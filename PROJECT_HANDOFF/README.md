@@ -12,7 +12,7 @@ site. The first website milestone is implemented in this independent repository 
 - Astro 7.3.5 + TypeScript 6.0.3, custom CSS, self-hosted Manrope and native animations.
 - Home, filterable catalogue, six detail pages, original interactive bundle demos,
   downloads, usage guide, spring playground and 404 page.
-- Sixteen content/account routes plus404,robots andproduction sitemap. Staticproductionbuild.
+- Sixteen content/account routes plus 404, robots and production sitemap. Static production build.
 - Release exports: Glass/Bento 0.1.5, Clay/Kinetic 0.1.2, Aurora/Brutalism 0.1.1.
 - Live Cloudflare site: https://special-web.olaoluwa-special.workers.dev/
 - Account UI/client/declarative schema prepared locally; correct Supabase project connection pending.
