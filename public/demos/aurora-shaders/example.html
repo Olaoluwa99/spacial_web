@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Aurora shaders · Reference screen</title>
+  <link rel="stylesheet" href="aurora-shaders.css">
+  <script src="shader.js"></script>
+  <style>
+    /* Layout for this screen only; everything visual comes from aurora-shaders.css. */
+    main { position: relative; z-index: 1; max-width: 440px; margin: 0 auto; padding: calc(28px + env(safe-area-inset-top)) var(--gutter) 190px; }
+    header { display: grid; gap: var(--space-s); }
+    header h1 { margin: 2px 0; }
+    .card-wrap { margin-top: var(--space-xxl); }
+    .row { display: flex; align-items: center; gap: var(--space-m); }
+    .grow { flex: 1; min-width: 0; }
+    .brand { letter-spacing: 4px; }
+    .chip-art { width: 40px; height: 30px; border-radius: 6px; margin-bottom: var(--space-m);
+      background:
+        linear-gradient(transparent 32%, rgb(6 5 15 / .35) 33% 35%, transparent 36% 65%, rgb(6 5 15 / .35) 66% 68%, transparent 69%),
+        linear-gradient(90deg, transparent 39%, rgb(6 5 15 / .35) 40% 42%, transparent 43%),
+        linear-gradient(135deg, rgb(45 245 196 / .85), rgb(255 255 255 / .7), rgb(139 92 246 / .85)); }
+    .meta { display: grid; gap: 2px; }
+    .meta .t-caption { color: var(--content-secondary); }
+    .hint { display: flex; justify-content: center; margin-top: var(--space-m); }
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m); margin-top: var(--space-xxl); }
+    .plan { display: grid; gap: 2px; text-align: left; padding: var(--panel-padding); border: 0; cursor: pointer; transition: scale var(--spring-press); }
+    .plan .top { display: flex; margin-bottom: var(--space-s); }
+    .plan .top .t-caption { color: var(--content-secondary); flex: 1; }
+    .plan .note { color: var(--mint); }
+    .plan:not(.lit)::before, .plan:not(.lit)::after { display: none; }
+    .perks { margin-top: var(--space-l); padding: var(--panel-padding); }
+    .perk { display: flex; align-items: center; gap: var(--space-l); padding: var(--space-m) 0; }
+    .perk .t-body { font-size: 13px; line-height: 18px; }
+    .perks .divider { margin-left: 52px; }
+    .dock { position: fixed; z-index: 2; left: 0; right: 0; bottom: 0;
+      padding: var(--space-huge) var(--gutter) calc(var(--space-l) + env(safe-area-inset-bottom));
+      background: linear-gradient(transparent, rgb(6 5 15 / .88) 35%, rgb(6 5 15 / .96)); }
+    .dock > * { max-width: 400px; margin: 0 auto; }
+    .dock .button { display: flex; width: 100%; }
+    .terms { margin-top: var(--space-m); text-align: center; font-size: 13px; line-height: 18px; }
+  </style>
+</head>
+<body class="shader-page">
+  <div class="shader-backdrop" aria-hidden="true">
+    <div class="aurora-fallback"><i></i><i></i><i></i><i></i></div>
+    <canvas id="aurora"></canvas>
+    <div class="veil"></div>
+    <div class="grain"></div>
+  </div>
+
+  <main>
+    <header class="emerge" style="--order:0">
+      <span class="t-caption">Lumen · Membership</span>
+      <h1 class="t-display glow-text">Aurora</h1>
+      <p class="t-body">Lossless sound, live sets and first access to every drop, lit from within.</p>
+    </header>
+
+    <div class="card-wrap emerge" style="--order:1">
+      <div class="holo" id="holo" tabindex="0" role="img" aria-label="Aurora member card. Drag to tilt it.">
+        <div class="holo__face">
+          <canvas id="foil"></canvas>
+          <div class="holo__foil"></div>
+          <div class="holo__print"></div>
+        </div>
+        <div class="holo__content">
+          <div class="row">
+            <span class="t-label brand grow">LUMEN</span>
+            <span class="tag lit" id="card-tag">Yearly</span>
+          </div>
+          <div class="grow"></div>
+          <div class="chip-art"></div>
+          <div class="row">
+            <div class="meta grow"><span class="t-caption">Member</span><span class="t-mono">•••• 2046</span></div>
+            <div class="meta" style="text-align:right"><span class="t-caption">Valid thru</span><span class="t-mono">09 / 27</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hint emerge" style="--order:2"><span class="tag">Drag to tilt · tap to ripple</span></div>
+
+    <div class="plans" role="radiogroup" aria-label="Plan">
+      <button class="panel plan emerge" style="--order:3" role="radio" aria-checked="false" data-plan="0">
+        <span class="top"><span class="t-caption">Monthly</span></span>
+        <span class="t-numeric">$9.99</span>
+        <span class="t-body">a month</span>
+      </button>
+      <button class="panel plan lit emerge" style="--order:4" role="radio" aria-checked="true" data-plan="1">
+        <span class="top"><span class="t-caption">Yearly</span><span class="t-caption note">Save 33%</span></span>
+        <span class="t-numeric">$79.99</span>
+        <span class="t-body">a year</span>
+      </button>
+    </div>
+
+    <section class="panel perks emerge" style="--order:5">
+      <h2 class="t-title">Included</h2>
+      <div class="perk">
+        <span class="orb" style="--hue: var(--azure)"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <div><div class="t-label">Lossless, spatial audio</div><p class="t-body">Up to 24-bit / 192 kHz</p></div>
+      </div>
+      <div class="divider"></div>
+      <div class="perk">
+        <span class="orb" style="--hue: var(--violet)"><svg viewBox="0 0 24 24"><path d="m12 17.3 6.2 3.7-1.6-7L22 9.2l-7.2-.6L12 2 9.2 8.6 2 9.2 7.4 14l-1.6 7z"/></svg></span>
+        <div><div class="t-label">First access</div><p class="t-body">Every drop, 48 hours early</p></div>
+      </div>
+      <div class="divider"></div>
+      <div class="perk">
+        <span class="orb" style="--hue: var(--rose)"><svg viewBox="0 0 24 24"><path d="M12 21.4 10.6 20C5.4 15.4 2 12.3 2 8.5 2 5.4 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.4 22 8.5c0 3.8-3.4 6.9-8.6 11.5z"/></svg></span>
+        <div><div class="t-label">Living visuals</div><p class="t-body">Shader art that moves with each track</p></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="dock emerge" style="--order:6">
+    <button class="button button--prominent lit" id="join">Start 7-day free trial</button>
+    <p class="t-body terms" id="terms" aria-live="polite">Then $79.99 a year. Cancel anytime.</p>
+  </div>
+
+  <script>
+    const S = AuroraShaders;
+    const T = S.tokens.shader;
+    const M = S.tokens.motion;
+    const palette = S.paletteUniforms(T.hueShift);
+    const reduced = S.prefersReducedMotion();
+
+    document.documentElement.style.setProperty("--grain-texture", `url(${S.grainTexture()})`);
+
+    // ---------- Backdrop: aurora at half resolution, with tap ripples folded in ----------
+    let ripple = null;   // { x, y (css px), start (motion seconds) }
+    const aurora = S.mount(document.getElementById("aurora"), S.programs.aurora, (time, size) => {
+      let r = [0, 0, 0, 0];
+      if (ripple) {
+        const p = Math.min(1, (time - ripple.start) / (M.ripple.durationMs / 1000));
+        const e = 1 - Math.pow(1 - p, 2.4);   // ≈ linear-out-slow-in
+        const reach = Math.hypot(size.width, size.height);
+        r = p >= 1 ? [0, 0, 0, 0] : [ripple.x * size.ratio, ripple.y * size.ratio, reach * e, M.ripple.amplitude * size.ratio * (1 - e)];
+        if (p >= 1) ripple = null;
+      }
+      return {
+        time: time * T.flow, scale: T.scale, warp: T.warp, intensity: T.intensity, stage: 2,
+        voidColor: S.rgb(S.tokens.void), ripple: r, rippleWidth: M.ripple.width * size.ratio, ...palette,
+      };
+    }, { renderScale: T.renderScale, stillTime: 50 });
+    if (aurora) document.documentElement.classList.add("webgl");
+
+    // Any tap (not a drag) sends a ripple through the aurora, buttons included.
+    let down = null;
+    addEventListener("pointerdown", (e) => { down = { x: e.clientX, y: e.clientY }; }, true);
+    addEventListener("pointerup", (e) => {
+      if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 8 && aurora && !reduced) {
+        ripple = { x: e.clientX, y: e.clientY, start: aurora.time };
+      }
+      down = null;
+    }, true);
+
+    // ---------- Holo card: drag to tilt, spring back, tap to ripple ----------
+    const holo = document.getElementById("holo");
+    const tilt = { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, dragging: false };
+    const toward = (e) => {
+      const r = holo.getBoundingClientRect();
+      tilt.tx = Math.max(-1, Math.min(1, (e.clientX - r.left) / r.width * 2 - 1));
+      tilt.ty = Math.max(-1, Math.min(1, (e.clientY - r.top) / r.height * 2 - 1));
+    };
+    let press = null;
+    holo.addEventListener("pointerdown", (e) => {
+      holo.setPointerCapture(e.pointerId);
+      tilt.dragging = true; press = { x: e.clientX, y: e.clientY, moved: false }; toward(e);
+    });
+    holo.addEventListener("pointermove", (e) => {
+      if (!tilt.dragging) return;
+      if (Math.hypot(e.clientX - press.x, e.clientY - press.y) > 8) press.moved = true;
+      toward(e);
+      if (press.moved) { tilt.x = tilt.tx; tilt.y = tilt.ty; tilt.vx = tilt.vy = 0; }   // follow the finger
+    });
+    const release = (e) => {
+      if (!tilt.dragging) return;
+      tilt.dragging = false; tilt.tx = tilt.ty = 0;
+      if (!press.moved && !reduced) {
+        const r = holo.getBoundingClientRect();
+        const ring = document.createElement("span");
+        ring.className = "holo__ring";
+        ring.style.left = `${e.clientX - r.left}px`; ring.style.top = `${e.clientY - r.top}px`;
+        holo.querySelector(".holo__face").append(ring);
+        ring.addEventListener("animationend", () => ring.remove());
+      }
+    };
+    holo.addEventListener("pointerup", release);
+    holo.addEventListener("pointercancel", release);
+
+    let last = performance.now();
+    (function step(now) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (!(tilt.dragging && press?.moved)) {
+        [tilt.x, tilt.vx] = S.springStep(tilt.x, tilt.vx, tilt.tx, dt, M.tilt);
+        [tilt.y, tilt.vy] = S.springStep(tilt.y, tilt.vy, tilt.ty, dt, M.tilt);
+      }
+      holo.style.setProperty("--tx", tilt.x.toFixed(4));
+      holo.style.setProperty("--ty", tilt.y.toFixed(4));
+      requestAnimationFrame(step);
+    })(last);
+
+    // The foil sees the touch tilt plus a slow idle sway.
+    S.mount(document.getElementById("foil"), S.programs.foil, (time, size) => {
+      const a = time / M.foilDriftSeconds * Math.PI * 2;
+      return {
+        tilt: [tilt.x + 0.25 * Math.sin(a), tilt.y + 0.18 * Math.cos(a * 1.3)],
+        time, strength: T.foil, density: size.ratio, ...palette,
+      };
+    }, { stillTime: 3 });
+
+    // ---------- Plans and the primary action ----------
+    const plans = [
+      { name: "Monthly", price: "$9.99", per: "a month" },
+      { name: "Yearly", price: "$79.99", per: "a year" },
+    ];
+    let plan = 1, joined = false;
+    const terms = document.getElementById("terms");
+    const join = document.getElementById("join");
+    const tag = document.getElementById("card-tag");
+    function update() {
+      document.querySelectorAll(".plan").forEach((el, i) => {
+        el.classList.toggle("lit", i === plan);
+        el.setAttribute("aria-checked", i === plan);
+      });
+      tag.textContent = joined ? "Active" : plans[plan].name;
+      join.innerHTML = joined
+        ? '<svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>Membership active'
+        : "Start 7-day free trial";
+      terms.textContent = joined ? "You're in. Tap again to undo." : `Then ${plans[plan].price} ${plans[plan].per}. Cancel anytime.`;
+    }
+    document.querySelectorAll(".plan").forEach((el) => el.addEventListener("click", () => { plan = +el.dataset.plan; update(); }));
+    join.addEventListener("click", () => { joined = !joined; update(); });
+    update();
+  </script>
+</body>
+</html>

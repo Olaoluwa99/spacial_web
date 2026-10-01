@@ -1,0 +1,8 @@
+---
+import Icon from './Icon.astro';
+---
+<dialog id="preview-dialog" class="preview-dialog" aria-labelledby="preview-heading">
+  <div class="dialog-header"><div><span class="eyebrow">LIVE STYLE PREVIEW</span><h2 id="preview-heading">Style preview</h2></div><button data-close-preview class="icon-button" aria-label="Close live preview"><Icon name="close" /></button></div>
+  <div class="dialog-toolbar"><p>The real bundle showcase. Try its controls.</p><a id="preview-detail-link" href="/styles/">Explore the style <Icon name="arrow" size={17}/></a></div>
+  <div class="dialog-demo"><iframe id="preview-frame" title="Live style showcase" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe></div>
+</dialog>

@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bento motion · Reference screen</title>
+  <link rel="stylesheet" href="bento.css">
+  <style>
+    /* Layout for this screen only; everything shared comes from bento.css. */
+    main { max-width: 440px; margin: 0 auto; padding: calc(16px + env(safe-area-inset-top)) var(--gutter) 40px; box-sizing: border-box; }
+    .head { display: flex; align-items: flex-end; }
+    .head > div { flex: 1; }
+    .head .t-caption { margin: 0 0 4px; }
+    .controls { display: flex; gap: var(--space-s); align-items: center; margin: var(--space-xl) 0 var(--space-m); }
+    .controls .segmented { flex: 1; }
+    .controls .icon-button { width: 40px; height: 40px; }
+    .hint { text-align: center; margin: var(--space-l) 0 0; font-size: 12px; letter-spacing: 0; text-transform: none; }
+
+    .row { display: flex; align-items: center; gap: var(--space-m); }
+    .row--end { align-items: flex-end; }
+    .row--top { align-items: flex-start; }
+    .grow { flex: 1; min-width: 0; min-height: 0; }
+    .col { display: flex; flex-direction: column; min-width: 0; }
+    .ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .on-night { color: var(--on-night); }
+    .accent { color: var(--accent); }
+    .gap-s { height: var(--space-s); flex: none; }
+    .gap-m { height: var(--space-m); flex: none; }
+    .gap-xs { height: var(--space-xs); flex: none; }
+
+    /* Live content: drawn in once the tile lands (.is-live) or opens (.revealed). */
+    .draw { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 900ms var(--ease-live); }
+    .is-live [data-when="live"].draw, .revealed [data-when="open"].draw { stroke-dashoffset: 0; }
+    .wash { opacity: 0; transition: opacity 600ms ease 300ms; }
+    .is-live [data-when="live"].wash, .revealed [data-when="open"].wash { opacity: 1; }
+    .head-dot { opacity: 0; transition: opacity 200ms ease 800ms; }
+    .is-live [data-when="live"].head-dot, .revealed [data-when="open"].head-dot { opacity: 1; }
+    .bar { transform-box: fill-box; transform-origin: 50% 100%; scale: 1 0; transition: scale 700ms var(--ease-live); transition-delay: calc(var(--i) * 28ms); }
+    .is-live [data-when="live"] .bar, .revealed [data-when="open"] .bar { scale: 1 1; }
+    .ring { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 900ms var(--ease-live); transition-delay: calc(var(--i) * 110ms); }
+    .is-live [data-when="live"] .ring, .revealed [data-when="open"] .ring { stroke-dashoffset: calc(1 - var(--frac)); }
+    .reveal-x { clip-path: inset(0 100% 0 0); transition: clip-path 900ms var(--ease-live); }
+    .is-live .reveal-x { clip-path: inset(0 0 0 0); }
+    .meter--scrub::after { transition: none; scale: 1 1; }
+
+    .ecg { animation: ecg 1.11s linear infinite; }
+    @keyframes ecg { to { translate: calc(var(--beat) * -1) 0; } }
+    .photo-art { position: absolute; inset: 0; width: 100%; height: 100%; animation: drift 28s ease-in-out infinite alternate; }
+    @keyframes drift { from { scale: 1.02; } to { scale: 1.1; } }
+    .scrim { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px; background: linear-gradient(transparent, rgb(0 0 0 / .55)); color: var(--on-night); }
+    .scrim .sub { font: 500 13px/16px var(--font-sans); color: rgb(255 255 255 / .85); }
+    .dots { display: flex; gap: 6px; margin-top: 12px; }
+    .dots i { width: 6px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / .5); }
+    .dots i:first-child { width: 16px; background: #fff; }
+    .map-chip { position: absolute; left: 12px; bottom: 12px; padding: 6px 10px; border-radius: var(--radius-inner); background: var(--tile); color: var(--ink); }
+    .map-chip .sub { font: 600 12px/14px var(--font-sans); color: var(--ink-2); }
+    .eta { position: absolute; right: 12px; top: 12px; padding: 6px 12px; border-radius: 999px; background: var(--night); color: var(--on-night); font: 500 13px/16px var(--font-sans); }
+    .map-you { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; }
+    .map-you::before, .map-you::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--accent); opacity: 0; animation: bento-pulse 2.4s linear infinite; }
+    .map-you::after { animation-delay: -1.2s; }
+    .map-you i { position: absolute; inset: -2px; border-radius: 50%; background: var(--tile); }
+    .map-you i::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--accent); }
+    .art { border-radius: var(--radius-inner); overflow: hidden; flex: none; display: block; }
+    .transport { display: flex; justify-content: space-evenly; align-items: center; margin-top: var(--space-s); }
+    .transport button { width: 44px; height: 44px; border: 0; background: none; padding: 12px; cursor: pointer; color: var(--on-night); }
+    .transport button svg { width: 100%; height: 100%; fill: currentColor; display: block; }
+    .transport .play { width: 52px; height: 52px; border-radius: 50%; background: var(--tile); color: var(--ink); padding: 16px; }
+    .sessions { display: flex; align-items: center; gap: 4px; }
+    .sessions i { width: 28px; height: 6px; border-radius: 3px; background: var(--track); }
+    .sessions i.done { background: var(--ink); } .sessions i.now { background: var(--accent); }
+    .stats { display: flex; }
+    .stats > div { flex: 1; }
+    .legend { display: flex; flex-direction: column; gap: 12px; }
+    .days { display: flex; } .days span { flex: 1; text-align: center; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .draw, .wash, .head-dot, .bar, .ring, .reveal-x { transition: none; }
+      .ecg, .photo-art, .map-you::before, .map-you::after { animation: none; }
+    }
+  </style>
+</head>
+<body class="bento-page">
+  <main>
+    <header class="head">
+      <div>
+        <p class="t-caption" id="date">WEDNESDAY · 30 SEPTEMBER</p>
+        <h1 class="t-display">Today</h1>
+      </div>
+      <button class="icon-button" id="refresh" aria-label="Replay the wave from here">
+        <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg>
+      </button>
+    </header>
+
+    <div class="controls">
+      <div class="segmented" id="filters" role="tablist" aria-label="Filter" style="--count:4">
+        <button role="tab" aria-selected="true">All</button>
+        <button role="tab" aria-selected="false">Health</button>
+        <button role="tab" aria-selected="false">Places</button>
+        <button role="tab" aria-selected="false">Media</button>
+      </div>
+      <button class="icon-button" id="density" aria-label="Compact layout"><svg viewBox="0 0 16 16" id="density-glyph"></svg></button>
+    </div>
+
+    <div class="bento"><div class="bento-grid" id="grid"></div></div>
+    <p class="hint t-caption" id="hint">Tap a tile to open it in place.</p>
+  </main>
+
+  <script>
+  // ---------- Motion: the place spring, exactly (motion.json → springs.place) ----------
+
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /** Samples a spring (mass 1) from 0 to 1; duration is when it's within 0.1% of rest. */
+  function spring(damping, stiffness, steps = 32) {
+    const w = Math.sqrt(stiffness), wd = w * Math.sqrt(1 - damping * damping);
+    const x = t => 1 - Math.exp(-damping * w * t) * (Math.cos(wd * t) + (damping * w / wd) * Math.sin(wd * t));
+    let settle = 0;
+    for (let t = 0; t < 3; t += 0.001) if (Math.abs(1 - x(t)) > 0.001) settle = t;
+    const values = Array.from({ length: steps + 1 }, (_, i) => (i === steps ? 1 : x((settle * i) / steps)));
+    return { duration: settle * 1000, values };
+  }
+  const PLACE = spring(0.8, 380);
+  const WAVE_STEP = 45, WAVE_SCALE = 0.9, WAVE_PULL = 16, OPAQUE_AT = 0.4, LIVE_AT = 0.55;
+  const COUNTER_MS = 1100, DETAIL_DELAY = 120, SCROLL_AFTER = 380;
+
+  // ---------- Packing: identical to packBento() in the Compose code ----------
+
+  function pack(spans, columns) {
+    const taken = [];
+    const row = r => { while (taken.length <= r) taken.push(new Array(columns).fill(false)); return taken[r]; };
+    const free = (c, r, w, h) => { for (let y = r; y < r + h; y++) for (let x = c; x < c + w; x++) if (row(y)[x]) return false; return true; };
+    const take = (c, r, w, h) => { for (let y = r; y < r + h; y++) for (let x = c; x < c + w; x++) row(y)[x] = true; };
+    const cells = spans.map(([sw, h]) => {
+      const w = Math.min(sw, columns);
+      for (let r = 0; ; r++) for (let c = 0; c <= columns - w; c++) if (free(c, r, w, h)) { take(c, r, w, h); return { c, r, w, h }; }
+    });
+    const rows = Math.max(0, ...cells.map(p => p.r + p.h));
+    for (let grew = true; grew;) {
+      grew = false;
+      for (const p of cells) if (p.c + p.w < columns && free(p.c + p.w, p.r, 1, p.h)) { take(p.c + p.w, p.r, 1, p.h); p.w++; grew = true; }
+      for (const p of cells) if (p.r + p.h < rows && free(p.c, p.r + p.h, p.w, 1)) { take(p.c, p.r + p.h, p.w, 1); p.h++; grew = true; }
+    }
+    return cells;
+  }
+
+  // ---------- FLIP: reflow and expand ride the place spring ----------
+
+  /**
+   * Measures every cell, runs `mutate`, then springs each cell from where it was to
+   * where it is now. The tile's corners and content are counter-scaled every frame,
+   * so radii stay round and text never stretches.
+   */
+  function flip(cells, mutate) {
+    const first = new Map(cells.map(el => [el, el.getBoundingClientRect()]));
+    cells.forEach(el => el.querySelectorAll(":scope, .tile, .tile__content").forEach(n => n.getAnimations().forEach(a => a.id === "flip" && a.cancel())));
+    mutate();
+    if (reduced) return;
+    const radius = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--radius"));
+    for (const el of cells) {
+      const a = first.get(el), b = el.getBoundingClientRect();
+      if (!a || !b.width || !b.height) continue;
+      const dx = a.left - b.left, dy = a.top - b.top, sx = a.width / b.width, sy = a.height / b.height;
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5 && Math.abs(sx - 1) < 0.004 && Math.abs(sy - 1) < 0.004) continue;
+      const frames = PLACE.values.map(p => ({ x: dx * (1 - p), y: dy * (1 - p), sx: sx + (1 - sx) * p, sy: sy + (1 - sy) * p }));
+      const options = { duration: PLACE.duration, easing: "linear", id: "flip" };
+      // Bigger tiles pass over smaller ones.
+      el.style.zIndex = Math.round((b.width * b.height) / 1000);
+      el.animate(frames.map(f => ({ transform: `translate(${f.x}px, ${f.y}px) scale(${f.sx}, ${f.sy})` })), options)
+        .finished.then(() => (el.style.zIndex = ""), () => {});
+      el.querySelector(".tile").animate(frames.map(f => ({ borderRadius: `${radius / f.sx}px / ${radius / f.sy}px` })), options);
+      el.querySelectorAll(".tile__content").forEach(c => c.animate(frames.map(f => ({ transform: `scale(${1 / f.sx}, ${1 / f.sy})` })), options));
+    }
+  }
+
+  /**
+   * The wave: every tile leaves and comes back, nearest to `origin` first, one cell
+   * pitch every 45 ms. Tiles start pulled towards the origin and spring outwards.
+   */
+  function wave(origin) {
+    const box = grid.getBoundingClientRect();
+    const o = origin ?? { x: 0, y: 0 };
+    const pitch = cellSize().cell + gap();
+    const landedAt = PLACE.values.findIndex(v => v >= LIVE_AT) / (PLACE.values.length - 1) * PLACE.duration;
+    for (const t of tiles) {
+      const r = t.cell.getBoundingClientRect();
+      const cx = r.left + r.width / 2 - box.left, cy = r.top + r.height / 2 - box.top;
+      const d = Math.hypot(cx - o.x, cy - o.y);
+      const dir = d > 1 ? { x: (cx - o.x) / d, y: (cy - o.y) / d } : { x: 0, y: 0 };
+      const delay = (d / pitch) * WAVE_STEP;
+      clearTimeout(t.liveTimer);
+      setLive(t, false);
+      if (reduced) { setLive(t, true); continue; }
+      t.tile.animate(PLACE.values.map(p => ({
+        opacity: Math.min(1, p / OPAQUE_AT),
+        scale: `${WAVE_SCALE + (1 - WAVE_SCALE) * p}`,
+        translate: `${-dir.x * WAVE_PULL * (1 - p)}px ${-dir.y * WAVE_PULL * (1 - p)}px`,
+      })), { duration: PLACE.duration, delay, easing: "linear", fill: "backwards" });
+      t.liveTimer = setTimeout(() => setLive(t, true), delay + landedAt);
+    }
+  }
+
+  // ---------- Live content ----------
+
+  const easeLive = bezier(0.2, 0, 0, 1);
+  function bezier(x1, y1, x2, y2) {
+    const at = (a, b, s) => 3 * a * s * (1 - s) ** 2 + 3 * b * s * s * (1 - s) + s ** 3;
+    return x => { let lo = 0, hi = 1; for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; at(x1, x2, m) < x ? (lo = m) : (hi = m); } return at(y1, y2, (lo + hi) / 2); };
+  }
+  const formats = {
+    int: v => Math.round(v).toLocaleString("en-US"),
+    k: v => v.toFixed(1),
+    deg: v => `${Math.round(v)}°`,
+  };
+  function setLive(t, on) {
+    t.live = on;
+    t.tile.classList.toggle("is-live", on);
+    t.tile.querySelectorAll("[data-count]").forEach(el => countUp(el, on));
+  }
+  function countUp(el, on) {
+    const target = +el.dataset.count, format = formats[el.dataset.format];
+    cancelAnimationFrame(el._raf);
+    if (!on) { el.textContent = format(0); return; }
+    if (reduced) { el.textContent = format(target); return; }
+    const start = performance.now();
+    const step = now => {
+      const p = Math.min(1, (now - start) / COUNTER_MS);
+      el.textContent = format(target * easeLive(p));
+      if (p < 1) el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+  }
+
+  // ---------- The dashboard ----------
+
+  const L = [2, 2], W = [2, 1], S = [1, 1], T = [1, 2];
+  const DASH = [
+    { id: "weather", name: "Weather", group: "Places", tone: "light", span: L, compact: W },
+    { id: "steps", name: "Steps", group: "Health", tone: "night", span: W, compact: W },
+    { id: "move", name: "Move", group: "Health", tone: "accent", span: S, compact: S },
+    { id: "heart", name: "Heart rate", group: "Health", tone: "light", span: T, compact: S },
+    { id: "music", name: "Now playing", group: "Media", tone: "night", span: L, compact: W },
+    { id: "focus", name: "Focus", group: "Health", tone: "light", span: S, compact: S },
+    { id: "map", name: "Commute", group: "Places", tone: "light", span: L, compact: W, bleed: true },
+    { id: "photo", name: "Memories", group: "Media", tone: "night", span: L, compact: W, bleed: true },
+    { id: "sleep", name: "Sleep", group: "Health", tone: "light", span: W, compact: W },
+  ];
+  const state = { group: "All", compact: false, open: null, columns: 4 };
+  const grid = document.getElementById("grid");
+  const gap = () => parseFloat(getComputedStyle(grid).columnGap);
+  const cellSize = () => { const g = gap(); return { cell: (grid.clientWidth - g * (state.columns - 1)) / state.columns, gap: g }; };
+  const sizeOf = (w, h) => { const { cell, gap: g } = cellSize(); return { w: w * cell + (w - 1) * g, h: h * cell + (h - 1) * g }; };
+
+  const tiles = DASH.map(d => {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    const tile = document.createElement("article");
+    tile.className = `tile tile--${d.tone}${d.bleed ? " tile--bleed" : ""}`;
+    tile.setAttribute("role", "button");
+    tile.tabIndex = 0;
+    cell.append(tile);
+    const t = { ...d, cell, tile, fit: null, live: false };
+    const activate = () => onTile(t);
+    tile.addEventListener("click", activate);
+    tile.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); } });
+    return t;
+  });
+
+  /** Which layout a tile's content uses, from the span it actually got. */
+  function fitOf(cell, open) { return { wide: cell.w >= 2, tall: cell.h >= 2, open, large: cell.w >= 2 && cell.h >= 2 }; }
+  const fitKey = f => `${f.wide}${f.tall}${f.open}`;
+
+  function layout() {
+    const order = state.group === "All" ? tiles : [...tiles].sort((a, b) => (a.group !== state.group) - (b.group !== state.group));
+    const spans = order.map(t => {
+      const focused = state.group === "All" || t.group === state.group;
+      if (t.id === state.open) return [state.columns, Math.max(2, state.columns - 1)];
+      if (!focused) return S;
+      return state.compact ? t.compact : t.span;
+    });
+    const cells = pack(spans, state.columns);
+    order.forEach((t, i) => {
+      const c = cells[i];
+      grid.append(t.cell); // reading order = DOM order
+      t.cell.style.gridColumn = `${c.c + 1} / span ${c.w}`;
+      t.cell.style.gridRow = `${c.r + 1} / span ${c.h}`;
+      t.cell.toggleAttribute("data-dimmed", !(state.group === "All" || t.group === state.group));
+      t.tile.setAttribute("aria-label", `${t.id === state.open ? "Close" : "Open"} ${t.name}`);
+      const fit = fitOf(c, t.id === state.open);
+      if (!t.fit || fitKey(fit) !== fitKey(t.fit)) render(t, fit, sizeOf(c.w, c.h));
+    });
+    document.getElementById("hint").textContent = state.open ? "Tap it again to put it back." : "Tap a tile to open it in place.";
+  }
+
+  /** Swaps a tile's layout with a short crossfade; the tile itself is springing to size meanwhile. */
+  function render(t, fit, size) {
+    const next = document.createElement("div");
+    next.className = "tile__content";
+    next.innerHTML = CONTENT[t.id](fit, size, t);
+    const old = t.tile.querySelectorAll(".tile__content");
+    if (t.fit && !reduced) {
+      next.classList.add("entering");
+      old.forEach(o => { o.classList.add("leaving"); setTimeout(() => o.remove(), 240); });
+    } else old.forEach(o => o.remove());
+    t.tile.append(next);
+    t.fit = fit;
+    t.tile.querySelectorAll("[data-count]").forEach(el => (el.textContent = formats[el.dataset.format](t.live || reduced ? +el.dataset.count : 0)));
+    if (fit.open) setTimeout(() => next.classList.add("revealed"), reduced ? 0 : DETAIL_DELAY);
+    bindMusic(t, next);
+  }
+
+  function onTile(t) {
+    const cells = tiles.map(x => x.cell);
+    flip(cells, () => {
+      if (state.group !== "All" && t.group !== state.group) { setFilter("All", false); state.open = t.id; }
+      else state.open = state.open === t.id ? null : t.id;
+      layout();
+    });
+    if (state.open === t.id) setTimeout(() => t.cell.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" }), reduced ? 0 : SCROLL_AFTER);
+  }
+
+  // ---------- Controls ----------
+
+  const filterButtons = [...document.querySelectorAll("#filters button")];
+  function setFilter(group, relayout = true) {
+    state.group = group;
+    filterButtons.forEach((b, i) => {
+      b.setAttribute("aria-selected", b.textContent === group);
+      if (b.textContent === group) document.getElementById("filters").style.setProperty("--index", i);
+    });
+    if (relayout) flip(tiles.map(t => t.cell), () => { state.open = null; layout(); });
+  }
+  filterButtons.forEach(b => b.addEventListener("click", () => setFilter(b.textContent)));
+
+  const density = document.getElementById("density");
+  function drawDensity() {
+    const n = state.compact ? 3 : 2, g = 2, c = (16 - g * (n - 1)) / n;
+    document.getElementById("density-glyph").innerHTML = Array.from({ length: n * n }, (_, i) =>
+      `<rect x="${(i % n) * (c + g)}" y="${Math.floor(i / n) * (c + g)}" width="${c}" height="${c}" rx="${c * 0.3}"/>`).join("");
+    density.setAttribute("aria-label", state.compact ? "Comfortable layout" : "Compact layout");
+  }
+  density.addEventListener("click", () => {
+    flip(tiles.map(t => t.cell), () => { state.compact = !state.compact; state.open = null; layout(); });
+    drawDensity();
+  });
+
+  document.getElementById("refresh").addEventListener("click", e => {
+    // The tap point is the origin: the wave starts from under your finger.
+    const box = grid.getBoundingClientRect(), r = e.currentTarget.getBoundingClientRect();
+    wave({ x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top });
+  });
+
+  document.getElementById("date").textContent = new Date()
+    .toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }).replace(/,? /, " · ").toUpperCase();
+
+  // ---------- Tile content (mirrors the Compose showcase, layout by layout) ----------
+
+  const label = t => `<span class="label">${t}</span>`;
+  const value = (v, unit = "", hero = false) => `<span class="value${hero ? " value--hero" : ""}">${v}${unit ? `<small>${unit}</small>` : ""}</span>`;
+  const count = (n, format, unit = "", hero = false, style = "") =>
+    `<span class="value${hero ? " value--hero" : ""}" style="${style}"><span data-count="${n}" data-format="${format}">${formats[format](n)}</span>${unit ? `<small>${unit}</small>` : ""}</span>`;
+  const meter = (v, extra = "") => `<div class="meter ${extra}" style="--value:${v}"></div>`;
+  const grow = `<span class="grow"></span>`;
+  const sun = px => `<svg class="sun" width="${px}" height="${px}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="var(--accent)"/><g class="rays" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round">${
+    Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4, c = Math.cos(a), s = Math.sin(a); return `<line x1="${12 + c * 7.4}" y1="${12 + s * 7.4}" x2="${12 + c * 11}" y2="${12 + s * 11}"/>`; }).join("")}</g></svg>`;
+  const heart = `<svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+  const eq = (paused = false) => `<div class="eq"${paused ? " data-paused" : ""}><span></span><span></span><span></span><span></span></div>`;
+
+  function lineChart(values, w, h, when) {
+    const low = Math.min(...values), high = Math.max(...values), inset = 5;
+    const pt = i => [inset + (w - inset * 2) * i / (values.length - 1), inset + (h - inset * 2) * (1 - (values[i] - low) / (high - low))];
+    let d = `M${pt(0)}`;
+    for (let i = 1; i < values.length; i++) { const [px, py] = pt(i - 1), [x, y] = pt(i), m = (px + x) / 2; d += ` C${m},${py} ${m},${y} ${x},${y}`; }
+    const [ex, ey] = pt(values.length - 1);
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block;overflow:visible" aria-hidden="true">
+      <defs><linearGradient id="wash-${when}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".18"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+      <path class="wash" data-when="${when}" d="${d} L${ex},${h} L${pt(0)[0]},${h} Z" fill="url(#wash-${when})"/>
+      <path class="draw" data-when="${when}" pathLength="1" d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="head-dot" data-when="${when}" cx="${ex}" cy="${ey}" r="4" fill="var(--accent)"/></svg>`;
+  }
+  function bars(values, w, h, when, highlighted, color = "currentColor") {
+    const top = Math.max(...values), slot = w / values.length, bw = Math.min(slot * 0.56, 14);
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block" data-when="${when}" aria-hidden="true">${values.map((v, i) => {
+      const bh = Math.max(h * v / top, bw);
+      return `<rect class="bar" style="--i:${i}" x="${slot * i + (slot - bw) / 2}" y="${h - bh}" width="${bw}" height="${bh}" rx="${bw / 2}" fill="${highlighted(i) ? "var(--accent)" : color}" fill-opacity="${highlighted(i) ? 1 : 0.16}"/>`;
+    }).join("")}</svg>`;
+  }
+  function rings(fracs, px, stroke, when) {
+    return `<svg width="${px}" height="${px}" viewBox="0 0 ${px} ${px}" style="display:block;rotate:-90deg;flex:none" data-when="${when}" aria-hidden="true">${fracs.map((f, i) => {
+      const r = px / 2 - stroke / 2 - i * stroke * 1.35;
+      return `<circle cx="${px / 2}" cy="${px / 2}" r="${r}" fill="none" stroke="currentColor" stroke-opacity=".16" stroke-width="${stroke}"/>
+        <circle class="ring" style="--i:${i};--frac:${f}" pathLength="1" cx="${px / 2}" cy="${px / 2}" r="${r}" fill="none" stroke="currentColor" stroke-width="${stroke}" stroke-linecap="round"/>`;
+    }).join("")}</svg>`;
+  }
+  function heartbeat(w, h) {
+    const beat = 64, mid = h * 0.62, amp = h * 0.5;
+    let d = `M${-beat},${mid}`;
+    for (let x = -beat; x < w + beat; x += beat) {
+      d += ` L${x + beat * .18},${mid} Q${x + beat * .24},${mid - amp * .16} ${x + beat * .3},${mid} L${x + beat * .38},${mid + amp * .14} L${x + beat * .45},${mid - amp}`
+        + ` L${x + beat * .52},${mid + amp * .3} L${x + beat * .58},${mid} Q${x + beat * .7},${mid - amp * .26} ${x + beat * .82},${mid} L${x + beat},${mid}`;
+    }
+    // The fade lives in a mask on a still group, so it stays put while the trace scrolls.
+    const id = `ecg-${Math.round(w)}-${Math.round(h)}`;
+    return `<svg class="reveal-x" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block;overflow:hidden" aria-hidden="true">
+      <defs><linearGradient id="${id}-fade" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff"/></linearGradient>
+      <mask id="${id}"><rect width="${w}" height="${h}" fill="url(#${id}-fade)"/></mask></defs>
+      <g mask="url(#${id})"><path class="ecg" style="--beat:${beat}px" d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`;
+  }
+  function albumArt(px) {
+    let stripes = "", y = 0.62 - 0.05, i = 0;
+    while (y < 1) { stripes += `<rect x="0" y="${y}" width="1" height="${0.05 * (0.25 + i * 0.14)}" fill="#2b1b4a"/>`; y += 0.075; i++; }
+    return `<svg class="art" width="${px}" height="${px}" viewBox="0 0 1 1" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><linearGradient id="sleeve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1b4a"/><stop offset=".5" stop-color="#b8336a"/><stop offset="1" stop-color="var(--accent)"/></linearGradient></defs>
+      <rect width="1" height="1" fill="url(#sleeve)"/><circle cx=".5" cy=".62" r=".26" fill="#ffd9a8"/>${stripes}</svg>`;
+  }
+
+  const HOURLY = [15, 16, 19, 22, 24, 23, 20], HOURS = ["06", "09", "12", "15", "18", "21", "00"];
+  const WEEK = [6.2, 9.8, 7.4, 11.2, 5.1, 8.9, 8.4], DAYS = ["M", "T", "W", "T", "F", "S", "S"];
+  const SLEEP = [1, 2, 3, 3, 2, 1, 2, 3, 2, 1, 2, 2, 3, 2, 1, 1, 2, 1, 2, 1, 0.5, 1];
+  const inner = size => ({ w: size.w - 32, h: size.h - 32 });
+
+  const CONTENT = {
+    weather(f, size) {
+      const c = inner(size);
+      const top = `<div class="row row--top"><div class="col grow">${label(f.open ? "Lisbon · Today" : f.wide ? "Lisbon" : "Now")}${
+        f.open ? `<span class="gap-xs"></span>${value("21°", "", true)}<span class="t-label secondary">Sunny, a light breeze from the west.</span>` : ""}</div>${sun(f.open ? 44 : f.large ? 30 : 18)}</div>`;
+      if (f.open) return `${top}${grow}${lineChart(HOURLY, c.w, 72, "open")}<span class="gap-s"></span><div class="row" style="justify-content:space-between">${HOURS.map(h => `<span class="label">${h}</span>`).join("")}</div>`;
+      if (f.large) return `${top}${grow}${count(21, "deg", "", true)}<span class="t-label secondary ellipsis">Sunny · H 24° L 16°</span>`;
+      if (f.wide) return `${top}${grow}<div class="row row--end">${count(21, "deg")}${grow}<span class="t-label secondary">H 24° L 16°</span></div>`;
+      return `${top}${grow}${count(21, "deg")}${f.tall ? `<span class="t-label secondary">H 24°<br>L 16°</span>` : ""}`;
+    },
+    steps(f, size) {
+      const c = inner(size);
+      const top = `<div class="row">${label(f.open ? "Steps · Today" : "Steps")}${grow}${f.wide ? `<span class="label accent">84%</span>` : ""}</div>`;
+      if (f.open) return `${top}${count(8432, "int", "", true)}<span class="t-label secondary">of 10,000 · 6.1 km</span><span class="gap-m"></span>${meter(.84)}${grow}${
+        bars(WEEK, c.w, 72, "open", i => i === WEEK.length - 1, "var(--on-night)")}<span class="gap-s"></span><div class="days">${DAYS.map(d => `<span class="label">${d}</span>`).join("")}</div>`;
+      if (f.large) return `${top}${grow}${count(8432, "int", "", true, "font-size:44px;line-height:44px")}<span class="gap-m"></span>${meter(.84)}`;
+      if (f.wide) return `${top}${grow}<div class="row">${count(8432, "int")}<div class="grow">${meter(.84)}</div></div>`;
+      return `${top}${grow}${count(8.4, "k", "k")}`;
+    },
+    move(f, size) {
+      const c = inner(size);
+      if (f.open) return `<div class="row" style="height:100%;gap:20px">${rings([.72, .45, .83], c.h, 14, "open")}<div class="legend">${
+        [["Move", "72%", "430 kcal"], ["Exercise", "45%", "27 min"], ["Stand", "83%", "10 of 12 h"]].map(([n, v, d]) =>
+          `<div>${label(n)}<div class="row row--end" style="gap:8px">${value(v)}<span class="t-label" style="padding-bottom:3px">${d}</span></div></div>`).join("")}</div></div>`;
+      if (f.large || f.tall) return `${label("Move")}${value("72", " %")}${grow}<div class="row" style="justify-content:center">${rings([.72, .45, .83], Math.min(c.w, c.h - 60), 6, "live")}</div>`;
+      if (f.wide) return `<div class="row" style="height:100%"><div class="col grow" style="height:100%">${label("Move")}${grow}${value("72", " %")}</div>${rings([.72, .45, .83], c.h, 5, "live")}</div>`;
+      return `<div style="position:relative;display:grid;place-items:center;height:100%">${rings([.72], Math.min(c.w, c.h), 6, "live")}<span class="t-label" style="position:absolute;font-weight:600">72%</span></div>`;
+    },
+    heart(f, size) {
+      const c = inner(size);
+      const top = `<div class="row">${label(f.open ? "Heart rate · Now" : "Heart")}${grow}${heart}</div>`;
+      if (f.open) return `${top}${value("62", " bpm", true)}${grow}${heartbeat(c.w, 88)}<span class="gap-m"></span><div class="stats">${
+        [["Resting", "58"], ["Peak", "141"], ["HRV", "48 ms"]].map(([n, v]) => `<div>${label(n)}<p class="t-title">${v}</p></div>`).join("")}</div>`;
+      if (f.large) return `${top}${value("62", " bpm", true)}${grow}${heartbeat(c.w, 56)}`;
+      if (f.tall) return `${top}<span class="gap-s"></span>${value("62")}<span class="t-label secondary">bpm</span>${grow}${heartbeat(c.w, 56)}`;
+      if (f.wide) return `${top}<div class="row row--end grow">${value("62", " bpm")}<div class="grow">${heartbeat(c.w - 110, c.h - 20)}</div></div>`;
+      return `${top}${grow}${value("62")}`;
+    },
+    focus(f) {
+      const top = `<div class="row">${label(f.open ? "Focus · Deep work" : "Focus")}${grow}<span class="pulse"><i></i></span></div>`;
+      if (f.open) return `${top}${grow}${value(`<span data-focus>24:12</span>`, "", true)}<span class="gap-m"></span>${meter(.03, "is-live meter--scrub")}<span class="gap-m"></span><span class="gap-s"></span>
+        <div class="sessions"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><span class="t-label secondary" style="margin-left:8px">Session 3 of 4</span></div>`;
+      if (f.wide || f.tall) return `${top}${grow}<span class="value" style="${f.large ? "font-size:44px;line-height:44px" : ""}"><span data-focus>24:12</span></span><span class="gap-s"></span>${meter(.03, "is-live meter--scrub")}`;
+      return `${top}${grow}${value(`<span data-focus-min>24</span>`, " m")}`;
+    },
+    music(f, size, t) {
+      const title = `<p class="t-title on-night ellipsis">Night Drive</p>`, artist = `<span class="t-label secondary ellipsis">Kōsuke · Neon Coast</span>`;
+      const scrub = `<div class="meter meter--scrub" data-song style="--value:${music.position() / SONG}"></div>`;
+      if (f.open) return `<div class="row row--top" style="gap:16px">${albumArt(112)}<div class="col grow">${label("Now playing")}<span class="gap-s"></span>
+          <p class="t-title on-night ellipsis" style="font-size:22px;line-height:26px">Night Drive</p>${artist}<span class="gap-m"></span>${eq(!music.playing)}</div></div>${grow}${scrub}
+        <span class="gap-s"></span><div class="row"><span class="label" data-song-time>${clock(music.position())}</span>${grow}<span class="label">${clock(SONG)}</span></div>
+        <div class="transport"><button data-act="prev" aria-label="Previous"><svg viewBox="0 0 18 18"><rect x=".7" width="2.9" height="18" rx="1"/><path d="M18 0 4 9l14 9z"/></svg></button>
+        <button class="play" data-act="toggle" aria-label="${music.playing ? "Pause" : "Play"}"><svg viewBox="0 0 18 18">${music.playing
+          ? `<rect x="2.9" width="4.3" height="18" rx="2"/><rect x="10.8" width="4.3" height="18" rx="2"/>` : `<path d="M2.5 0 17 9 2.5 18z"/>`}</svg></button>
+        <button data-act="next" aria-label="Next"><svg viewBox="0 0 18 18"><path d="M0 0l14 9-14 9z"/><rect x="14.4" width="2.9" height="18" rx="1"/></svg></button></div>`;
+      if (f.large) return `<div class="row row--top">${albumArt(64)}${grow}${eq(!music.playing)}</div>${grow}${title}${artist}<span class="gap-m"></span>${scrub}`;
+      if (f.wide) return `<div class="row" style="height:100%">${albumArt(inner(size).h)}<div class="col grow"><p class="t-title on-night ellipsis" style="font-size:15px;line-height:20px">Night Drive</p>${artist}</div>${eq(!music.playing)}</div>`;
+      return `<div style="position:relative;height:100%">${albumArt(Math.min(inner(size).w, inner(size).h))}<div style="position:absolute;right:4px;bottom:4px;--accent:#fff">${eq(!music.playing)}</div></div>`;
+    },
+    map(f, size) {
+      const s = Math.max(size.w, size.h), ox = (size.w - s) / 2, oy = (size.h - s) / 2;
+      const route = [[.18, .8], [.46, .8], [.46, .52], [.6, .39], [.74, .26], [.74, .22], [.88, .22]];
+      const streets = [[.18, 0, .18, 1], [.46, 0, .46, 1], [.74, 0, .74, 1], [0, .22, 1, .22], [0, .52, 1, .52], [0, .8, 1, .8], [0, .98, 1, .06]];
+      const when = f.open ? "open" : "live";
+      const [ex, ey] = route[route.length - 1];
+      const svg = `<svg width="${size.w}" height="${size.h}" viewBox="0 0 1 1" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0" aria-hidden="true">
+        <rect x="-1" y="-1" width="3" height="3" fill="var(--track)"/>
+        <rect x=".5" y=".56" width=".2" height=".2" rx=".03" fill="#dcdbd5"/><rect x=".22" y=".26" width=".2" height=".22" rx=".03" fill="#dcdbd5"/>
+        <g stroke="var(--tile)" stroke-width=".035" stroke-linecap="round">${streets.map(([a, b, c, d]) => `<line x1="${a}" y1="${b}" x2="${c}" y2="${d}"/>`).join("")}</g>
+        <polyline class="draw" data-when="${when}" pathLength="1" points="${route.join(" ")}" fill="none" stroke="var(--accent)" stroke-width="${4 / s}" stroke-linecap="round" stroke-linejoin="round"/>
+        <g class="head-dot" data-when="${when}"><circle cx="${ex}" cy="${ey}" r="${7 / s}" fill="var(--night)"/><circle cx="${ex}" cy="${ey}" r="${3 / s}" fill="var(--tile)"/></g></svg>`;
+      const you = `<span class="map-you" style="left:${ox + .18 * s}px;top:${oy + .8 * s}px"><i></i></span>`;
+      const chip = f.wide || f.tall || f.open
+        ? `<div class="map-chip"><p class="${f.open ? "t-title" : "t-label"}" style="margin:0;font-weight:600">Home</p><span class="sub">${f.open ? "12 min · 3.4 km · light traffic" : "12 min"}</span></div>` : "";
+      return `${svg}${you}${chip}${f.open ? `<span class="eta">ETA 08:42</span>` : ""}`;
+    },
+    photo(f) {
+      const ridge = (base, height, phase) => {
+        let d = "";
+        for (let i = 0; i <= 24; i++) {
+          const x = i / 24, y = base - height * (0.5 + 0.5 * Math.sin(x * Math.PI * 2.2 + phase)) * (0.6 + 0.4 * Math.sin(x * 7 + phase));
+          d += `${i ? "L" : "M"}${x.toFixed(3)},${y.toFixed(3)} `;
+        }
+        return d + "L1,1 L0,1 Z";
+      };
+      const art = `<svg class="photo-art" viewBox="0 0 1 1" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2=".7" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7d3b5"/><stop offset=".5" stop-color="#f29a6b"/><stop offset="1" stop-color="#b65c7a"/></linearGradient></defs>
+        <rect width="1" height="1" fill="url(#sky)"/><circle cx=".64" cy=".5" r=".1" fill="#fff1dc"/>
+        <path d="${ridge(.52, .06, 1.3)}" fill="#9a5a7c"/><path d="${ridge(.64, .08, 2.1)}" fill="#5e3a63"/><path d="${ridge(.78, .07, .7)}" fill="#2b2036"/></svg>`;
+      let caption = "";
+      if (f.open) caption = `<div class="scrim">${label("Memories")}<p class="t-title" style="font-size:22px;line-height:26px">Sintra at sunrise</p><span class="sub">24 photos from this week</span><div class="dots"><i></i><i></i><i></i><i></i><i></i></div></div>`;
+      else if (f.large || f.tall) caption = `<div class="scrim"><p class="t-title">Sintra</p><span class="sub">06:12 · Memories</span></div>`;
+      else if (f.wide) caption = `<div class="scrim"><span class="t-label">Sintra · 06:12</span></div>`;
+      return art + caption;
+    },
+    sleep(f, size) {
+      const c = inner(size), deep = i => SLEEP[i] >= 3;
+      const v = hero => value(`7<small>h </small>42`, "m", hero);
+      const top = label(f.open ? "Sleep · Last night" : "Sleep");
+      if (f.open) return `${top}${v(true)}${grow}${bars(SLEEP, c.w, 80, "open", deep)}<span class="gap-s"></span><div class="row"><span class="label">23:10</span>${grow}<span class="label">06:52</span></div>
+        <span class="gap-s"></span><span class="t-label secondary">Deep 1h 38m · REM 1h 52m · Awake 12m</span>`;
+      if (f.large || f.tall) return `${top}${f.large ? value(`7<small>h </small>42`, "m").replace('class="value"', 'class="value" style="font-size:44px;line-height:44px"') : v(false)}${grow}${bars(SLEEP, c.w, 48, "live", deep)}`;
+      if (f.wide) return `${top}<div class="row row--end grow">${v(false)}${bars(SLEEP, c.w - 90, c.h - 18, "live", deep)}</div>`;
+      return `${top}${grow}${value("7", "h")}`;
+    },
+  };
+
+  // ---------- Focus timer and music: the two tiles that tick ----------
+
+  const clock = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  const SONG = 232, FOCUS = 25 * 60, started = performance.now();
+  const music = {
+    playing: true, base: 84, since: 0,
+    position() { return this.playing ? (this.base + (performance.now() - this.since) / 1000) % SONG : this.base; },
+    toggle() { if (this.playing) this.base = this.position(); else this.since = performance.now(); this.playing = !this.playing; },
+    restart() { this.base = 0; this.since = performance.now(); },
+  };
+  music.since = performance.now();
+  function bindMusic(t, content) {
+    if (t.id !== "music") return;
+    content.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", e => {
+      e.stopPropagation();
+      if (b.dataset.act === "toggle") music.toggle(); else music.restart();
+      render(t, t.fit, sizeOf(...spanOf(t)));
+      t.tile.querySelectorAll(".tile__content.leaving").forEach(o => o.remove());
+      t.tile.querySelector(".tile__content").classList.remove("entering");
+    }));
+  }
+  const spanOf = t => [+t.cell.style.gridColumn.split("span ")[1], +t.cell.style.gridRow.split("span ")[1]];
+  function tick() {
+    const left = reduced ? 1452 : ((1452 - Math.floor((performance.now() - started) / 1000)) % FOCUS + FOCUS) % FOCUS;
+    document.querySelectorAll("[data-focus]").forEach(el => (el.textContent = clock(left)));
+    document.querySelectorAll("[data-focus-min]").forEach(el => (el.textContent = Math.floor(left / 60)));
+    document.querySelectorAll("[data-focus]").forEach(el => el.closest(".tile__content").querySelector(".meter")?.style.setProperty("--value", 1 - left / FOCUS));
+    document.querySelectorAll("[data-song]").forEach(el => el.style.setProperty("--value", music.position() / SONG));
+    document.querySelectorAll("[data-song-time]").forEach(el => (el.textContent = clock(music.position())));
+  }
+  if (!reduced) setInterval(tick, 250);
+
+  // ---------- Go ----------
+
+  drawDensity();
+  layout();
+  tick();
+  wave(null); // First appearance: from the top-left, in reading order.
+  </script>
+</body>
+</html>

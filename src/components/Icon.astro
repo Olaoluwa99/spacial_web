@@ -1,0 +1,6 @@
+---
+interface Props { name?: 'arrow' | 'download' | 'play' | 'plus' | 'close' | 'check' | 'code' | 'chevron' | 'copy'; size?: number; }
+const { name = 'arrow', size = 20 } = Astro.props;
+const paths = { arrow: 'M5 12h14M12 5l7 7-7 7', download: 'M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5', play: 'm9 5 11 7-11 7V5Z', plus: 'M12 5v14M5 12h14', close: 'm6 6 12 12M18 6 6 18', check: 'm5 12 4 4L19 6', code: 'm8 5-6 7 6 7m8-14 6 7-6 7m-3-17-2 20', chevron: 'm9 5 7 7-7 7', copy: 'M8 8h12v12H8V8ZM4 16H2V2h14v2' };
+---
+<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={paths[name]} /></svg>

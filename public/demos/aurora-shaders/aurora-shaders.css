@@ -1,0 +1,332 @@
+/*
+ * Special · Aurora shaders for the web.
+ * Values mirror tokens.json and motion.json. Structure:
+ *
+ *   <body class="shader-page">
+ *     <div class="shader-backdrop">           aurora canvas (WebGL) over a CSS fallback,
+ *       <div class="aurora-fallback"><i></i><i></i><i></i><i></i></div>
+ *       <canvas></canvas>
+ *       <div class="veil"></div><div class="grain"></div>
+ *     </div>
+ *     <section class="panel lit">…</section>  obsidian panels; .lit adds shimmer + glow
+ *   </body>
+ *
+ * Light comes from shaders; surfaces don't glow on their own. The canvas runs
+ * shader.js. When WebGL works, shader.js adds .webgl to <html> and the CSS fallback
+ * is hidden; when it doesn't, the .aurora-fallback blobs show: same palette, same motion.
+ */
+
+@property --hue-angle { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+@property --comet-angle { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+@property --wx { syntax: "<number>"; inherits: true; initial-value: 1; }
+@property --wy { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+:root {
+  --void: #06050f;
+  --deep: #0d0b1e;
+  --mint: #2df5c4;
+  --azure: #3c6eff;
+  --violet: #8b5cf6;
+  --rose: #f0459c;
+
+  --content-primary: #f6f4ff;
+  --content-secondary: rgb(246 244 255 / .74);
+  --content-tertiary: rgb(246 244 255 / .62);
+  --panel: rgb(13 11 30 / .82);
+  --edge: rgb(255 255 255 / .10);
+
+  --veil: .75;
+  --glow: .6;
+  --grain: .07;
+  --aberration: 1.5px;
+
+  --radius-panel: 24px;
+  --radius-card: 20px;
+  --radius-inner: 14px;
+  --radius-pill: 999px;
+
+  --space-xs: 4px; --space-s: 8px; --space-m: 12px; --space-l: 16px;
+  --space-xl: 20px; --space-xxl: 24px; --space-huge: 32px;
+  --gutter: 20px;
+  --panel-padding: 20px;
+
+  --font-sans: system-ui, -apple-system, "SF Pro Text", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+  /* Springs approximated as curves (motion.json → approximation). */
+  --spring-emerge: 460ms cubic-bezier(.22, 1, .36, 1);
+  --spring-tilt: 640ms cubic-bezier(.34, 1.56, .64, 1);
+  --spring-press: 210ms cubic-bezier(.3, 1.4, .6, 1);
+  --stagger: 80ms;
+  --shimmer-turn: 6s;
+}
+
+/* Elements marked hidden stay hidden, even when a component class sets display. */
+[hidden] { display: none !important; }
+
+/* ---------- Page and backdrop ---------- */
+
+.shader-page {
+  margin: 0;
+  min-height: 100dvh;
+  color: var(--content-primary);
+  background: var(--void);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+.shader-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--void);
+  pointer-events: none;
+}
+.shader-backdrop canvas,
+.aurora-fallback { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* No-WebGL fallback: four soft blobs on slow orbits, screen-blended over the void. */
+.aurora-fallback i {
+  position: absolute;
+  width: 100vmax; height: 100vmax;
+  left: calc(50% - 50vmax); top: calc(50% - 50vmax);
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  opacity: .5;
+  translate: var(--x) var(--y);
+  animation: orbit 34s ease-in-out infinite alternate;
+}
+.aurora-fallback i:nth-child(1) { --x: -28vw; --y: -24vh; background: radial-gradient(closest-side, rgb(45 245 196 / .7), rgb(45 245 196 / .22) 50%, transparent); }
+.aurora-fallback i:nth-child(2) { --x: 32vw; --y: 2vh; width: 90vmax; height: 90vmax; left: calc(50% - 45vmax); top: calc(50% - 45vmax); animation-duration: 27s; animation-delay: -9s; background: radial-gradient(closest-side, rgb(60 110 255 / .7), rgb(60 110 255 / .22) 50%, transparent); }
+.aurora-fallback i:nth-child(3) { --x: -14vw; --y: 22vh; width: 84vmax; height: 84vmax; left: calc(50% - 42vmax); top: calc(50% - 42vmax); animation-duration: 41s; animation-delay: -20s; background: radial-gradient(closest-side, rgb(139 92 246 / .75), rgb(139 92 246 / .25) 50%, transparent); }
+.aurora-fallback i:nth-child(4) { --x: 26vw; --y: 30vh; width: 64vmax; height: 64vmax; left: calc(50% - 32vmax); top: calc(50% - 32vmax); animation-duration: 23s; animation-delay: -4s; background: radial-gradient(closest-side, rgb(240 69 156 / .7), rgb(240 69 156 / .2) 50%, transparent); }
+@keyframes orbit {
+  from { translate: var(--x) var(--y); }
+  to { translate: calc(var(--x) * -.6) calc(var(--y) * -.4); }
+}
+.webgl .aurora-fallback { display: none; }
+
+/* The veil: void behind text on the backdrop. Full over the top 30% and bottom 10%. */
+.veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    rgb(6 5 15 / var(--veil)) 0%, rgb(6 5 15 / var(--veil)) 30%,
+    rgb(6 5 15 / 0) 52%, rgb(6 5 15 / 0) 76%,
+    rgb(6 5 15 / var(--veil)) 90%, rgb(6 5 15 / var(--veil)) 100%);
+}
+
+/* Film grain: a tile (shader.js grainTexture) that jumps to a new offset 24 times a second. */
+.grain {
+  position: absolute; inset: -128px;
+  background-image: var(--grain-texture, none);
+  background-size: 128px 128px;
+  opacity: calc(var(--grain) * 2);
+  animation: grain 1s steps(1) infinite;
+  pointer-events: none;
+}
+@keyframes grain {
+  0% { translate: 0 0; } 12% { translate: -37px 91px; } 25% { translate: 74px -54px; }
+  37% { translate: -111px -17px; } 50% { translate: 20px 60px; } 62% { translate: -80px 30px; }
+  75% { translate: 55px -100px; } 87% { translate: -12px -70px; }
+}
+
+/* ---------- Surfaces ---------- */
+
+.panel {
+  position: relative;
+  box-sizing: border-box;
+  border-radius: var(--radius-panel);
+  background: var(--panel);
+  /* Hairline inner edge, brighter at the top. */
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), inset 0 0 0 1px var(--edge);
+}
+
+/* Lit: the one thing that matters most. A shimmer border and a breathing glow. */
+.lit, .shimmer, .glow { position: relative; isolation: isolate; }
+.lit::before, .shimmer::before {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background:
+    conic-gradient(from var(--comet-angle), transparent 0 80%, rgb(255 255 255 / .85) 99.5%, transparent),
+    conic-gradient(from var(--hue-angle), var(--mint), var(--azure), var(--violet), var(--rose), var(--mint));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: shimmer-hue calc(var(--shimmer-turn) * 2) linear infinite, shimmer-comet var(--shimmer-turn) linear infinite;
+  pointer-events: none;
+}
+.lit::after, .glow::after {
+  content: "";
+  position: absolute; inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(var(--hue-angle), var(--mint), var(--azure), var(--rose));
+  filter: blur(22px);
+  opacity: calc(var(--glow) * .7);
+  animation: shimmer-hue var(--shimmer-turn) linear infinite;
+  pointer-events: none;
+  transition: opacity var(--spring-press);
+}
+@keyframes shimmer-hue { to { --hue-angle: 360deg; } }
+@keyframes shimmer-comet { to { --comet-angle: 360deg; } }
+
+/* ---------- Components ---------- */
+
+.button, .chip, .plan { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; }
+
+.button {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-s);
+  min-height: 48px; padding: 0 var(--space-xxl);
+  border: 0; border-radius: var(--radius-pill);
+  background: var(--panel);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), inset 0 0 0 1px var(--edge);
+  color: var(--content-primary);
+  font: 600 14px/18px var(--font-sans); letter-spacing: .3px;
+  cursor: pointer;
+  transition: scale var(--spring-press);
+}
+.button svg { width: 20px; height: 20px; fill: currentColor; }
+.button:active, .chip:active, .plan:active { scale: .97; }
+:is(.button, .chip, .plan, .holo):focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
+
+/* The one primary action: deep fill, aurora light pooled inside, shimmer and glow. */
+.button--prominent {
+  position: relative; isolation: isolate;
+  min-height: 56px;
+  background: radial-gradient(60% 120% at 50% 110%, rgb(60 110 255 / .28), transparent) , var(--deep);
+  box-shadow: none;
+}
+.button--prominent::after { opacity: calc(var(--glow) * .8); }
+.button--prominent:active::after { opacity: calc(var(--glow) * 1.4); }
+
+.icon-button { width: 48px; padding: 0; }
+
+.chip {
+  position: relative;
+  min-height: 40px; padding: 10px var(--space-l);
+  border: 0; border-radius: var(--radius-pill);
+  background: var(--panel);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), inset 0 0 0 1px var(--edge);
+  color: var(--content-secondary);
+  font: 600 14px/18px var(--font-sans); letter-spacing: .3px;
+  cursor: pointer;
+  transition: color var(--spring-emerge), scale var(--spring-press);
+}
+.chip[aria-pressed="true"] { color: var(--content-primary); }
+
+.tag {
+  position: relative;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--panel);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), inset 0 0 0 1px var(--edge);
+  font: 600 11px/14px var(--font-sans); letter-spacing: 2px; text-transform: uppercase;
+  color: var(--content-primary);
+  white-space: nowrap;
+}
+
+/* Display text lit from within: violet glow plus a mint/rose chromatic split that wobbles. */
+.glow-text {
+  text-shadow:
+    calc(var(--aberration) * -1 * var(--wx)) calc(var(--aberration) * -.35 * var(--wy)) 0 rgb(45 245 196 / .6),
+    calc(var(--aberration) * var(--wx)) calc(var(--aberration) * .35 * var(--wy)) 0 rgb(240 69 156 / .6),
+    0 0 18px rgb(139 92 246 / var(--glow));
+  animation: aberration 7s linear infinite;
+}
+@keyframes aberration {
+  0% { --wx: 1; --wy: 0; } 25% { --wx: 0; --wy: 1; } 50% { --wx: -1; --wy: 0; }
+  75% { --wx: 0; --wy: -1; } 100% { --wx: 1; --wy: 0; }
+}
+
+/* An orb: a small glowing well in one aurora hue, for icons and bullets. */
+.orb {
+  --hue: var(--azure);
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--deep);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hue) 70%, transparent), 0 0 16px color-mix(in srgb, var(--hue) 45%, transparent);
+}
+.orb svg { width: 18px; height: 18px; fill: var(--content-primary); }
+
+.divider { height: 1px; background: var(--edge); }
+
+/* ---------- The holo card ---------- */
+
+.holo {
+  --tx: 0; --ty: 0;           /* tilt, -1..1, driven from JS on the tilt spring */
+  position: relative;
+  aspect-ratio: 1.586;
+  border-radius: var(--radius-card);
+  transform: perspective(700px) rotateY(calc(var(--tx) * 14deg)) rotateX(calc(var(--ty) * -14deg));
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  isolation: isolate;
+}
+.holo:active { cursor: grabbing; }
+.holo::after { /* glow halo */
+  content: ""; position: absolute; inset: 6px; z-index: -1; border-radius: inherit;
+  background: linear-gradient(120deg, var(--mint), var(--azure), var(--rose));
+  filter: blur(32px); opacity: calc(var(--glow) * .75);
+}
+.holo__face {
+  position: absolute; inset: 0; overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--deep), var(--void), #15102e);
+}
+.holo__face canvas, .holo__foil { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: screen; }
+/* Fallback foil: mirrored bands that slide with tilt, plus a hotspot opposite it. */
+.holo__foil {
+  background:
+    radial-gradient(55% 80% at calc(50% - var(--tx) * 50%) calc(50% - var(--ty) * 50%), rgb(255 255 255 / .5), transparent),
+    repeating-linear-gradient(115deg, var(--mint), var(--azure) 12%, var(--violet) 24%, var(--rose) 36%, var(--mint) 48%);
+  background-size: 100% 100%, 220% 220%;
+  background-position: 0 0, calc(50% + var(--tx) * 35%) calc(50% + var(--ty) * 20%);
+  opacity: .42;
+}
+.webgl .holo__foil { display: none; }
+.holo__print { /* dark print bands under the text (top and bottom), and the hairline edge */
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(rgb(6 5 15 / .7), rgb(6 5 15 / .66) 22%, transparent 38% 56%, rgb(6 5 15 / .7) 70%, rgb(6 5 15 / .75));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), inset 0 0 0 1px var(--edge);
+}
+.holo__content {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: var(--space-xl);
+}
+.holo__ring { /* ripple on the card: a ring of light (the backdrop ripple is in the shader) */
+  position: absolute; border-radius: 50%; pointer-events: none;
+  border: 1.5px solid rgb(45 245 196 / .4);
+  box-shadow: 0 0 28px rgb(45 245 196 / .3), inset 0 0 28px rgb(45 245 196 / .22);
+  translate: -50% -50%;
+  animation: ring 900ms cubic-bezier(0, 0, .2, 1) forwards;
+}
+@keyframes ring { from { width: 0; height: 0; opacity: 1; } to { width: 300px; height: 300px; opacity: 0; } }
+
+/* ---------- Type ---------- */
+
+.t-display { margin: 0; font: 300 44px/48px var(--font-sans); letter-spacing: -1.2px; color: var(--content-primary); }
+.t-title   { margin: 0; font: 500 22px/28px var(--font-sans); letter-spacing: -.3px; color: var(--content-primary); }
+.t-body    { margin: 0; font: 400 15px/22px var(--font-sans); color: var(--content-secondary); }
+.t-label   { font: 600 14px/18px var(--font-sans); letter-spacing: .3px; color: var(--content-primary); }
+.t-caption { font: 600 11px/14px var(--font-sans); letter-spacing: 2px; text-transform: uppercase; color: var(--content-tertiary); }
+.t-numeric { font: 200 40px/44px var(--font-sans); letter-spacing: -1.5px; color: var(--content-primary); }
+.t-mono    { font: 500 13px/16px var(--font-mono); letter-spacing: 2.2px; color: var(--content-primary); }
+
+/* ---------- Entrance: condense out of the light ---------- */
+
+.emerge { animation: emerge var(--spring-emerge) backwards; animation-delay: calc(var(--order, 0) * var(--stagger)); }
+@keyframes emerge { from { opacity: 0; translate: 0 20px; filter: blur(16px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .emerge { animation: none; }
+  .aurora-fallback i, .grain, .lit::before, .lit::after, .shimmer::before, .glow::after, .glow-text { animation: none; }
+  .holo__ring { display: none; }
+}

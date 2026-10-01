@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Glassmorphism · Reference screen</title>
+  <link rel="stylesheet" href="glass.css">
+  <style>
+    /* Layout for this screen only; everything visual comes from glass.css. */
+    main { max-width: 440px; margin: 0 auto; padding: calc(24px + env(safe-area-inset-top)) var(--gutter) 140px; display: grid; gap: var(--space-m); }
+    header { display: flex; align-items: center; margin-bottom: var(--space-m); }
+    header > div { flex: 1; display: grid; gap: var(--space-xs); }
+    .chips { display: flex; gap: var(--space-s); overflow-x: auto; margin: 0 calc(var(--gutter) * -1) var(--space-xs); padding: 0 var(--gutter); scrollbar-width: none; }
+    .row { display: flex; align-items: center; gap: var(--space-l); }
+    .grow { flex: 1; min-width: 0; }
+    @property --spin { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+    .art { width: 64px; height: 64px; flex-shrink: 0; border-radius: var(--radius-inner); background: radial-gradient(circle, #fff 3px, transparent 3.5px), repeating-radial-gradient(circle, transparent 0 8px, rgb(255 255 255 / .14) 8px 9px), conic-gradient(from var(--spin), var(--glass-violet), var(--glass-pink), var(--glass-amber), var(--glass-sky), var(--glass-violet)); animation: spin 20s linear infinite; }
+    .times { display: flex; justify-content: space-between; margin: var(--space-s) 0 var(--space-m); }
+    .controls { display: flex; justify-content: center; align-items: center; gap: var(--space-xl); }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m); }
+    .pair .glass-card { display: flex; flex-direction: column; gap: var(--space-s); }
+    .ring { width: 76px; height: 76px; display: grid; place-items: center; border-radius: 50%;
+      background: radial-gradient(closest-side, transparent 84%, transparent 0),
+                  conic-gradient(#fff calc(var(--p) * 1turn), rgb(255 255 255 / .12) 0);
+      -webkit-mask: radial-gradient(closest-side, transparent 83%, #000 84%); mask: radial-gradient(closest-side, transparent 83%, #000 84%); }
+    .ring-wrap { position: relative; width: 76px; height: 76px; margin: var(--space-xs) 0; }
+    .ring-wrap .t-label { position: absolute; inset: 0; display: grid; place-items: center; }
+    .track { display: flex; align-items: center; gap: var(--space-m); padding: var(--space-s) 0; }
+    .track + .track { border-top: 1px solid rgb(255 255 255 / .08); }
+    .track i { width: 44px; height: 44px; border-radius: var(--radius-inner); }
+    .link { color: var(--glass-accent); }
+    svg { fill: currentColor; }
+    @keyframes spin { to { --spin: 1turn; } }
+    @media (prefers-reduced-motion: reduce) { .art { animation: none; } }
+  </style>
+</head>
+<body class="glass-scene">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <main>
+    <header>
+      <div class="glass-enter" style="--order:0">
+        <span class="t-caption" id="date">Tuesday · 29 September</span>
+        <h1 class="t-display">Good evening</h1>
+      </div>
+      <button class="glass glass-icon-button glass-enter" style="--order:0" aria-label="Notifications">
+        <svg viewBox="0 0 24 24"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2Zm6-6V11c0-3.1-1.6-5.6-4.5-6.3V4a1.5 1.5 0 0 0-3 0v.7C7.6 5.4 6 7.9 6 11v5l-2 2v1h16v-1l-2-2Z"/></svg>
+      </button>
+    </header>
+
+    <div class="chips" role="group" aria-label="Mood">
+      <button class="glass glass-chip glass-enter" style="--order:1" aria-pressed="true">For you</button>
+      <button class="glass glass-chip glass-enter" style="--order:1" aria-pressed="false">Focus</button>
+      <button class="glass glass-chip glass-enter" style="--order:1" aria-pressed="false">Sleep</button>
+      <button class="glass glass-chip glass-enter" style="--order:1" aria-pressed="false">Energy</button>
+      <button class="glass glass-chip glass-enter" style="--order:1" aria-pressed="false">Chill</button>
+    </div>
+
+    <article class="glass glass-card glass-enter" style="--order:2">
+      <div class="row">
+        <div class="art" aria-hidden="true"></div>
+        <div class="grow">
+          <div class="t-caption">Now playing</div>
+          <div class="t-title">Slow Tide</div>
+          <div class="t-body">Lumen Ensemble</div>
+        </div>
+        <button class="glass-fill glass-icon-button" style="--size:40px; color:#ff4f9a" aria-label="Like" aria-pressed="true">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="m12 21-1.4-1.3C5.4 15 2 12 2 8.3 2 5.3 4.4 3 7.4 3c1.7 0 3.4.8 4.6 2.1C13.2 3.8 14.9 3 16.6 3 19.6 3 22 5.3 22 8.3c0 3.7-3.4 6.7-8.6 11.4Z"/></svg>
+        </button>
+      </div>
+      <div style="height:var(--space-xl)"></div>
+      <div class="glass-progress" id="progress" style="--progress:.36" role="progressbar" aria-label="Playback"></div>
+      <div class="times"><span class="t-caption" id="elapsed">1:24</span><span class="t-caption">3:52</span></div>
+      <div class="controls">
+        <button class="glass-fill glass-icon-button" aria-label="Previous"><svg viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M6 5h2v14H6zm3.5 7L19 5v14z"/></svg></button>
+        <button class="glass-fill glass-icon-button" style="--size:64px" aria-label="Pause" id="play"><svg viewBox="0 0 24 24" style="width:26px;height:26px"><path id="play-icon" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button>
+        <button class="glass-fill glass-icon-button" aria-label="Next"><svg viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M16 5h2v14h-2zM5 5l9.5 7L5 19z"/></svg></button>
+      </div>
+    </article>
+
+    <div class="pair">
+      <article class="glass glass-card glass-enter" style="--order:3">
+        <span class="t-caption">Lagos</span>
+        <span class="t-numeric">24°</span>
+        <span class="t-body" style="margin-top:auto">☾ Clear night</span>
+      </article>
+      <article class="glass glass-card glass-enter" style="--order:4">
+        <span class="t-caption">Focus</span>
+        <div class="ring-wrap"><div class="ring" style="--p:.62"></div><span class="t-label">18:40</span></div>
+        <span class="t-body">Deep work</span>
+      </article>
+    </div>
+
+    <article class="glass glass-card glass-enter" style="--order:5">
+      <div class="row" style="margin-bottom:var(--space-m)"><span class="t-title grow">Up next</span><a class="t-label link">See all</a></div>
+      <div class="track"><i style="background:linear-gradient(135deg,var(--glass-sky),var(--glass-violet))"></i><div class="grow"><div class="t-label">Glass Rooms</div><div class="t-caption" style="text-transform:none">Nova Lane</div></div><span class="t-caption">3:18</span></div>
+      <div class="track"><i style="background:linear-gradient(135deg,var(--glass-amber),var(--glass-pink))"></i><div class="grow"><div class="t-label">Afterglow</div><div class="t-caption" style="text-transform:none">Harbor &amp; Kite</div></div><span class="t-caption">4:02</span></div>
+      <div class="track"><i style="background:linear-gradient(135deg,var(--glass-violet),var(--glass-pink))"></i><div class="grow"><div class="t-label">Low Orbit</div><div class="t-caption" style="text-transform:none">Mira Sol</div></div><span class="t-caption">2:47</span></div>
+    </article>
+  </main>
+
+  <nav class="glass glass-nav glass-enter" style="--order:6; --count:4; --index:0">
+    <span class="glass-fill glass-nav__lens" aria-hidden="true"></span>
+    <button class="glass-nav__item" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 3 3 10v11h6v-6h6v6h6V10z"/></svg><span>Home</span></button>
+    <button class="glass-nav__item"><svg viewBox="0 0 24 24"><path d="M10 4a6 6 0 1 0 3.5 10.9l5.3 5.3 1.4-1.4-5.3-5.3A6 6 0 0 0 10 4Zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"/></svg><span>Search</span></button>
+    <button class="glass-nav__item"><svg viewBox="0 0 24 24"><path d="m12 21-1.4-1.3C5.4 15 2 12 2 8.3 2 5.3 4.4 3 7.4 3c1.7 0 3.4.8 4.6 2.1C13.2 3.8 14.9 3 16.6 3 19.6 3 22 5.3 22 8.3c0 3.7-3.4 6.7-8.6 11.4Z"/></svg><span>Library</span></button>
+    <button class="glass-nav__item"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg><span>You</span></button>
+  </nav>
+
+  <script>
+    document.getElementById("date").textContent = new Date()
+      .toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }).replace(",", " ·");
+
+    document.querySelectorAll(".glass-chip").forEach((chip, _, all) =>
+      chip.addEventListener("click", () => all.forEach(c => c.setAttribute("aria-pressed", c === chip))));
+
+    const nav = document.querySelector(".glass-nav");
+    nav.querySelectorAll(".glass-nav__item").forEach((item, i, all) => item.addEventListener("click", () => {
+      nav.style.setProperty("--index", i);
+      all.forEach(a => a === item ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+    }));
+
+    const total = 232, progress = document.getElementById("progress"), label = document.getElementById("elapsed");
+    const play = document.getElementById("play"), icon = document.getElementById("play-icon");
+    let elapsed = 84, playing = true, last = performance.now();
+    play.addEventListener("click", () => {
+      playing = !playing;
+      play.setAttribute("aria-label", playing ? "Pause" : "Play");
+      icon.setAttribute("d", playing ? "M6 4h4v16H6zm8 0h4v16h-4z" : "M7 4v16l13-8z");
+    });
+    requestAnimationFrame(function tick(now) {
+      if (playing) elapsed = (elapsed + (now - last) / 1000) % total;
+      last = now;
+      progress.style.setProperty("--progress", elapsed / total);
+      label.textContent = `${Math.floor(elapsed / 60)}:${String(Math.floor(elapsed % 60)).padStart(2, "0")}`;
+      requestAnimationFrame(tick);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+/*
+ * Special · Neo-brutalism for the web.
+ * Values mirror tokens.json and motion.json. Structure:
+ *
+ *   <body class="brutal-page">
+ *     <article class="block block--yellow card">…<span class="block block--pink tag">…</span></article>
+ *   </body>
+ *
+ * Every box is a .block: flat fill, 3px ink outline, hard ink shadow. Nested blocks
+ * cast half the shadow automatically. Press sinks the block into its shadow.
+ */
+
+:root {
+  --paper: #fff6e5;
+  --ink: #111111;
+  --white: #ffffff;
+  --yellow: #ffd23f;
+  --pink: #ff7aa2;
+  --blue: #5b8cff;
+  --green: #3ddc97;
+  --lilac: #b69cff;
+  --orange: #ff8a3d;
+  --redline: #ff3b30;
+
+  --border: 3px;
+  --shadow: 6px;
+  --radius: 12px;
+  --tilt: 3deg;
+
+  --space-xs: 4px; --space-s: 8px; --space-m: 12px; --space-l: 16px;
+  --space-xl: 20px; --space-xxl: 24px; --space-huge: 32px;
+  --gutter: 20px;
+
+  --font-sans: system-ui, -apple-system, "SF Pro Text", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+  /* Springs approximated as curves (motion.json → approximation). */
+  --spring-drop: 380ms cubic-bezier(.34, 1.8, .6, 1);
+  --spring-press: 140ms cubic-bezier(.3, 1.6, .6, 1);
+  --spring-pop: 300ms cubic-bezier(.3, 2, .5, 1);
+  --stagger: 70ms;
+}
+
+/* Elements marked hidden stay hidden, even when a component class sets display. */
+[hidden] { display: none !important; }
+
+/* ---------- Page ---------- */
+
+.brutal-page {
+  margin: 0;
+  min-height: 100dvh;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  background-color: var(--paper);
+  background-image: radial-gradient(rgb(17 17 17 / .12) 1.2px, transparent 1.5px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip; /* tilted tape bands overhang the edges */
+}
+
+/* ---------- The block ---------- */
+
+.block {
+  --fill: var(--white);
+  --offset: var(--shadow);
+  position: relative;
+  box-sizing: border-box;
+  color: var(--ink);
+  background: var(--fill);
+  border: var(--border) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--offset) var(--offset) 0 0 var(--ink);
+  transition:
+    translate var(--spring-press),
+    box-shadow var(--spring-press),
+    background-color var(--spring-pop);
+}
+
+/* Depth halves when nested. */
+.block .block { --offset: calc(var(--shadow) / 2); }
+
+.block--white  { --fill: var(--white); }
+.block--yellow { --fill: var(--yellow); }
+.block--pink   { --fill: var(--pink); }
+.block--blue   { --fill: var(--blue); }
+.block--green  { --fill: var(--green); }
+.block--lilac  { --fill: var(--lilac); }
+.block--orange { --fill: var(--orange); }
+
+/* Flat: no shadow, nudged to where a pressed block would sit. */
+.block--flat { box-shadow: 0 0 0 0 var(--ink); translate: 3px 3px; }
+
+/* Press: sink into the shadow. No scale, no colour change.
+   :where keeps these resets weaker than the component classes below. */
+:where(button, a, [role="button"], [role="checkbox"], [role="tab"]).block {
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+:is(button, a, [role="button"], [role="checkbox"], [role="tab"]).block:active {
+  translate: var(--offset) var(--offset);
+  box-shadow: 0 0 0 0 var(--ink);
+}
+.block:focus-visible { outline: 3px solid var(--blue); outline-offset: calc(var(--offset) + 3px); }
+
+/* ---------- Components ---------- */
+
+.card { padding: 18px; }
+
+.button {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-s);
+  padding: 14px 20px;
+  font-size: 14px; line-height: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+}
+.button svg { width: 20px; height: 20px; fill: currentColor; }
+
+.icon-button {
+  --size: 48px;
+  display: inline-grid; place-items: center;
+  width: var(--size); height: var(--size); padding: 0;
+}
+.icon-button svg { width: 22px; height: 22px; fill: currentColor; }
+
+.tag {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font: 700 11px/14px var(--font-mono); letter-spacing: 1px; text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chip {
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 14px; line-height: 18px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
+  transition: translate var(--spring-press), box-shadow var(--spring-pop), background-color var(--spring-pop);
+}
+.chip[aria-pressed="false"] { --offset: calc(var(--shadow) / 2); }
+.chip[aria-pressed="true"]  { --fill: var(--yellow); }
+
+.checkbox {
+  width: 28px; height: 28px; padding: 0;
+  border-radius: 8px;
+  display: inline-grid; place-items: center; flex-shrink: 0;
+}
+.checkbox svg { width: 18px; height: 18px; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: square; }
+.checkbox svg path { stroke-dasharray: 26; stroke-dashoffset: 26; transition: stroke-dashoffset var(--spring-pop); }
+.checkbox[aria-checked="true"] { --fill: var(--green); animation: brutal-pop var(--spring-pop); }
+.checkbox[aria-checked="true"] svg path { stroke-dashoffset: 0; }
+@keyframes brutal-pop { 50% { scale: 1.18; } }
+
+/* Strike-through that draws itself left to right. Keep it inline so it spans the text only. */
+.strike {
+  background: linear-gradient(var(--ink), var(--ink)) no-repeat 0 55% / 0% 2.5px;
+  transition: background-size var(--spring-drop), opacity var(--spring-drop);
+}
+.strike[data-done="true"] { background-size: 100% 2.5px; opacity: .55; }
+
+.progress {
+  --progress: 0;
+  --bar: var(--yellow);
+  height: 20px; border-radius: 6px; overflow: hidden;
+}
+.progress::before {
+  content: "";
+  position: absolute; inset: 0 auto 0 0;
+  width: calc(var(--progress) * 100%);
+  background:
+    repeating-linear-gradient(-45deg, rgb(17 17 17 / .22) 0 2px, transparent 2px 10px),
+    var(--bar);
+  background-size: 14.14px 14.14px, auto;
+  border-right: var(--border) solid var(--ink);
+  transition: width var(--spring-drop);
+  animation: brutal-hatch 1.2s linear infinite;
+}
+@keyframes brutal-hatch { to { background-position: 14.14px 0, 0 0; } }
+
+/* Tape band: ink strip, yellow text, scrolling forever. Duplicate the text once. */
+.marquee {
+  display: flex; align-items: center; overflow: hidden;
+  height: 40px;
+  background: var(--ink); color: var(--yellow);
+  rotate: calc(var(--tilt) * -.5);
+  font-size: 14px; font-weight: 700; letter-spacing: 1px; white-space: nowrap;
+}
+.marquee__track { display: flex; flex-shrink: 0; animation: brutal-marquee var(--marquee-duration, 20s) linear infinite; }
+.marquee__track > span { padding-right: 3ch; }
+@keyframes brutal-marquee { to { translate: -50% 0; } }
+
+.sticker { position: relative; width: 92px; height: 92px; display: grid; place-items: center; rotate: calc(var(--tilt) * 2); }
+.sticker svg { position: absolute; inset: 0; animation: brutal-spin 12s linear infinite; overflow: visible; }
+.sticker span { position: relative; font: 900 12px/16px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; text-align: center; padding: 0 4px 4px 0; }
+@keyframes brutal-spin { to { rotate: 1turn; } }
+
+/* One word per screen. */
+.highlight { position: relative; z-index: 0; display: inline-block; }
+.highlight::before {
+  content: ""; position: absolute; z-index: -1;
+  inset: 18% -6px 4% -6px;
+  background: var(--yellow); border-radius: 4px;
+  rotate: -2deg;
+}
+
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: repeat(var(--count, 4), 1fr); gap: var(--space-s);
+  padding: 12px var(--gutter) calc(16px + env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: var(--border) solid var(--ink);
+}
+.tab {
+  height: 60px; padding: 0;
+  display: grid; place-items: center; align-content: center; gap: 2px;
+  font: 700 10px/14px var(--font-mono); letter-spacing: 1px; text-transform: uppercase;
+  transition: translate var(--spring-pop), box-shadow var(--spring-pop), background-color var(--spring-pop);
+}
+.tab svg { width: 22px; height: 22px; fill: currentColor; }
+.tab:not([aria-current]) { box-shadow: 0 0 0 0 var(--ink); translate: 3px 3px; }
+.tab[aria-current] { --fill: var(--yellow); }
+
+/* ---------- Type ---------- */
+
+.t-display { font-size: 44px; line-height: 44px; font-weight: 900; letter-spacing: -1.5px; margin: 0; }
+.t-title   { font-size: 22px; line-height: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; }
+.t-body    { font-size: 15px; line-height: 22px; font-weight: 500; margin: 0; }
+.t-label   { font-size: 14px; line-height: 18px; font-weight: 700; }
+.t-mono    { font: 700 12px/16px var(--font-mono); letter-spacing: 1px; text-transform: uppercase; }
+.t-numeric { font-size: 56px; line-height: 56px; font-weight: 900; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+
+/* ---------- Entrance: slapped onto the page ---------- */
+
+.drop {
+  --side: 1;
+  animation: brutal-drop var(--spring-drop) backwards;
+  animation-delay: calc(var(--order, 0) * var(--stagger));
+}
+.drop:nth-child(even) { --side: -1; }
+@keyframes brutal-drop {
+  from { translate: 0 -40px; rotate: calc(var(--side) * var(--tilt)); scale: 1.06; opacity: 0; }
+  25% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop { animation: none; }
+  .marquee__track, .sticker svg, .progress::before { animation-play-state: paused; }
+  .checkbox[aria-checked="true"] { animation: none; }
+}

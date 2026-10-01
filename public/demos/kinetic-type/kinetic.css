@@ -1,0 +1,240 @@
+/*
+ * Special · Kinetic type for the web.
+ * Values mirror tokens.json and motion.json. Structure:
+ *
+ *   <body class="kinetic-page">
+ *     <h1 class="k-display"><span class="k-line">…letters…</span></h1>   letters rise out of their line
+ *     <div class="k-enter" style="--order:2">…</div>                       blocks rise out of their own box
+ *   </body>
+ *
+ * The type is the interface: near-black page, huge tight type, one acid accent,
+ * monospace for meta. Nothing fades in. Letters are masked, in reading order.
+ * Kinetic.tsx has React components; example.html shows the vanilla version.
+ */
+
+:root {
+  --ink: #0b0b0c;
+  --raised: #161618;
+  --paper: #f3f1ea;
+  --muted: #8e8c85;
+  --line: #2e2e31;
+  --edge: #6b6b70;
+  --accent: #d7ff3a;
+
+  /* The entrance recipe (tokens.json → kinetic). */
+  --letter-stagger: 28ms;
+  --rise: 1;
+  --emphasis-scale: 1.08;
+
+  --hairline: 1px;
+  --space-xs: 4px; --space-s: 8px; --space-m: 12px; --space-l: 16px;
+  --space-xl: 20px; --space-xxl: 24px; --space-huge: 32px; --space-section: 48px;
+  --gutter: 20px;
+
+  --font-sans: "Helvetica Neue", "SF Pro Display", -apple-system, "Segoe UI Variable Display", "Segoe UI", Roboto, "Ubuntu Sans", Inter, "Noto Sans", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", "Ubuntu Sans Mono", Menlo, Consolas, monospace;
+
+  /* Springs approximated as curves (motion.json → approximation). */
+  --spring-rise: 340ms cubic-bezier(.55, 1.1, .2, 1);
+  --spring-roll: 290ms cubic-bezier(.4, .55, .2, 1);
+  --spring-emphasis: 260ms cubic-bezier(.55, 1.45, .5, 1);
+  --spring-press: 190ms cubic-bezier(.55, 1.2, .25, 1);
+  --rule-draw: 560ms cubic-bezier(.2, 0, 0, 1);
+  --block-stagger: 90ms;
+  --roll-stagger: 24ms;
+
+  /* Set by script from scroll position, 0 → 1 over 240px. */
+  --collapse: 0;
+}
+
+/* Elements marked hidden stay hidden, even when a component class sets display. */
+[hidden] { display: none !important; }
+
+/* ---------- Page ---------- */
+
+.kinetic-page {
+  margin: 0;
+  min-height: 100dvh;
+  color: var(--paper);
+  background: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  overflow-x: clip;
+}
+
+/* The grid: four columns inside the gutters, barely there. Put it on the column container. */
+.k-grid { position: relative; }
+.k-grid::before {
+  content: "";
+  position: absolute; inset: 0 var(--gutter);
+  background-image: linear-gradient(to right, rgb(46 46 49 / .45) var(--hairline), transparent var(--hairline));
+  background-size: 25% 100%;
+  border-right: var(--hairline) solid rgb(46 46 49 / .45);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ---------- Type ---------- */
+
+.k-display {
+  --size: min(84px, calc((min(100vw, 440px) - 2 * var(--gutter)) / 4.2));
+  margin: 0;
+  font-size: var(--size); line-height: calc(var(--size) * 76 / 84); font-weight: 900;
+  /* −3.5px at 84px, tightening by another 2px as the page scrolls. */
+  letter-spacing: calc(-0.0417em - var(--collapse) * 0.0238em);
+  text-transform: uppercase;
+}
+.k-headline { font-size: 44px; line-height: 46px; font-weight: 800; letter-spacing: -1.5px; margin: 0; }
+.k-title    { font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -.4px; margin: 0; }
+.k-body     { font-size: 16px; line-height: 24px; font-weight: 400; margin: 0; }
+.k-label    { font-size: 14px; line-height: 18px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+.k-meta     { font: 500 12px/16px var(--font-mono); letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+.k-numeric  { font-size: 72px; line-height: 72px; font-weight: 200; letter-spacing: -3px; font-variant-numeric: tabular-nums; }
+
+.k-accent  { color: var(--accent); }
+.k-paper   { color: var(--paper); }
+.k-outline { color: transparent; -webkit-text-stroke: 1.5px var(--paper); }
+
+/* ---------- Letters: the signature entrance ---------- */
+
+/* Each line is a mask. Letters are inline-blocks that rise one line height out of it. */
+.k-line { display: block; overflow: clip; white-space: nowrap; }
+.k-char {
+  display: inline-block;
+  animation: k-rise var(--spring-rise) backwards;
+  animation-delay: calc(var(--delay, 0ms) + var(--i, 0) * var(--letter-stagger));
+}
+@keyframes k-rise { from { translate: 0 calc(var(--rise) * 100%); } }
+
+/* Scroll reaction: alternate lines drift apart. */
+.k-display .k-line:nth-child(odd)  > .k-drift { translate: calc(var(--collapse) * 24px) 0; }
+.k-display .k-line:nth-child(even) > .k-drift { translate: calc(var(--collapse) * -24px) 0; }
+.k-drift { display: inline-block; }
+
+/* ---------- Blocks: rise out of their own box ---------- */
+
+.k-enter {
+  animation: k-block var(--spring-rise) backwards;
+  animation-delay: calc(var(--delay, 0ms) + var(--order, 0) * var(--block-stagger));
+}
+/* The clip moves against the translation, so the box itself is the mask. */
+@keyframes k-block {
+  from { translate: 0 calc(var(--rise) * 100%); clip-path: inset(0 0 calc(var(--rise) * 100%) 0); }
+  to   { translate: 0 0; clip-path: inset(0 0 0 0); }
+}
+
+/* Hairline rule that draws itself in from the left. */
+.k-rule {
+  height: var(--hairline); background: var(--line); transform-origin: left center;
+  animation: k-rule var(--rule-draw) backwards; animation-delay: var(--delay, 0ms);
+}
+@keyframes k-rule { from { scale: 0 1; } }
+
+/* ---------- Roll: a word on a wheel ---------- */
+
+.k-roll {
+  position: relative; display: inline-block; overflow: clip; white-space: nowrap;
+  vertical-align: bottom;
+  transition: width var(--spring-roll);
+}
+.k-roll__word { display: inline-block; }
+.k-roll__word--out { position: absolute; left: 0; top: 0; }
+.k-roll__char { display: inline-block; animation-duration: 290ms; animation-timing-function: cubic-bezier(.4, .55, .2, 1); animation-fill-mode: both; animation-delay: calc(var(--delay, 0ms) + var(--i, 0) * var(--roll-stagger)); }
+.k-roll__word--in  .k-roll__char { animation-name: k-roll-in; }
+.k-roll__word--out .k-roll__char { animation-name: k-roll-out; }
+@keyframes k-roll-in  { from { translate: 0 100%; } }
+@keyframes k-roll-out { to { translate: 0 -100%; } }
+
+/* ---------- Odometer ---------- */
+
+.k-odometer { display: inline-flex; font-variant-numeric: tabular-nums; }
+.k-wheel { position: relative; display: inline-block; overflow: clip; text-align: center; }
+.k-wheel::before { content: "0"; visibility: hidden; } /* holds the size */
+.k-wheel span { position: absolute; inset: 0; will-change: translate; }
+
+/* ---------- Scramble ---------- */
+
+.k-scramble { white-space: pre; }
+.k-scramble i { font-style: normal; color: var(--accent); }
+
+/* ---------- Emphasis: weight steps, not fades ---------- */
+
+.k-emphasis {
+  display: inline-block; transform-origin: left center; white-space: nowrap;
+  transition:
+    font-weight 260ms steps(4, end),
+    letter-spacing var(--spring-emphasis),
+    scale var(--spring-emphasis),
+    color 160ms linear;
+}
+.k-emphasis[data-on="true"] {
+  font-weight: 900; color: var(--accent);
+  letter-spacing: calc(-.4px - .6px);
+  scale: var(--emphasis-scale);
+}
+
+/* ---------- Ambient ---------- */
+
+.k-marquee { display: flex; overflow: clip; white-space: nowrap; }
+.k-marquee__track { display: flex; flex-shrink: 0; animation: k-marquee var(--marquee-duration, 30s) linear infinite; }
+.k-marquee--reverse .k-marquee__track { animation-direction: reverse; }
+@keyframes k-marquee { to { translate: -50% 0; } }
+
+.k-circle { position: relative; width: 124px; height: 124px; rotate: calc(var(--collapse) * 120deg); }
+.k-circle__ring { position: absolute; inset: 0; animation: k-spin 20s linear infinite; }
+.k-circle__slot { position: absolute; left: 50%; top: 0; height: 50%; width: 1ch; margin-left: -.5ch; transform-origin: 50% 100%; rotate: var(--a); }
+.k-circle__mask { display: block; overflow: clip; text-align: center; }
+.k-circle__mask > span { display: inline-block; color: var(--paper); animation: k-rise var(--spring-rise) backwards; animation-delay: calc(var(--delay, 0ms) + var(--i, 0) * var(--letter-stagger) / 2); }
+.k-circle svg {
+  position: absolute; inset: 0;
+  /* Turns against the ring; grows in once the ring has risen. */
+  animation: k-spin 13.3s linear infinite reverse, k-grow var(--spring-rise) var(--grow-delay, 0ms) backwards;
+}
+@keyframes k-grow { from { scale: 0; } }
+@keyframes k-spin { to { rotate: 1turn; } }
+
+/* ---------- Controls ---------- */
+
+.k-button {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-l);
+  min-height: 56px; padding: 0 var(--space-xl);
+  border: 0; border-radius: 0; cursor: pointer;
+  background: var(--accent); color: var(--ink);
+  font: 700 14px/18px var(--font-sans); letter-spacing: 1.2px; text-transform: uppercase;
+  transition: scale var(--spring-press);
+  -webkit-tap-highlight-color: transparent;
+}
+.k-button:active { scale: .97; }
+.k-button svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+.k-button--paper { background: var(--paper); }
+
+.k-icon-button {
+  display: inline-grid; place-items: center; width: 48px; height: 48px; padding: 0;
+  background: transparent; color: var(--paper); border: var(--hairline) solid var(--edge); border-radius: 0; cursor: pointer;
+  transition: scale var(--spring-press);
+}
+.k-icon-button:active { scale: .97; }
+.k-icon-button svg { width: 22px; height: 22px; fill: currentColor; }
+
+.k-tag {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--space-m);
+  background: transparent; color: var(--paper);
+  border: var(--hairline) solid var(--edge); border-radius: 0; cursor: pointer;
+  font: 500 12px/16px var(--font-mono); letter-spacing: 1.5px; text-transform: uppercase;
+  transition: background-color 160ms linear, border-color 160ms linear, color 160ms linear;
+}
+.k-tag[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+.k-tag[aria-pressed="true"] .k-scramble i { color: rgb(11 11 12 / .55); }
+
+:is(.k-button, .k-icon-button, .k-tag, .k-row):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- Reduced motion: everything lands in place ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .k-char, .k-enter, .k-rule, .k-roll__char, .k-circle__mask > span { animation: none; }
+  .k-marquee__track, .k-circle__ring { animation-play-state: paused; }
+  .k-circle svg { animation: none; }
+  .k-roll, .k-emphasis { transition: none; }
+  .k-display .k-line > .k-drift, .k-circle { translate: none; rotate: none; }
+}

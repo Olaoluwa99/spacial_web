@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import StyleCard from '../../components/StyleCard.astro';
+import { styles } from '../../data/styles';
+---
+<Base title="The collection — Special" description="Six distinctive interface styles, each with a working showcase, exact design tokens, motion recipes and downloadable web and Compose code.">
+<div class="container page-intro"><span class="eyebrow">THE SPECIAL COLLECTION / VOL. 01</span><h1>Find your<br/><em>feeling.</em></h1><div class="page-intro-bottom"><p>Six distinct design languages.<br/>One place to make them your own.</p><span class="eyebrow">BUILT FOR WEB + ANDROID</span></div></div>
+<section class="container collection-section catalogue"><div class="collection-toolbar"><div class="filter-group" aria-label="Filter styles">{['All styles','Surfaces','Typography','Layout'].map((filter, i) => <button data-filter={filter} aria-pressed={i === 0}>{filter}{i === 0 && <span>06</span>}</button>)}</div><span class="collection-count" aria-live="polite" data-collection-count>06 styles to explore</span></div><div class="style-grid">{styles.map(style => <StyleCard style={style}/>)}</div><div class="catalogue-after"><h2>Looks are only half the story.</h2><p>Find out what makes a good entrance, a satisfying press and a natural spring.</p><a class="button" href="/playground/">Explore the motion playground <span>↗</span></a></div></section>
+</Base>

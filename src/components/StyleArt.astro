@@ -1,0 +1,13 @@
+---
+import type { StyleId } from '../data/styles';
+interface Props { id: StyleId; }
+const { id } = Astro.props;
+---
+<div class:list={['style-art', `art-${id}`]} aria-hidden="true">
+  {id === 'glassmorphism' && <><div class="art-aurora"></div><div class="art-glass"><div class="art-overline">NOW PLAYING <span>↗</span></div><div class="album-art"><i></i><i></i><i></i></div><strong>Slow Tide</strong><p>Lumen Ensemble</p><div class="music-progress"><i></i></div><div class="music-controls"><span>↶</span><span class="music-play">Ⅱ</span><span>↷</span></div></div><div class="art-glass weather-mini"><span>✳</span><strong>24°</strong><small>Clear mind. Good evening.</small></div></>}
+  {id === 'neo-brutalism' && <><div class="brutal-heading">Get it<br/><mark>done.</mark></div><span class="brutal-badge">MAKE<br/>SOME<br/>NOISE</span><div class="brutal-card"><small>TODAY'S FOCUS</small><strong>Make<br/>something.</strong><div><span>✳</span><span>YOUR NEXT BIG IDEA ↗</span></div></div><span class="brutal-sticker">GOOD THINGS TAKE ACTION.</span></>}
+  {id === 'kinetic-type' && <><div class="kinetic-top">VOL. 03 — WORDS IN MOTION <span>↗</span></div><strong class="kinetic-head">TYPE.<br/><span>IN</span><br/>MOTION<span class="kinetic-dot">.</span></strong><div class="kinetic-foot"><span>LESS INTERFACE.<br/>MORE EXPRESSION.</span><i>✳</i></div></>}
+  {id === 'aurora-shaders' && <><div class="shader-light"></div><div class="shader-title">After<br/>hours.</div><div class="holo-card"><div>STUDIO <span>YOUR WORLD ↗</span></div><div class="holo-flow"></div><div><strong>Stay in the flow.</strong><small>MEMBER / 2046</small></div></div><div class="shader-caption">A LITTLE LIGHT GOES A LONG WAY.</div></>}
+  {id === 'claymorphism' && <><div class="clay-orb"></div><div class="clay-small-orb"></div><div class="clay-heading">Make yourself<br/>at home.</div><div class="clay-panel"><div><span>YOUR SPACE</span><span class="clay-pill">✳ Cozy</span></div><strong>Good energy.</strong><div class="clay-track"><i></i></div><div class="clay-controls"><span>☀<small>Warm</small></span><span>♪<small>Slow</small></span><span>☾<small>Quiet</small></span></div></div></>}
+  {id === 'bento-motion' && <><div class="bento-art-heading">A little more room.<span>↗</span></div><div class="bento-art-grid"><div class="bento-large"><small>YOUR DAY</small><strong>Room<br/>to grow.</strong><span>✳</span></div><div class="bento-dark"><small>FOCUS</small><strong>24<span>m</span></strong></div><div class="bento-orange"><small>ENERGY</small><strong>↑</strong></div><div class="bento-white"><small>IDEAS</small><strong>∞</strong></div><div class="bento-bottom"><span>01</span><small>ONE THING AT A TIME.</small></div></div></>}
+</div>

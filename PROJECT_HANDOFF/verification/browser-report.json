@@ -1,0 +1,186 @@
+{
+  "pages": [
+    {
+      "route": "/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/guide/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/playground/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/glassmorphism/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/neo-brutalism/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/kinetic-type/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/aurora-shaders/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/claymorphism/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/bento-motion/",
+      "width": 1440,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/guide/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/playground/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/glassmorphism/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/neo-brutalism/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/kinetic-type/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/aurora-shaders/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/claymorphism/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    },
+    {
+      "route": "/styles/bento-motion/",
+      "width": 390,
+      "overflow": "passed",
+      "semantics": "passed"
+    }
+  ],
+  "interactions": [
+    {
+      "width": 1440,
+      "filter": "passed"
+    },
+    {
+      "width": 1440,
+      "previews": "6 passed; Escape restores focus and unloads iframe"
+    },
+    {
+      "width": 1440,
+      "spring": "passed; reduced motion snaps"
+    },
+    {
+      "width": 390,
+      "filter": "passed"
+    },
+    {
+      "width": 390,
+      "previews": "6 passed; Escape restores focus and unloads iframe"
+    },
+    {
+      "width": 390,
+      "spring": "passed; reduced motion snaps"
+    },
+    {
+      "normalMotion": "spring animates; switching OS preference cancels movement"
+    }
+  ],
+  "downloads": [
+    {
+      "id": "glassmorphism",
+      "version": "0.1.5",
+      "checksum": "passed"
+    },
+    {
+      "id": "neo-brutalism",
+      "version": "0.1.1",
+      "checksum": "passed"
+    },
+    {
+      "id": "kinetic-type",
+      "version": "0.1.2",
+      "checksum": "passed"
+    },
+    {
+      "id": "aurora-shaders",
+      "version": "0.1.1",
+      "checksum": "passed"
+    },
+    {
+      "id": "claymorphism",
+      "version": "0.1.2",
+      "checksum": "passed"
+    },
+    {
+      "id": "bento-motion",
+      "version": "0.1.5",
+      "checksum": "passed"
+    }
+  ],
+  "errors": []
+}

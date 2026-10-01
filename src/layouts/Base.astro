@@ -1,0 +1,20 @@
+---
+import '../styles/global.css';
+import '../styles/art.css';
+import Mark from '../components/Mark.astro';
+import Icon from '../components/Icon.astro';
+import PreviewDialog from '../components/PreviewDialog.astro';
+interface Props { title?: string; description?: string; }
+const { title = 'Special — Make interfaces feel something.', description = 'Explore six distinctive UI styles, play with their motion, and take the design system into your next project. Live showcases and downloadable bundles for web and Android.' } = Astro.props;
+const pathname = Astro.url.pathname;
+const canonical = Astro.site ? new URL(pathname, Astro.site) : undefined;
+---
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="description" content={description}/><meta name="theme-color" content="#F9FAF6"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:type" content="website"/>{canonical && <link rel="canonical" href={canonical}/>}<link rel="icon" href="/favicon.svg" type="image/svg+xml"/><title>{title}</title></head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="/" aria-label="Special home"><Mark/><span>special<span class="brand-period">.</span></span></a><nav class="desktop-nav" aria-label="Main navigation"><a href="/styles/" aria-current={pathname.startsWith('/styles') ? 'page' : undefined}>The collection <span class="nav-count">06</span></a><a href="/playground/" aria-current={pathname.startsWith('/playground') ? 'page' : undefined}>Motion playground</a><a href="/guide/" aria-current={pathname.startsWith('/guide') ? 'page' : undefined}>How it works</a></nav><a class="button button-small header-cta" href="/styles/">Find your style <Icon name="arrow" size={16}/></a><button class="menu-toggle icon-button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button></div><nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden><a href="/styles/">The collection <span>06</span></a><a href="/playground/">Motion playground</a><a href="/guide/">How it works</a></nav></header>
+<main id="main"><slot/></main>
+<footer class="site-footer"><div class="container"><div class="footer-top"><div><a class="brand" href="/"><Mark size={25}/><span>special.</span></a><p>For interfaces that make you feel something.</p></div><div class="footer-links"><a href="/styles/">The collection</a><a href="/playground/">Motion playground</a><a href="/guide/">Get started</a></div></div><div class="footer-bottom"><span>CRAFTED WITH INTENTION. BUILT TO BE USED.</span><span>WEB + JETPACK COMPOSE <span class="little-star">✳</span> 2026</span></div></div></footer>
+<PreviewDialog/>
+<script src="../scripts/site.ts"></script>
+</body></html>

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Claymorphism · Reference screen</title>
+  <link rel="stylesheet" href="clay.css">
+  <style>
+    /* Layout for this screen only; everything visual comes from clay.css. */
+    main { max-width: 440px; margin: 0 auto; padding: calc(28px + env(safe-area-inset-top)) 0 48px; }
+    .gutter { padding: 0 var(--gutter); }
+    .row { display: flex; align-items: center; }
+    .grow { flex: 1; min-width: 0; }
+    header { position: relative; height: 156px; }
+    header .blob { position: absolute; right: calc(var(--gutter) - 12px); top: -8px; width: 144px; }
+    header .blob--sphere { width: 52px; right: calc(var(--gutter) + 112px); top: 84px; }
+    .family { display: flex; align-items: center; gap: var(--space-m); margin-bottom: var(--space-xl); position: relative; }
+    .family .avatars { display: flex; }
+    .family .avatar { --size: 42px; margin-right: -12px; }
+    .family .avatar:last-child { margin-right: 0; }
+    .section { margin-top: var(--space-xxl); }
+    .climate .toggle { margin-bottom: 6px; }
+    .climate .end { display: grid; justify-items: end; align-self: flex-start; }
+    .climate .slider { margin-top: var(--space-m); --fill-tone: var(--butter); }
+    .climate .notes { margin-top: var(--space-s); }
+    .devices { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l); margin-top: var(--space-xl); }
+    .tile { padding: 18px; text-align: left; }
+    .tile .puck {
+      --lift: 1; --level: .45; --fill: var(--on-fill);
+      width: 44px; height: 44px; border-radius: 50%;
+      display: grid; place-items: center;
+      transition: --lift var(--spring-jelly), background-color 240ms ease;
+    }
+    .tile[aria-pressed="false"] .puck { --lift: -1; }
+    .tile .puck svg { width: 22px; height: 22px; fill: var(--ink); }
+    .tile .name { display: block; margin-top: var(--space-l); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .energy .tube { margin-top: var(--space-l); }
+    .scenes { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-m); margin-top: var(--space-l); }
+    .scenes .well-button { height: 92px; }
+    #night { width: 100%; margin-top: var(--space-huge); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+<body class="clay-page">
+  <main>
+    <header class="gutter pop" style="--order:0">
+      <div class="blob" aria-hidden="true"><div class="blob__body"></div></div>
+      <div class="blob blob--sphere" style="--fill: var(--butter); --deep: var(--butter-deep)" aria-hidden="true"><div class="blob__body" style="animation-delay:-1.1s"></div></div>
+      <div class="family">
+        <div class="avatars" role="img" aria-label="Mia, Ada and Jo are home">
+          <span class="clay clay--peach avatar">M</span>
+          <span class="clay clay--sky avatar">A</span>
+          <span class="clay clay--butter avatar">J</span>
+        </div>
+        <span class="clay clay--mint badge">3 home</span>
+      </div>
+      <p class="t-body">Good evening, Mia</p>
+      <h1 class="t-display">Cosy home</h1>
+    </header>
+
+    <div class="gutter section pop" style="--order:1">
+      <div class="well segmented" role="tablist" aria-label="Room" id="rooms" style="--count:3">
+        <span class="clay segmented__puck"></span>
+      </div>
+    </div>
+
+    <div class="gutter section pop" style="--order:2">
+      <article class="clay clay--peach card climate">
+        <div class="row">
+          <div class="grow">
+            <span class="t-caption">Climate</span>
+            <div class="t-numeric" id="temp">22°</div>
+          </div>
+          <div class="end">
+            <button class="toggle" role="switch" aria-checked="true" aria-label="Heating" id="heating" style="--on: var(--butter); --on-deep-tone: var(--butter-deep)">
+              <span class="well toggle__track"></span><span class="clay toggle__knob"></span>
+            </button>
+            <span class="t-caption">Heating</span>
+          </div>
+        </div>
+        <div class="slider" role="slider" tabindex="0" aria-label="Temperature" aria-valuemin="16" aria-valuemax="28" id="slider">
+          <span class="well slider__track"><span class="slider__fill"></span></span>
+          <span class="clay slider__thumb"></span>
+        </div>
+        <div class="row notes t-caption"><span class="grow" id="heat-note">Warming up to 22°</span><span>16° – 28°</span></div>
+      </article>
+    </div>
+
+    <div class="gutter devices" id="devices"></div>
+
+    <div class="gutter section pop" style="--order:5; margin-top: var(--space-xl)">
+      <article class="clay card energy">
+        <div class="row">
+          <div class="grow"><h2 class="t-title">Energy today</h2><span class="t-caption">Daily goal 10 kWh</span></div>
+          <span class="clay clay--mint badge" id="kwh">6.4 kWh</span>
+        </div>
+        <div class="well tube" role="progressbar" aria-label="Energy used" aria-valuemin="0" aria-valuemax="1" id="tube"><span class="clay clay--mint tube__fill"></span></div>
+      </article>
+    </div>
+
+    <div class="gutter section pop" style="--order:6; margin-top: var(--space-xl)">
+      <article class="clay card">
+        <h2 class="t-title">Scenes</h2>
+        <div class="scenes" id="scenes"></div>
+      </article>
+    </div>
+
+    <div class="gutter pop" style="--order:7">
+      <button class="clay clay--lilac button press" id="night"></button>
+    </div>
+  </main>
+
+  <script>
+    // The same 24-unit paths as the Compose reference screen.
+    const icon = {
+      bulb: "M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z",
+      music: "M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z",
+      tv: "M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z",
+      blinds: "M4 3h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm1 4h14v2.5H5zm0 4h14v2.5H5zm0 4h14v2.5H5zm6 4h2v2a1 1 0 0 1-2 0z",
+      moon: "M12.34 2.02C6.59 1.82 2 6.42 2 12c0 5.52 4.48 10 10 10 3.71 0 6.93-2.02 8.66-5.02-7.51-.25-12.09-8.43-8.32-14.96z",
+      sun: "M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM11 1h2v3h-2zm0 19h2v3h-2zM1 11h3v2H1zm19 0h3v2h-3zM4.22 5.64l1.42-1.42 2.12 2.12-1.42 1.42zm12.02 12.02 1.42-1.42 2.12 2.12-1.42 1.42zM4.22 18.36l2.12-2.12 1.42 1.42-2.12 2.12zM16.24 6.34l2.12-2.12 1.42 1.42-2.12 2.12z",
+      dinner: "M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z",
+      play: "M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z",
+    };
+    const svg = d => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
+
+    const kinds = {
+      lamp:    { icon: icon.bulb,   tone: "butter", detail: "Warm · 80%" },
+      speaker: { icon: icon.music,  tone: "lilac",  detail: "Lo-fi beats" },
+      tv:      { icon: icon.tv,     tone: "sky",    detail: "Paused" },
+      blinds:  { icon: icon.blinds, tone: "mint",   detail: "Closed" },
+    };
+    const rooms = ["Living", "Kitchen", "Bedroom"];
+    const start = [
+      [0, "lamp", "Lamp", true], [0, "speaker", "Speaker", true], [0, "tv", "TV", false], [0, "blinds", "Blinds", false],
+      [1, "lamp", "Lights", true], [1, "speaker", "Radio", false], [1, "tv", "Screen", false], [1, "blinds", "Blinds", true],
+      [2, "lamp", "Night light", false], [2, "speaker", "Sleep sounds", true], [2, "tv", "TV", false], [2, "blinds", "Curtains", true],
+    ].map(([room, kind, name, on]) => ({ room, kind, name, on }));
+    const scenes = [
+      { name: "Movie",  icon: icon.play,   tone: "sky",   on: ["tv", "blinds", "speaker"] },
+      { name: "Dinner", icon: icon.dinner, tone: "peach", on: ["lamp", "speaker"] },
+      { name: "Sleep",  icon: icon.moon,   tone: "lilac", on: ["blinds"] },
+    ];
+    const state = {
+      room: 0, scene: -1, night: false,
+      devices: start.map(d => ({ ...d })),
+      heating: [true, false, true],
+      temperature: [22, 20, 19],
+    };
+
+    // ---------- Build once; update in place so every change animates ----------
+
+    const roomsEl = document.getElementById("rooms");
+    const puck = roomsEl.querySelector(".segmented__puck");
+    rooms.forEach((name, i) => {
+      const b = document.createElement("button");
+      b.className = "segmented__option"; b.role = "tab"; b.textContent = name;
+      b.addEventListener("click", () => { selectRoom(i); });
+      roomsEl.append(b);
+    });
+
+    const devicesEl = document.getElementById("devices");
+    const tiles = [0, 1, 2, 3].map(slot => {
+      const tile = document.createElement("article");
+      tile.className = `clay card press tile pop`;
+      tile.style.setProperty("--order", 3 + Math.floor(slot / 2));
+      tile.setAttribute("role", "button");
+      tile.tabIndex = 0;
+      tile.innerHTML = `
+        <div class="row"><span class="well puck"></span><span class="grow"></span>
+          <button class="toggle" role="switch"><span class="well toggle__track"></span><span class="clay toggle__knob"></span></button></div>
+        <span class="t-label name"></span><span class="t-caption status"></span>`;
+      const flip = () => { const d = here()[slot]; d.on = !d.on; render(); };
+      tile.addEventListener("click", flip);
+      tile.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } });
+      tile.querySelector(".toggle").addEventListener("click", e => { e.stopPropagation(); flip(); });
+      devicesEl.append(tile);
+      return tile;
+    });
+
+    const scenesEl = document.getElementById("scenes");
+    const sceneButtons = scenes.map((s, i) => {
+      const b = document.createElement("button");
+      b.className = "well well-button press";
+      b.style.setProperty("--tone", `var(--${s.tone})`);
+      b.style.setProperty("--tone-deep", `var(--${s.tone}-deep)`);
+      b.innerHTML = `${svg(s.icon)}<span>${s.name}</span>`;
+      b.addEventListener("click", () => {
+        state.scene = state.scene === i ? -1 : i;
+        if (state.scene >= 0) here().forEach(d => { d.on = s.on.includes(d.kind); });
+        render();
+      });
+      scenesEl.append(b);
+      return b;
+    });
+
+    const here = () => state.devices.filter(d => d.room === state.room);
+
+    function selectRoom(i) {
+      const from = state.room;
+      state.room = i; state.scene = -1;
+      // The puck's stretch reads how far it has travelled: f = (pos - from) / span.
+      puck.style.setProperty("--from", from);
+      puck.style.setProperty("--span", i === from ? 1 : i - from);
+      render();
+    }
+
+    document.getElementById("heating").addEventListener("click", () => {
+      state.heating[state.room] = !state.heating[state.room]; render();
+    });
+
+    // Slider: a hollow track and a squishy thumb that squashes while dragged.
+    const slider = document.getElementById("slider");
+    const setTemp = x => {
+      const r = slider.getBoundingClientRect(), thumb = 32;
+      const f = Math.min(1, Math.max(0, (x - r.left - thumb / 2) / (r.width - thumb)));
+      state.temperature[state.room] = 16 + f * 12; render();
+    };
+    slider.addEventListener("pointerdown", e => { slider.setPointerCapture(e.pointerId); slider.classList.add("is-dragging"); setTemp(e.clientX); });
+    slider.addEventListener("pointermove", e => { if (slider.classList.contains("is-dragging")) setTemp(e.clientX); });
+    ["pointerup", "pointercancel"].forEach(t => slider.addEventListener(t, () => slider.classList.remove("is-dragging")));
+    slider.addEventListener("keydown", e => {
+      const step = { ArrowRight: .5, ArrowUp: .5, ArrowLeft: -.5, ArrowDown: -.5 }[e.key];
+      if (step) { e.preventDefault(); state.temperature[state.room] = Math.min(28, Math.max(16, state.temperature[state.room] + step)); render(); }
+    });
+
+    document.getElementById("night").addEventListener("click", () => {
+      state.night = !state.night;
+      state.devices.forEach((d, i) => { d.on = state.night ? d.kind === "blinds" : start[i].on; });
+      state.heating = state.heating.map((_, i) => !state.night && i !== 1);
+      state.scene = state.night ? 2 : -1;
+      render();
+    });
+
+    // Even the quickest tap squashes all the way (90 ms) before it wobbles back.
+    document.addEventListener("pointerdown", e => {
+      const el = e.target.closest(".press");
+      if (!el || e.target.closest(".toggle, .slider") && el.classList.contains("tile")) return;
+      el.classList.add("is-pressed");
+      const down = performance.now();
+      const up = () => {
+        setTimeout(() => el.classList.remove("is-pressed"), Math.max(0, 90 - (performance.now() - down)));
+        removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
+      };
+      addEventListener("pointerup", up); addEventListener("pointercancel", up);
+    });
+
+    function render() {
+      const t = Math.round(state.temperature[state.room]);
+      const heating = state.heating[state.room];
+
+      roomsEl.querySelectorAll(".segmented__option").forEach((b, i) => b.setAttribute("aria-selected", i === state.room));
+      puck.style.setProperty("--pos", state.room);
+
+      document.getElementById("temp").textContent = `${t}°`;
+      document.getElementById("heating").setAttribute("aria-checked", heating);
+      document.getElementById("heat-note").textContent = heating ? `Warming up to ${t}°` : "Heating is off";
+      slider.style.setProperty("--value", (state.temperature[state.room] - 16) / 12);
+      slider.setAttribute("aria-valuenow", t);
+
+      here().forEach((d, slot) => {
+        const tile = tiles[slot], kind = kinds[d.kind];
+        tile.className = tile.className.replace(/clay--\w+/g, "").trim() + (d.on ? ` clay--${kind.tone}` : "");
+        tile.setAttribute("aria-pressed", d.on);
+        tile.setAttribute("aria-label", `${d.name}, ${d.on ? "on" : "off"}`);
+        tile.querySelector(".puck").innerHTML = svg(kind.icon);
+        tile.querySelector(".toggle").setAttribute("aria-checked", d.on);
+        tile.querySelector(".toggle").setAttribute("aria-label", d.name);
+        tile.querySelector(".name").textContent = d.name;
+        tile.querySelector(".status").textContent = d.on ? kind.detail : "Off";
+      });
+
+      const energy = Math.min(10, 3.2 + state.devices.filter(d => d.on).length * .55 + state.heating.filter(Boolean).length * 1.1);
+      document.getElementById("kwh").textContent = `${energy.toFixed(1)} kWh`;
+      document.getElementById("tube").style.setProperty("--progress", energy / 10);
+      document.getElementById("tube").setAttribute("aria-valuenow", (energy / 10).toFixed(2));
+
+      sceneButtons.forEach((b, i) => b.setAttribute("aria-pressed", state.scene === i));
+
+      const night = document.getElementById("night");
+      night.innerHTML = `${svg(state.night ? icon.sun : icon.moon)}${state.night ? "Good morning" : "Good night"}`;
+      night.classList.toggle("clay--lilac", !state.night);
+      night.classList.toggle("clay--butter", state.night);
+    }
+    render();
+  </script>
+</body>
+</html>

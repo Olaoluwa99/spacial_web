@@ -1,0 +1,409 @@
+/*
+ * Special · Claymorphism for the web.
+ * Values mirror tokens.json and motion.json. Structure:
+ *
+ *   <body class="clay-page">
+ *     <article class="clay clay--peach card">…
+ *       <span class="well tube"><span class="clay clay--mint tube__fill"></span></span>
+ *     </article>
+ *   </body>
+ *
+ * .clay is raised clay, .well is a hollow pressed into whatever it sits on. Both are
+ * painted with the same five-layer box-shadow, driven by one number, --lift:
+ * 1 raised · 0 flush · -1 pressed in. --lift is a registered property, so it
+ * animates, and presses and selections wobble through the jelly spring.
+ * Nested clay casts half the shadow automatically. Needs Chrome/Edge 116+,
+ * Safari 17.2+, Firefox 128+ (CSS trig, color-mix, linear() easing, @property).
+ */
+
+@property --lift { syntax: "<number>"; inherits: false; initial-value: 1; }
+@property --p    { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --pos  { syntax: "<number>"; inherits: false; initial-value: 0; }
+
+:root {
+  --background: #eee8fa;
+  --ink: #2b2340;
+  --ink-soft: #574c70;
+  --highlight: #ffffff;
+  --milk: #faf7ff;   --milk-deep: #a493d6;
+  --peach: #ffcfb5;  --peach-deep: #eb8558;
+  --mint: #bfebd7;   --mint-deep: #4db38a;
+  --sky: #c3deff;    --sky-deep: #5a97e8;
+  --lilac: #dccfff;  --lilac-deep: #8a6fe3;
+  --butter: #ffe9a6; --butter-deep: #e3ac2b;
+
+  /* The recipe (tokens.json → clay, light). Everything scales from --depth. */
+  --depth: 12px;
+  --highlight-alpha: .8;
+  --shade-alpha: .35;
+  --shadow-alpha: .5;
+  --shadow-blur: 2;
+  --inner-offset: .5;
+  --inner-blur: 1;
+  --well-darken: 6%;
+  --squish: .1;
+  --light: 315deg;                      /* compass bearing the light comes from */
+  --lx: sin(var(--light));              /* unit vector towards the light, y down */
+  --ly: calc(-1 * cos(var(--light)));
+
+  --radius: 32px;
+  --radius-inner: 20px;
+  --space-xs: 4px; --space-s: 8px; --space-m: 12px; --space-l: 16px;
+  --space-xl: 20px; --space-xxl: 24px; --space-huge: 32px;
+  --gutter: 24px;
+  --card-padding: 22px;
+
+  --font: ui-rounded, "SF Pro Rounded", Nunito, Quicksand, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Springs (motion.json → approximation.cssLinear): the whole wobble, not just one overshoot. */
+  --spring-squash: 324ms linear(0, 0.083, 0.271, 0.492, 0.698, 0.865, 0.983, 1.055, 1.088, 1.094, 1.084, 1.065, 1.044, 1.025, 1.01, 1, 0.994, 0.991, 0.991, 0.992, 0.994, 0.996, 0.998, 0.999, 1);
+  --spring-jelly: 1071ms linear(0, 0.049, 0.181, 0.368, 0.582, 0.798, 0.995, 1.157, 1.276, 1.347, 1.372, 1.357, 1.311, 1.243, 1.164, 1.083, 1.009, 0.947, 0.901, 0.873, 0.862, 0.866, 0.882, 0.907, 0.936, 0.966, 0.994, 1.018, 1.036, 1.047, 1.051, 1.05, 1.045, 1.036, 1.025, 1.014, 1.003, 0.994, 0.987, 0.983, 0.981, 0.981, 0.983, 0.986, 0.99, 0.995, 0.998, 1.002, 1.005, 1.006, 1.007, 1.007, 1.006, 1.005, 1.004, 1.002, 1.001, 0.999, 0.998, 0.998, 0.997, 0.997, 0.998, 0.998, 1);
+  --spring-knob: 617ms linear(0, 0.067, 0.233, 0.447, 0.668, 0.865, 1.022, 1.129, 1.188, 1.205, 1.192, 1.158, 1.114, 1.068, 1.028, 0.996, 0.974, 0.962, 0.958, 0.961, 0.968, 0.977, 0.986, 0.994, 1.001, 1.005, 1.008, 1.009, 1.008, 1.007, 1.005, 1.003, 1.001, 1, 0.999, 0.998, 1);
+  --spring-dough: 970ms linear(0, 0.031, 0.114, 0.234, 0.377, 0.529, 0.679, 0.82, 0.943, 1.046, 1.126, 1.183, 1.218, 1.233, 1.231, 1.215, 1.19, 1.158, 1.123, 1.087, 1.054, 1.023, 0.997, 0.977, 0.961, 0.951, 0.946, 0.946, 0.948, 0.953, 0.96, 0.968, 0.977, 0.985, 0.992, 0.999, 1.004, 1.008, 1.011, 1.012, 1.013, 1.012, 1.011, 1.01, 1.008, 1.006, 1.004, 1.002, 1.001, 1, 0.998, 0.998, 0.997, 0.997, 0.997, 0.997, 0.998, 0.998, 1);
+  --stagger: 60ms;
+}
+
+/* Elements marked hidden stay hidden, even when a component class sets display. */
+[hidden] { display: none !important; }
+
+/* ---------- The table ---------- */
+
+.clay-page {
+  --on-fill: var(--background);
+  --on-deep: var(--milk-deep);
+  margin: 0;
+  min-height: 100dvh;
+  color: var(--ink);
+  font-family: var(--font);
+  background:
+    radial-gradient(circle 80vw at 100% 8%, color-mix(in srgb, var(--peach) 55%, transparent), transparent),
+    radial-gradient(circle 90vw at 0% 62%, color-mix(in srgb, var(--sky) 50%, transparent), transparent),
+    var(--background);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* ---------- The recipe ---------- */
+
+:where(.clay) { --fill: var(--milk); --deep: var(--milk-deep); }
+
+.clay, .well {
+  --d: calc(var(--depth) * var(--level, 1));
+  --up: max(var(--lift), 0);                 /* how raised */
+  --down: max(calc(-1 * var(--lift)), 0);    /* how pressed in */
+  --ox: calc(var(--lx) * -1 * var(--d));     /* one depth, away from the light */
+  --oy: calc(var(--ly) * -1 * var(--d));
+  --ix: calc(var(--ox) * var(--inner-offset));
+  --iy: calc(var(--oy) * var(--inner-offset));
+  --ib: calc(var(--d) * var(--inner-blur));
+  position: relative;
+  box-sizing: border-box;
+  color: var(--ink);
+  background-color: var(--fill);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow:
+    /* 1 · coloured shadow, thrown away from the light */
+    calc(var(--ox) * var(--up)) calc(var(--oy) * var(--up)) calc(var(--d) * var(--shadow-blur) * var(--up)) 0
+      color-mix(in srgb, var(--deep) calc(var(--shadow-alpha) * min(var(--up) * 4, 1) * 100%), transparent),
+    /* 3 · lit rim: white highlight when raised … */
+    inset var(--ix) var(--iy) var(--ib) 0
+      color-mix(in srgb, var(--highlight) calc(var(--highlight-alpha) * var(--up) * 100%), transparent),
+    /*     … the rim's own shadow when pressed in */
+    inset var(--ix) var(--iy) var(--ib) 0
+      color-mix(in srgb, var(--deep) calc(min(var(--shade-alpha) * 1.6 * var(--down), 1) * 100%), transparent),
+    /* 4 · far rim: tinted shade when raised … */
+    inset calc(var(--ix) * -1) calc(var(--iy) * -1) var(--ib) 0
+      color-mix(in srgb, var(--deep) calc(var(--shade-alpha) * var(--up) * 100%), transparent),
+    /*     … a catch of light when pressed in */
+    inset calc(var(--ix) * -1) calc(var(--iy) * -1) var(--ib) 0
+      color-mix(in srgb, var(--highlight) calc(var(--highlight-alpha) * .7 * var(--down) * 100%), transparent);
+}
+
+/* What sits on raised clay can be pressed into it. (Wells read these; they never set them.) */
+.clay { --on-fill: var(--fill); --on-deep: var(--deep); }
+
+/* Depth halves when nested. Components set their own --level where it matters. */
+:where(.clay, .well) :where(.clay) { --level: .5; }
+:where(.clay) :where(.clay) :where(.clay) { --level: .25; }
+
+/* A hollow in whatever it sits on: the same clay, a touch deeper. Always full depth. */
+.well {
+  --lift: -1;
+  --level: 1;
+  --fill: color-mix(in srgb, var(--on-fill) calc(100% - var(--well-darken)), var(--on-deep));
+  --deep: var(--on-deep);
+  border-radius: var(--radius-inner);
+}
+
+.clay--milk   { --fill: var(--milk);   --deep: var(--milk-deep); }
+.clay--peach  { --fill: var(--peach);  --deep: var(--peach-deep); }
+.clay--mint   { --fill: var(--mint);   --deep: var(--mint-deep); }
+.clay--sky    { --fill: var(--sky);    --deep: var(--sky-deep); }
+.clay--lilac  { --fill: var(--lilac);  --deep: var(--lilac-deep); }
+.clay--butter { --fill: var(--butter); --deep: var(--butter-deep); }
+
+/* ---------- Press: squash, sink, wobble back ---------- */
+
+.press {
+  --k: 1;
+  cursor: pointer;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition: --lift var(--spring-jelly), scale var(--spring-jelly), background-color 240ms ease;
+}
+/* :has keeps a card still while a control inside it is the thing being pressed. */
+.press:active:not(:has(.toggle:active, .slider:active, .press:active)), .press.is-pressed {
+  --lift: .35;
+  scale: calc(1 + var(--squish) * var(--k)) calc(1 - var(--squish) * var(--k));
+  transition: --lift var(--spring-squash), scale var(--spring-squash), background-color 240ms ease;
+}
+.press:focus-visible, .toggle:focus-visible, .slider:focus-visible, .segmented__option:focus-visible {
+  outline: 3px solid var(--lilac-deep);
+  outline-offset: 4px;
+}
+
+/* ---------- Components ---------- */
+
+.card { --k: .3; padding: var(--card-padding); }
+
+.button {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-s);
+  border-radius: 999px;
+  padding: 16px 24px;
+  font-size: 15px; line-height: 20px; font-weight: 700;
+}
+.button svg { width: 20px; height: 20px; fill: currentColor; }
+
+.icon-button {
+  --k: 1.2;
+  --size: 52px;
+  display: inline-grid; place-items: center;
+  width: var(--size); height: var(--size); padding: 0;
+  border-radius: 50%;
+}
+.icon-button svg { width: 24px; height: 24px; fill: currentColor; }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 13px; line-height: 18px; font-weight: 700; letter-spacing: .2px;
+  white-space: nowrap;
+}
+
+.avatar {
+  --size: 44px;
+  display: inline-grid; place-items: center;
+  width: var(--size); height: var(--size);
+  border-radius: 50%;
+  font-size: calc(var(--size) * .34); font-weight: 700;
+}
+
+/* Switch: the track is pressed in, the knob is a raised ball. --p runs 0 → 1 on the
+   knob spring; sin(π·p) stretches it mid-flight and squashes it past the end. */
+.toggle {
+  --on: var(--mint); --on-deep-tone: var(--mint-deep);
+  position: relative; flex-shrink: 0;
+  width: 64px; height: 36px; padding: 0;
+  border: 0; background: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.toggle__track { position: absolute; inset: 0; border-radius: 999px; transition: background-color 220ms ease; }
+.toggle[aria-checked="true"] .toggle__track { --fill: var(--on); --deep: var(--on-deep-tone); }
+.toggle__knob {
+  --level: .45;
+  --p: 0;
+  --stretch: calc(.35 * sin(var(--p) * 180deg));
+  position: absolute; left: 4px; top: 4px;
+  width: 28px; height: 28px; border-radius: 50%;
+  translate: calc(var(--p) * 28px) 0;
+  scale: calc(1 + var(--stretch) + var(--press, 0)) calc(1 - var(--stretch) * .35 - var(--press, 0));
+  transition: --p var(--spring-knob), --press var(--spring-jelly);
+}
+.toggle[aria-checked="true"] .toggle__knob { --p: 1; }
+.toggle:active .toggle__knob { --press: calc(var(--squish) * 1.5); transition: --p var(--spring-knob), --press var(--spring-squash); }
+@property --press { syntax: "<number>"; inherits: false; initial-value: 0; }
+
+/* Segmented: options in a hollow, one raised puck. JS sets --pos (animated), and
+   --from / --span for the stretch: f = (pos - from) / span. */
+.segmented {
+  --count: 3;
+  display: grid; grid-template-columns: repeat(var(--count), 1fr);
+  height: 52px; padding: 5px;
+  border-radius: 999px;
+}
+.segmented__puck {
+  --level: .45;
+  --f: calc((var(--pos) - var(--from, 0)) / var(--span, 1));
+  --stretch: calc(.21 * sin(var(--f) * 180deg));
+  position: absolute; left: 5px; top: 5px; bottom: 5px;
+  width: calc((100% - 10px) / var(--count));
+  border-radius: 999px;
+  translate: calc(var(--pos) * 100%) 0;
+  scale: calc(1 + var(--stretch)) calc(1 - var(--stretch) * .3);
+  transition: --pos var(--spring-knob);
+}
+.segmented__option {
+  position: relative; z-index: 1;
+  border: 0; background: none; padding: 0; cursor: pointer;
+  font: 700 15px/20px var(--font); color: var(--ink-soft);
+  transition: color 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.segmented__option[aria-selected="true"] { color: var(--ink); }
+
+/* Progress tube: a hollow with a raised, glossy filling that grows on the jelly spring. */
+.tube { --progress: 0; --h: 26px; height: var(--h); padding: 4px; border-radius: 999px; }
+.tube__fill {
+  --level: .35;
+  display: block; height: 100%;
+  width: calc(var(--h) - 8px + (100% - var(--h) + 8px) * var(--progress));
+  border-radius: 999px;
+  transition: width var(--spring-jelly);
+}
+.tube__fill::after {
+  content: ""; position: absolute;
+  left: 8px; right: 8px; top: 20%; height: 20%;
+  border-radius: 999px;
+  background: rgb(255 255 255 / .55);
+}
+
+/* Slider: a hollow track and a squishy ball. JS sets --value (0..1) and .is-dragging. */
+.slider {
+  --value: .5;
+  --thumb: 32px;
+  --fill-tone: var(--peach);
+  position: relative; height: 44px; touch-action: none; cursor: pointer;
+}
+.slider__track {
+  position: absolute; left: calc(var(--thumb) / 2 - 8px); right: calc(var(--thumb) / 2 - 8px);
+  top: 50%; height: 16px; translate: 0 -50%;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.slider__fill {
+  --h: 16px;
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: calc(16px + (100% - 16px) * var(--value));
+  border-radius: 999px;
+  background: linear-gradient(rgb(255 255 255 / .5), transparent 60%), var(--fill-tone);
+}
+.slider__thumb {
+  --level: .5;
+  position: absolute; top: 50%; left: 0;
+  width: var(--thumb); height: var(--thumb); border-radius: 50%;
+  translate: calc((100cqw - var(--thumb)) * var(--value)) -50%;
+  transition: --lift var(--spring-jelly), scale var(--spring-jelly);
+}
+.slider { container-type: inline-size; }
+.slider__thumb::after {
+  content: ""; position: absolute; inset: 32%;
+  border-radius: 50%;
+  background: var(--fill-tone);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--deep) 50%, transparent);
+}
+.slider.is-dragging .slider__thumb {
+  --lift: .35;
+  scale: calc(1 + var(--squish) * 2) calc(1 - var(--squish) * 2);
+  transition: --lift var(--spring-squash), scale var(--spring-squash);
+}
+
+/* Well button: a soft pillow that, when chosen, is pushed into the clay and stays there. */
+.well-button {
+  --k: .6;
+  --tone: var(--lilac); --tone-deep: var(--lilac-deep);
+  --lift: .6;
+  --level: .6;
+  --fill: var(--on-fill);
+  --deep: var(--on-deep);
+  border-radius: var(--radius-inner);
+  display: grid; place-items: center; align-content: center; gap: 6px;
+  font-size: 15px; line-height: 20px; font-weight: 700;
+}
+.well-button svg { width: 26px; height: 26px; fill: currentColor; }
+.well-button[aria-pressed="true"] {
+  --lift: -1;
+  --fill: color-mix(in srgb, var(--tone) calc(100% - var(--well-darken)), var(--tone-deep));
+  --deep: var(--tone-deep);
+}
+.well-button:active, .well-button.is-pressed { --lift: 0; }
+.well-button[aria-pressed="true"]:active, .well-button[aria-pressed="true"].is-pressed { --lift: -1; }
+
+/* The floating decoration: a morphing blob lit from --light, bobbing over its shadow. */
+.blob {
+  --fill: var(--lilac); --deep: var(--lilac-deep);
+  position: relative;
+  width: 150px; aspect-ratio: 150 / 164;
+  pointer-events: none;
+}
+.blob::before {
+  content: ""; position: absolute;
+  left: 50%; bottom: 3%;
+  width: 72%; height: 20%;
+  translate: calc(-50% + var(--lx) * -10%) 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--deep) 45%, transparent), transparent);
+  animation: clay-ground 6s ease-in-out infinite alternate;
+}
+.blob__body {
+  position: absolute; left: 7%; right: 7%; top: 4%; aspect-ratio: 1;
+  border-radius: 45% 55% 52% 48% / 55% 47% 53% 45%;
+  background:
+    radial-gradient(circle at calc(50% + var(--lx) * 45%) calc(50% + var(--ly) * 45%),
+      transparent 55%, color-mix(in srgb, color-mix(in srgb, var(--fill) 70%, white) 35%, transparent) 100%),
+    radial-gradient(circle at calc(50% + var(--lx) * 22%) calc(50% + var(--ly) * 22%),
+      color-mix(in srgb, var(--fill) 40%, white) 0%, var(--fill) 36%, color-mix(in srgb, var(--fill) 25%, var(--deep)) 80%);
+  animation: clay-float 3s ease-in-out infinite alternate, clay-morph 9s ease-in-out infinite alternate;
+}
+.blob__body::after {
+  content: ""; position: absolute;
+  left: calc(50% + var(--lx) * 25% - 14%); top: calc(50% + var(--ly) * 25% - 10%);
+  width: 28%; height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 255 255 / .9), transparent);
+}
+.blob--sphere .blob__body { border-radius: 50%; animation: clay-float 3s ease-in-out infinite alternate; }
+@keyframes clay-float { from { translate: 0 8px; } to { translate: 0 -8px; } }
+@keyframes clay-ground { from { scale: 1; opacity: 1; } to { scale: .88; opacity: .75; } }
+@keyframes clay-morph {
+  33% { border-radius: 55% 45% 48% 52% / 45% 55% 45% 55%; }
+  66% { border-radius: 45% 55% 58% 42% / 55% 48% 52% 45%; }
+  100% { border-radius: 52% 48% 44% 56% / 48% 56% 44% 52%; }
+}
+
+/* ---------- Type ---------- */
+
+.t-display { font-size: 34px; line-height: 40px; font-weight: 800; letter-spacing: -.8px; margin: 0; }
+.t-title   { font-size: 20px; line-height: 26px; font-weight: 800; letter-spacing: -.3px; margin: 0; }
+.t-body    { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--ink-soft); margin: 0; }
+.t-label   { font-size: 15px; line-height: 20px; font-weight: 700; }
+.t-caption { font-size: 13px; line-height: 18px; font-weight: 600; letter-spacing: .2px; color: var(--ink-soft); }
+.t-numeric { font-size: 48px; line-height: 52px; font-weight: 800; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; }
+
+/* ---------- Entrance: dough popping up ---------- */
+
+.pop {
+  transform-origin: 50% 100%;
+  animation:
+    clay-pop var(--spring-dough) backwards,
+    clay-fade calc(970ms / 3) linear backwards;
+  animation-delay: calc(var(--order, 0) * var(--stagger));
+}
+/* Two keyframes only: linear() pushes past 1, so the stretch becomes the landing squash. */
+@keyframes clay-pop { from { translate: 0 28px; scale: .8 1.1; } to { translate: 0 0; scale: 1 1; } }
+@keyframes clay-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pop { animation: none; }
+  /* Listed with the sphere variant too: its own animation shorthand would otherwise resume play. */
+  .blob::before, .blob__body, .blob--sphere .blob__body { animation-play-state: paused; }
+  .press, .press:active, .press.is-pressed, .toggle__knob, .slider__thumb, .well-button {
+    transition-timing-function: ease-out;
+    transition-duration: 160ms;
+  }
+  .toggle__knob { --stretch: 0; }
+  .segmented__puck { --stretch: 0; transition: --pos 200ms ease-out; }
+  .tube__fill { transition: width 200ms ease-out; }
+}

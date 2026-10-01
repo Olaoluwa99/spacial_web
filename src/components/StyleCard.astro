@@ -1,0 +1,15 @@
+---
+import type { Style } from '../data/styles';
+import { releaseFor } from '../data/styles';
+import StyleArt from './StyleArt.astro';
+import Icon from './Icon.astro';
+interface Props { style: Style; }
+const { style } = Astro.props;
+const release = releaseFor(style.id);
+---
+<article class="style-card" data-category={style.category} data-style-card={style.id}>
+  <a href={`/styles/${style.id}/`} class="style-card-art" aria-label={`Explore ${style.name}`}><StyleArt id={style.id} /><span class="art-open"><Icon name="arrow" /></span></a>
+  <div class="card-meta"><span class="eyebrow">{style.number} / {style.category}</span><span class="version">v{release.version}</span></div>
+  <div class="card-title"><h3><a href={`/styles/${style.id}/`}>{style.name}</a></h3><button class="preview-button" data-preview={style.id} aria-label={`Open ${style.name} live preview`}><Icon name="play" size={17}/></button></div>
+  <p>{style.tagline}</p><div class="tags">{style.tags.map(tag => <span>{tag}</span>)}</div>
+</article>

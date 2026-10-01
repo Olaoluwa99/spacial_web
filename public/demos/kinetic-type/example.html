@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Kinetic type · Reference screen</title>
+  <link rel="stylesheet" href="kinetic.css">
+  <style>
+    /* Layout for this screen only; everything visual comes from kinetic.css. */
+    main { max-width: 440px; margin: 0 auto; padding: calc(16px + env(safe-area-inset-top)) 0 150px; isolation: isolate; }
+    .gutter { padding: 0 var(--gutter); }
+    .meta-row { display: flex; justify-content: space-between; gap: var(--space-m); }
+    .hero { position: relative; margin-top: var(--space-xxl); }
+    .hero h1 { cursor: pointer; }
+    .hero .k-circle { position: absolute; right: var(--gutter); top: 4px; }
+    .lead { margin-top: var(--space-xxl); }
+    .plain { all: unset; cursor: pointer; display: block; }
+    .plain:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    section { margin-top: var(--space-section); }
+    .label { display: flex; gap: var(--space-m); margin-top: var(--space-m); }
+    .label .grow { flex: 1; }
+    .people { margin-top: var(--space-l); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--space-xxl); }
+    .stats > div { display: grid; justify-items: start; }
+    .stats .k-headline { font-weight: 200; font-variant-numeric: tabular-nums; }
+    .bands { display: grid; gap: var(--space-l); padding: var(--space-s) 0; border-block: var(--hairline) solid var(--line); position: relative; }
+    .bands::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: var(--hairline) solid var(--line); }
+    .lineup { margin-top: var(--space-s); }
+    .k-row {
+      box-sizing: border-box; width: 100%; margin: 0; cursor: pointer;
+      background: none; border: 0; color: inherit; font: inherit; text-align: left;
+      display: grid; grid-template-columns: 40px 1fr auto; align-items: center;
+      padding: var(--space-l) 0; border-bottom: var(--hairline) solid var(--line);
+    }
+    .k-row .index { color: var(--muted); }
+    .k-row[aria-selected="true"] .index { color: var(--accent); }
+    .k-row .detail { grid-column: 2 / 4; display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--spring-roll); }
+    .k-row[aria-selected="true"] .detail { grid-template-rows: 1fr; }
+    .k-row .detail > span { overflow: hidden; padding-top: 0; transition: padding-top var(--spring-roll); }
+    .k-row[aria-selected="true"] .detail > span { padding-top: var(--space-s); }
+    .tags { display: flex; flex-wrap: wrap; gap: var(--space-s); margin-top: var(--space-l); }
+    .ticket-bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--ink); border-top: var(--hairline) solid var(--line); }
+    .ticket-bar__inner { max-width: 440px; margin: 0 auto; box-sizing: border-box; display: flex; align-items: center; gap: var(--space-xl); padding: var(--space-m) var(--gutter) calc(var(--space-m) + env(safe-area-inset-bottom)); }
+    .ticket-bar .k-button { flex: 1; }
+    .ticket-bar .k-title { font-weight: 700; }
+  </style>
+</head>
+<body class="kinetic-page">
+  <main class="k-grid">
+    <div class="meta-row gutter">
+      <span class="k-meta" data-scramble>VOL. 07 — LISBON</span>
+      <span class="k-meta" data-scramble data-delay="80">14–16.11.2026</span>
+    </div>
+
+    <header class="hero gutter">
+      <h1 class="k-display" id="headline" data-letters data-delay="120" aria-label="Type in motion." title="Tap to replay">
+        <span class="k-line"><span class="k-drift">TYPE</span></span>
+        <span class="k-line"><span class="k-drift k-outline">IN</span></span>
+        <span class="k-line"><span class="k-drift">MOTION<span class="k-accent">.</span></span></span>
+      </h1>
+      <div class="k-circle k-meta" id="circle" data-text="TYPE FESTIVAL — LISBON — MMXXVI — " data-delay="420" aria-hidden="true"></div>
+    </header>
+
+    <div class="lead gutter">
+      <p class="k-title k-enter" style="--delay:560ms">Three days of type that</p>
+      <button class="plain" id="word-button" aria-label="Next word">
+        <span class="k-headline k-accent k-roll" id="word" aria-live="polite"></span>
+      </button>
+    </div>
+
+    <section class="gutter" aria-label="Attendance">
+      <div class="k-rule" style="--delay:700ms"></div>
+      <div class="label">
+        <span class="k-meta k-accent" data-scramble data-delay="820">01</span>
+        <span class="k-meta k-paper grow" data-scramble data-delay="880">ATTENDANCE</span>
+        <span class="k-meta" data-scramble data-delay="940">LIVE</span>
+      </div>
+      <div class="k-numeric k-odometer people" id="people" data-delay="800" data-group></div>
+      <div class="k-meta" data-scramble data-delay="900">PEOPLE GOING</div>
+      <div class="stats">
+        <div><div class="k-headline k-odometer" data-value="3" data-min="2" data-delay="900"></div><span class="k-meta" data-scramble data-delay="980">DAYS</span></div>
+        <div><div class="k-headline k-odometer" data-value="48" data-min="2" data-delay="990"></div><span class="k-meta" data-scramble data-delay="1070">TALKS</span></div>
+        <div><div class="k-headline k-odometer" data-value="6" data-min="2" data-delay="1080"></div><span class="k-meta" data-scramble data-delay="1160">STAGES</span></div>
+      </div>
+    </section>
+
+    <section class="bands k-enter" style="--delay:900ms" aria-label="Lisbon, LX Factory, 14 to 16 November">
+      <div class="k-marquee k-headline" data-marquee aria-hidden="true">LISBON — LX FACTORY — 14–16 NOV — </div>
+      <div class="k-marquee k-marquee--reverse k-headline k-outline" data-marquee aria-hidden="true">KERNING — LEADING — TRACKING — RHYTHM — </div>
+    </section>
+
+    <section class="gutter" aria-label="Line-up">
+      <div class="k-rule" style="--delay:1000ms"></div>
+      <div class="label">
+        <span class="k-meta k-accent" data-scramble data-delay="1120">02</span>
+        <span class="k-meta k-paper grow" data-scramble data-delay="1180">LINE-UP</span>
+        <span class="k-meta" data-scramble data-delay="1240">DAY 1</span>
+      </div>
+      <div class="lineup" id="lineup" role="tablist"></div>
+    </section>
+
+    <section class="gutter" aria-label="Topics">
+      <div class="k-rule" style="--delay:1300ms"></div>
+      <div class="label">
+        <span class="k-meta k-accent" data-scramble data-delay="1420">03</span>
+        <span class="k-meta k-paper grow" data-scramble data-delay="1480">TOPICS</span>
+        <span class="k-meta" id="followed" data-scramble data-delay="1540">2 FOLLOWED</span>
+      </div>
+      <div class="tags" id="tags"></div>
+    </section>
+  </main>
+
+  <div class="ticket-bar k-enter" style="--delay:700ms">
+    <div class="ticket-bar__inner">
+      <div>
+        <div class="k-meta">3-DAY PASS</div>
+        <div class="k-title"><span class="k-roll" id="price"></span></div>
+      </div>
+      <button class="k-button" id="tickets">
+        <span class="k-roll" id="ticket-label"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path id="ticket-icon" d="M12 4 10.6 5.4 16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=/<>";
+    const escape = (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c] ?? c;
+
+    // ---------- Letters: split into masked, staggered inline-blocks ----------
+    function splitLetters(root) {
+      let i = 0;
+      const walk = (node) => {
+        for (const child of [...node.childNodes]) {
+          if (child.nodeType === Node.TEXT_NODE) {
+            const frag = document.createDocumentFragment();
+            for (const c of child.textContent) {
+              // Spaces stay in the line (they just take no stagger slot).
+              if (/\s/.test(c)) { frag.append(document.createTextNode(c)); continue; }
+              const s = document.createElement("span");
+              s.className = "k-char";
+              s.style.setProperty("--i", i++);
+              s.textContent = c;
+              frag.append(s);
+            }
+            child.replaceWith(frag);
+          } else {
+            walk(child);
+          }
+        }
+      };
+      walk(root);
+      root.style.setProperty("--delay", `${root.dataset.delay ?? 0}ms`);
+    }
+
+    // ---------- Fit: display type shrinks until its widest line fits ----------
+    // Lines never wrap and are clipped as masks, so a line wider than the column would be cut off.
+    function fitDisplay(h) {
+      h.style.removeProperty("--size");
+      const widest = Math.max(...[...h.querySelectorAll(".k-line")].map((l) => (l.firstElementChild ?? l).scrollWidth));
+      const room = h.clientWidth;
+      if (widest > room) h.style.setProperty("--size", `${Math.floor(parseFloat(getComputedStyle(h).fontSize) * room / widest)}px`);
+    }
+
+    // ---------- Scramble: glyphs flicker, then lock left to right ----------
+    const glyph = (i, step) => {
+      const h = ((i * 7919 + step * 104729) ^ (step << 5) ^ (i << 11)) % GLYPHS.length;
+      return GLYPHS[(h + GLYPHS.length) % GLYPHS.length];
+    };
+    function scramble(el, text = el.dataset.text ?? el.textContent, delay = +(el.dataset.delay ?? 0)) {
+      el.dataset.text = text;
+      el.classList.add("k-scramble");
+      cancelAnimationFrame(el._raf);
+      if (reduced) { el.textContent = text; return; }
+      const chars = [...text];
+      const end = delay + 360 + (chars.length - 1) * 32;
+      const start = performance.now();
+      const frame = (now) => {
+        const t = now - start;
+        if (t >= end) { el.textContent = text; return; }
+        const step = Math.floor(t / 50);
+        el.innerHTML = chars.map((c, i) => {
+          if (c === " " || t >= delay + 360 + i * 32) return escape(c);
+          if (t >= delay + i * 16) return `<i>${escape(glyph(i, step))}</i>`;
+          return " ";
+        }).join("");
+        el._raf = requestAnimationFrame(frame);
+      };
+      el.textContent = " ".repeat(chars.length);
+      el._raf = requestAnimationFrame(frame);
+    }
+
+    // ---------- Roll: old letters up and out, new letters up from below ----------
+    function word(text, className) {
+      const w = document.createElement("span");
+      w.className = `k-roll__word ${className}`;
+      let i = 0;
+      for (const c of text) {
+        const s = document.createElement("span");
+        s.className = "k-roll__char";
+        s.textContent = c === " " ? " " : c;
+        if (c !== " ") s.style.setProperty("--i", i++);
+        w.append(s);
+      }
+      return w;
+    }
+    function roll(el, text, { delay = 0, animate = true } = {}) {
+      el.setAttribute("aria-label", text);
+      clearTimeout(el._done);
+      el.querySelectorAll(".k-roll__word--out").forEach((w) => w.remove());
+      const current = el.querySelector(".k-roll__word");
+      if (reduced || !animate) {
+        el.style.width = "";
+        el.replaceChildren(word(text, ""));
+        return;
+      }
+      const from = el.getBoundingClientRect().width;
+      if (current) current.className = "k-roll__word k-roll__word--out";
+      const next = word(text, "k-roll__word--in");
+      next.style.setProperty("--delay", `${delay}ms`);
+      el.append(next);
+      const to = next.getBoundingClientRect().width;
+      el.style.width = `${from}px`;
+      el.getBoundingClientRect();
+      el.style.width = `${to}px`;
+      const letters = Math.max(text.length, current ? current.textContent.length : 0);
+      el._done = setTimeout(() => {
+        el.querySelectorAll(".k-roll__word--out").forEach((w) => w.remove());
+        next.className = "k-roll__word";
+        el.style.width = "";
+      }, delay + letters * 24 + 340);
+    }
+
+    // ---------- A tiny spring, for odometer wheels ----------
+    function springTo(state, target, { z, k }, render, delay = 0) {
+      state.target = target;
+      if (reduced) { state.x = target; state.v = 0; render(); return; }
+      if (state.running) return;
+      state.running = true;
+      const startAt = performance.now() + delay;
+      let last = null;
+      const tick = (now) => {
+        if (now < startAt) { requestAnimationFrame(tick); return; }
+        const dt = Math.min(0.032, last === null ? 0 : (now - last) / 1000);
+        last = now;
+        for (let s = 0; s < 4; s++) {
+          const h = dt / 4;
+          const a = -k * (state.x - state.target) - 2 * z * Math.sqrt(k) * state.v;
+          state.v += a * h;
+          state.x += state.v * h;
+        }
+        if (Math.abs(state.x - state.target) < 0.002 && Math.abs(state.v) < 0.01) {
+          state.x = state.target; state.v = 0; state.running = false; render(); return;
+        }
+        render();
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+    const ROLL = { z: 0.82, k: 420 };
+
+    // ---------- Odometer: one wheel per digit, turning the short way ----------
+    function odometer(el) {
+      const wheels = new Map();
+      const min = +(el.dataset.min ?? 1);
+      const group = el.dataset.group !== undefined;
+      const delay = +(el.dataset.delay ?? 0);
+      let shown = null;
+      const wheelFor = (place) => {
+        if (!wheels.has(place)) {
+          const node = document.createElement("span");
+          node.className = "k-wheel";
+          node.style.visibility = "hidden"; // until its entrance roll starts
+          node.append(document.createElement("span"), document.createElement("span"));
+          const state = { x: 0, v: 0, target: 0, node };
+          state.render = () => {
+            const base = Math.floor(state.x), frac = state.x - base, d = ((base % 10) + 10) % 10;
+            const [a, b] = node.children;
+            a.textContent = d; a.style.translate = `0 ${-frac * 100}%`;
+            b.textContent = (d + 1) % 10; b.style.translate = `0 ${(1 - frac) * 100}%`;
+          };
+          wheels.set(place, state);
+        }
+        return wheels.get(place);
+      };
+      return (value) => {
+        const digits = String(Math.abs(value)).padStart(min, "0");
+        const entering = shown === null, up = value >= (shown ?? 0);
+        shown = value;
+        el.setAttribute("aria-label", group ? value.toLocaleString("en-US") : String(value));
+        el.replaceChildren();
+        [...digits].forEach((ch, i) => {
+          if (group && i > 0 && (digits.length - i) % 3 === 0) {
+            const comma = document.createElement("span");
+            comma.textContent = ",";
+            el.append(comma);
+          }
+          const wheel = wheelFor(digits.length - 1 - i);
+          el.append(wheel.node);
+          const current = Math.round(wheel.target), here = ((current % 10) + 10) % 10, target = +ch;
+          let steps = up ? (target - here + 10) % 10 : -((here - target + 10) % 10);
+          if (entering && steps === 0) steps = 10;
+          wheel.render();
+          const wait = entering && !reduced ? delay + i * 60 : 0;
+          if (wait) setTimeout(() => { wheel.node.style.visibility = ""; }, wait); else wheel.node.style.visibility = "";
+          springTo(wheel, current + steps, ROLL, wheel.render, wait);
+        });
+      };
+    }
+
+    // ---------- Circle text ----------
+    function circle(el) {
+      const text = el.dataset.text, n = [...text].length, delay = +(el.dataset.delay ?? 0);
+      const ring = document.createElement("div");
+      ring.className = "k-circle__ring";
+      [...text].forEach((c, i) => {
+        ring.insertAdjacentHTML("beforeend",
+          `<span class="k-circle__slot" style="--a:${(i + 0.5) * 360 / n}deg"><span class="k-circle__mask"><span style="--i:${i};--delay:${delay}ms">${c === " " ? "&nbsp;" : escape(c)}</span></span></span>`);
+      });
+      const r = 62 - 8, arm = r - 16 * 1.1;
+      const lines = [0, 45, 90, 135].map((deg) => {
+        const a = deg * Math.PI / 180, dx = Math.cos(a) * arm, dy = Math.sin(a) * arm;
+        return `<line x1="${62 - dx}" y1="${62 - dy}" x2="${62 + dx}" y2="${62 + dy}"/>`;
+      }).join("");
+      el.style.setProperty("--grow-delay", `${delay + n * 14}ms`);
+      el.innerHTML = `<svg viewBox="0 0 124 124" stroke="var(--accent)" stroke-width="3">${lines}</svg>`;
+      el.prepend(ring);
+    }
+
+    // ---------- Marquee: two identical halves, 44px/s whatever the length ----------
+    function marquee(el) {
+      const text = el.textContent;
+      el.textContent = "";
+      const track = document.createElement("div");
+      track.className = "k-marquee__track";
+      el.append(track);
+      const unit = () => { const s = document.createElement("span"); s.textContent = text.replaceAll(" ", " "); return s; };
+      track.append(unit());
+      const width = track.scrollWidth;
+      const copies = Math.max(1, Math.ceil(el.clientWidth / width));
+      for (let i = 1; i < copies * 2; i++) track.append(unit());
+      track.style.setProperty("--marquee-duration", `${(width * copies) / 44}s`);
+    }
+
+    // ---------- Build the page ----------
+    document.querySelectorAll("[data-letters]").forEach(splitLetters);
+    const fitAll = () => document.querySelectorAll(".k-display").forEach(fitDisplay);
+    fitAll();
+    addEventListener("resize", fitAll);
+    document.querySelectorAll("[data-scramble]").forEach((el) => scramble(el));
+    document.querySelectorAll("[data-marquee]").forEach(marquee);
+    circle(document.getElementById("circle"));
+
+    const headline = document.querySelector(".hero");
+    document.getElementById("headline").addEventListener("click", () => {
+      headline.getAnimations({ subtree: true }).forEach((a) => { a.cancel(); a.play(); });
+    });
+
+    // The rolling word: turns on its own every 2.4s, or on tap.
+    const words = ["moves.", "speaks.", "breathes.", "reacts.", "performs."];
+    let wordIndex = 0;
+    const wordEl = document.getElementById("word");
+    roll(wordEl, words[0], { delay: 640 });
+    const nextWord = () => roll(wordEl, words[++wordIndex % words.length]);
+    document.getElementById("word-button").addEventListener("click", nextWord);
+    if (!reduced) setInterval(nextWord, 2400);
+
+    // Numbers.
+    let joined = 0, going = false;
+    const people = odometer(document.getElementById("people"));
+    const peopleCount = () => 12480 + joined + (going ? 1 : 0);
+    people(peopleCount());
+    document.querySelectorAll(".stats .k-odometer").forEach((el) => odometer(el)(+el.dataset.value));
+    if (!reduced) {
+      let n = 0;
+      setInterval(() => { joined += 1 + (n++ % 3); people(peopleCount()); }, 3200);
+    }
+
+    // Line-up: selection is emphasis.
+    const talks = [
+      ["Ines Duarte", "10:30", "MAIN STAGE — VARIABLE FONTS IN MOTION"],
+      ["Kenji Mori", "11:45", "HALL B — THE GRID AS A CLOCK"],
+      ["Ada Okafor", "14:00", "MAIN STAGE — KERNING AT 60 FPS"],
+      ["Lars Voss", "15:30", "STUDIO — SWISS, BUT MOVING"],
+      ["Mira Castell", "17:00", "HALL B — LETTERS THAT LISTEN"],
+    ];
+    const lineup = document.getElementById("lineup");
+    talks.forEach(([name, time, detail], i) => {
+      lineup.insertAdjacentHTML("beforeend", `
+        <button class="k-row k-enter" role="tab" aria-selected="${i === 0}" style="--delay:1080ms;--order:${i}">
+          <span class="k-meta index">0${i + 1}</span>
+          <span><span class="k-title k-emphasis" data-on="${i === 0}">${name}</span></span>
+          <span class="k-meta k-paper">${time}</span>
+          <span class="detail"><span><span class="k-meta" data-detail>${detail}</span></span></span>
+        </button>`);
+    });
+    const rows = [...lineup.children];
+    rows.forEach((row) => row.addEventListener("click", () => {
+      rows.forEach((r) => {
+        const on = r === row;
+        r.setAttribute("aria-selected", on);
+        r.querySelector(".k-emphasis").dataset.on = on;
+      });
+      scramble(row.querySelector("[data-detail]"), undefined, 0);
+    }));
+
+    // Topics: tags decode in, and again when toggled.
+    const followed = new Set(["Motion", "Grids"]);
+    const tags = document.getElementById("tags");
+    ["Kerning", "Variable", "Grids", "Motion", "Swiss", "OpenType", "Rhythm", "Leading"].forEach((name, i) => {
+      const tag = document.createElement("button");
+      tag.className = "k-tag";
+      tag.setAttribute("aria-pressed", followed.has(name));
+      const label = document.createElement("span");
+      tag.append(label);
+      tags.append(tag);
+      scramble(label, `#${name.toUpperCase()}`, 1380 + i * 60);
+      tag.addEventListener("click", () => {
+        followed.has(name) ? followed.delete(name) : followed.add(name);
+        tag.setAttribute("aria-pressed", followed.has(name));
+        scramble(label, undefined, 0);
+        scramble(document.getElementById("followed"), `${followed.size} FOLLOWED`, 0);
+      });
+    });
+
+    // The ticket bar: the label rolls on every tap; the count goes up by one.
+    const ARROW = "M12 4 10.6 5.4 16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8z";
+    const CHECK = "M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z";
+    const label = document.getElementById("ticket-label"), price = document.getElementById("price");
+    roll(label, "GET TICKETS", { animate: false });
+    roll(price, "€240", { animate: false });
+    document.getElementById("tickets").addEventListener("click", () => {
+      going = !going;
+      roll(label, going ? "YOU'RE GOING" : "GET TICKETS");
+      roll(price, going ? "Booked" : "€240");
+      document.getElementById("ticket-icon").setAttribute("d", going ? CHECK : ARROW);
+      people(peopleCount());
+    });
+
+    // The headline answers to scroll. Not when motion is reduced.
+    if (!reduced) {
+      const root = document.documentElement;
+      addEventListener("scroll", () => root.style.setProperty("--collapse", Math.min(1, scrollY / 240).toFixed(3)), { passive: true });
+    }
+  </script>
+</body>
+</html>

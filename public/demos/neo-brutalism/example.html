@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Neo-brutalism · Reference screen</title>
+  <link rel="stylesheet" href="brutal.css">
+  <style>
+    /* Layout for this screen only; everything visual comes from brutal.css. */
+    main { max-width: 440px; margin: 0 auto; padding: calc(24px + env(safe-area-inset-top)) 0 150px; }
+    .gutter { padding: 0 var(--gutter); }
+    header { position: relative; }
+    header .sticker { position: absolute; right: var(--gutter); top: 10px; }
+    .stack { display: grid; gap: 2px; margin-top: var(--space-l); }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l); margin-top: var(--space-huge); }
+    .pair .card { display: flex; flex-direction: column; gap: 2px; }
+    .pair .card > :last-child { margin-top: auto; }
+    .chips { display: flex; gap: var(--space-m); overflow-x: auto; padding: 4px var(--gutter) 10px; margin-top: var(--space-xl); scrollbar-width: none; }
+    .tasks { margin-top: var(--space-l); }
+    .tasks header { display: flex; align-items: center; margin-bottom: var(--space-s); }
+    .tasks header h2 { flex: 1; }
+    .task { display: flex; align-items: center; gap: var(--space-m); padding: 10px 0; }
+    .task[hidden] { display: none; }
+    .task .title { flex: 1; min-width: 0; }
+    .new { width: calc(100% - 2 * var(--gutter)); margin: var(--space-xxl) var(--gutter) 0; }
+    .marquee { margin-top: var(--space-xxl); }
+  </style>
+</head>
+<body class="brutal-page">
+  <main>
+    <header class="gutter drop" style="--order:0">
+      <span class="block tag" id="date">TUE · 29 SEP</span>
+      <div class="stack">
+        <h1 class="t-display">Get it</h1>
+        <h1 class="t-display"><span class="highlight">done.</span></h1>
+      </div>
+      <div class="sticker" aria-hidden="true">
+        <svg viewBox="0 0 92 92"><polygon id="burst-shadow" transform="translate(4 4)" fill="var(--ink)"/><polygon id="burst" fill="var(--pink)" stroke="var(--ink)" stroke-width="3"/></svg>
+        <span>12 day<br>streak</span>
+      </div>
+    </header>
+
+    <div class="marquee drop" style="--order:1" id="marquee"><div class="marquee__track"></div></div>
+
+    <div class="pair gutter">
+      <article class="block block--yellow card drop" style="--order:2">
+        <span class="t-mono">Streak</span>
+        <span class="t-numeric">12</span>
+        <span class="t-body">days in a row</span>
+      </article>
+      <article class="block block--blue card drop" style="--order:3">
+        <span class="t-mono">Today</span>
+        <span class="t-numeric" id="percent">20%</span>
+        <div class="block progress" id="progress" style="--progress:.2" role="progressbar" aria-label="Tasks done"></div>
+      </article>
+    </div>
+
+    <div class="chips drop" style="--order:4" role="group" aria-label="Filter">
+      <button class="block chip" aria-pressed="true">All</button>
+      <button class="block chip" aria-pressed="false">Work</button>
+      <button class="block chip" aria-pressed="false">Life</button>
+      <button class="block chip" aria-pressed="false">Done</button>
+    </div>
+
+    <div class="gutter">
+      <article class="block card tasks drop" style="--order:5">
+        <header><h2 class="t-title">Today</h2><span class="block block--yellow tag" id="left">4 left</span></header>
+        <div id="list"></div>
+      </article>
+    </div>
+
+    <button class="block block--pink button new drop" style="--order:6" id="new">
+      <svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>New task
+    </button>
+  </main>
+
+  <nav class="tabbar">
+    <button class="block tab" role="tab"><svg viewBox="0 0 24 24"><path d="M12 3 3 10v11h6v-6h6v6h6V10z"/></svg>Home</button>
+    <button class="block block--yellow tab" role="tab" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8z"/></svg>Tasks</button>
+    <button class="block tab" role="tab"><svg viewBox="0 0 24 24"><path d="m12 17.3 6.2 3.7-1.6-7L22 9.2l-7.2-.6L12 2 9.2 8.6 2 9.2 7.4 14l-1.6 7z"/></svg>Wins</button>
+    <button class="block tab" role="tab"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg>Me</button>
+  </nav>
+
+  <script>
+    const tasks = [
+      { id: 1, title: "Ship onboarding redesign", tag: "Design", fill: "pink", group: "Work" },
+      { id: 2, title: "30 min run", tag: "Health", fill: "green", group: "Life" },
+      { id: 3, title: "Reply to Ada", tag: "Inbox", fill: "lilac", group: "Work", done: true },
+      { id: 4, title: "Review PR #214", tag: "Code", fill: "blue", group: "Work" },
+      { id: 5, title: "Read 20 pages", tag: "Growth", fill: "orange", group: "Life" },
+    ];
+    let filter = "All", created = 0;
+    const list = document.getElementById("list");
+
+    document.getElementById("date").textContent = new Date()
+      .toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }).replace(",", "").replace(" ", " · ").toUpperCase();
+
+    // Starburst sticker: 14 points.
+    const points = Array.from({ length: 28 }, (_, i) => {
+      const r = i % 2 ? 33.5 : 43, a = Math.PI * i / 14 - Math.PI / 2;
+      return `${(43 + r * Math.cos(a)).toFixed(1)},${(43 + r * Math.sin(a)).toFixed(1)}`;
+    }).join(" ");
+    document.getElementById("burst").setAttribute("points", points);
+    document.getElementById("burst-shadow").setAttribute("points", points);
+
+    function row(task) {
+      const el = document.createElement("div");
+      el.className = "task" + (task.fresh ? " drop" : "");
+      el.innerHTML = `
+        <button class="block checkbox" role="checkbox" aria-checked="${!!task.done}" aria-label="${task.title}">
+          <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 10l5 5L16 3"/></svg>
+        </button>
+        <span class="title"><span class="strike t-label" data-done="${!!task.done}">${task.title}</span></span>
+        <span class="block block--${task.fill} tag">${task.tag}</span>`;
+      el.querySelector(".checkbox").addEventListener("click", () => { task.done = !task.done; task.fresh = false; update(); });
+      task.el = el;
+      return el;
+    }
+    tasks.forEach(t => list.append(row(t)));
+
+    function update() {
+      const left = tasks.filter(t => !t.done).length, pct = Math.round((tasks.length - left) / tasks.length * 100);
+      tasks.forEach(t => {
+        t.el.querySelector(".checkbox").setAttribute("aria-checked", !!t.done);
+        t.el.querySelector(".strike").dataset.done = !!t.done;
+        t.el.hidden = !(filter === "All" || filter === t.group || (filter === "Done" && t.done));
+      });
+      document.getElementById("left").textContent = `${left} left`;
+      document.getElementById("percent").textContent = `${pct}%`;
+      document.getElementById("progress").style.setProperty("--progress", pct / 100);
+      const text = `★ ${left} TASKS LEFT ★ STREAK 12 DAYS ★ FOCUS 2H 10M ★ SHIP IT`;
+      const track = document.querySelector("#marquee .marquee__track");
+      track.innerHTML = `<span>${text}</span>`.repeat(6);
+      track.style.setProperty("--marquee-duration", `${track.scrollWidth / 2 / 40}s`);
+    }
+    update();
+
+    document.querySelectorAll(".chip").forEach((chip, _, all) => chip.addEventListener("click", () => {
+      all.forEach(c => c.setAttribute("aria-pressed", c === chip));
+      filter = chip.textContent; update();
+    }));
+    document.querySelectorAll(".tab").forEach((tab, _, all) => tab.addEventListener("click", () => {
+      all.forEach(t => { const on = t === tab; t.classList.toggle("block--yellow", on); on ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"); });
+    }));
+    document.getElementById("new").addEventListener("click", () => {
+      created++;
+      const task = { id: 100 + created, title: `Untitled task #${created}`, tag: "New", fill: "lilac", group: "Work", fresh: true };
+      tasks.unshift(task); list.prepend(row(task)); update();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,3432 @@
+{
+  "glassmorphism": {
+    "version": "0.1.5",
+    "download": "/releases/glassmorphism-0.1.5.zip",
+    "bytes": 1818842,
+    "sha256": "9b0c43a23c5709e13588c48cf8ac2896c2c17a74469b8f30f0ca684db776a3f5",
+    "reference": "/references/glassmorphism.png",
+    "demo": "/demos/glassmorphism/example.html",
+    "tokens": {
+      "$description": "Special · Glassmorphism design tokens (W3C Design Tokens format). Dimensions are in px; treat 1px as 1dp on Android and 1pt on iOS.",
+      "color": {
+        "backdrop": {
+          "base": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.027,
+                0.043,
+                0.102
+              ],
+              "alpha": 1,
+              "hex": "#070b1a"
+            },
+            "$description": "Deep night the aurora glows out of."
+          },
+          "violet": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.486,
+                0.227,
+                0.929
+              ],
+              "alpha": 1,
+              "hex": "#7c3aed"
+            }
+          },
+          "sky": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.055,
+                0.647,
+                0.914
+              ],
+              "alpha": 1,
+              "hex": "#0ea5e9"
+            }
+          },
+          "pink": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.859,
+                0.153,
+                0.467
+              ],
+              "alpha": 1,
+              "hex": "#db2777"
+            }
+          },
+          "amber": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.961,
+                0.62,
+                0.043
+              ],
+              "alpha": 1,
+              "hex": "#f59e0b"
+            }
+          }
+        },
+        "content": {
+          "primary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1,
+                1,
+                1
+              ],
+              "alpha": 1,
+              "hex": "#ffffff"
+            }
+          },
+          "secondary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1,
+                1,
+                1
+              ],
+              "alpha": 0.9,
+              "hex": "#ffffff"
+            }
+          },
+          "tertiary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1,
+                1,
+                1
+              ],
+              "alpha": 0.86,
+              "hex": "#ffffff"
+            }
+          },
+          "accent": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.49,
+                0.827,
+                0.988
+              ],
+              "alpha": 1,
+              "hex": "#7dd3fc"
+            }
+          }
+        }
+      },
+      "glass": {
+        "$description": "One pane of glass, painted bottom to top: shadow, blurred + saturated backdrop, shade, frost, sheen, grain, edge, content.",
+        "blur": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$description": "Blur of what is behind the pane."
+        },
+        "saturation": {
+          "$type": "number",
+          "$value": 1.6,
+          "$description": "Colour boost applied after the blur. 1 = unchanged."
+        },
+        "shade": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.027,
+              0.043,
+              0.102
+            ],
+            "alpha": 0.55,
+            "hex": "#070b1a"
+          },
+          "$description": "Night laid over the blurred backdrop, under the frost. It darkens whatever bright colour drifts behind the pane so white text keeps 4.5:1."
+        },
+        "tint-top": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.08,
+            "hex": "#ffffff"
+          },
+          "$description": "Frost at the top edge (over the shade)."
+        },
+        "tint-bottom": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.02,
+            "hex": "#ffffff"
+          },
+          "$description": "Frost at the bottom edge."
+        },
+        "highlight": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.12,
+            "hex": "#ffffff"
+          },
+          "$description": "Specular sheen from the top-left corner, fading out by 55% of the diagonal. Kept soft because captions sit under it."
+        },
+        "grain": {
+          "$type": "number",
+          "$value": 0.05,
+          "$description": "Opacity of fine white noise over the pane."
+        },
+        "stroke-top": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.45,
+            "hex": "#ffffff"
+          },
+          "$description": "Edge light at the top-left."
+        },
+        "stroke-bottom": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.1,
+            "hex": "#ffffff"
+          },
+          "$description": "Edge light at the bottom-right."
+        },
+        "stroke-width": {
+          "$type": "dimension",
+          "$value": {
+            "value": 1,
+            "unit": "px"
+          },
+          "$description": "Inner stroke: drawn inside the shape, never outside."
+        },
+        "shadow": {
+          "$type": "shadow",
+          "$value": {
+            "color": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0,
+                0
+              ],
+              "alpha": 0.3,
+              "hex": "#000000"
+            },
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 16,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 32,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        }
+      },
+      "fill": {
+        "$description": "Controls placed ON a pane: no blur, no shadow, just frost and edge.",
+        "tint-top": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.14,
+            "hex": "#ffffff"
+          }
+        },
+        "tint-bottom": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.08,
+            "hex": "#ffffff"
+          }
+        },
+        "stroke-top": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.28,
+            "hex": "#ffffff"
+          }
+        },
+        "stroke-bottom": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              1,
+              1
+            ],
+            "alpha": 0.06,
+            "hex": "#ffffff"
+          }
+        }
+      },
+      "radius": {
+        "sheet": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "card": {
+          "$type": "dimension",
+          "$value": {
+            "value": 28,
+            "unit": "px"
+          }
+        },
+        "inner": {
+          "$type": "dimension",
+          "$value": {
+            "value": 18,
+            "unit": "px"
+          },
+          "$description": "Artwork and fills nested in a card: card radius minus its padding, roughly."
+        },
+        "pill": {
+          "$type": "dimension",
+          "$value": {
+            "value": 999,
+            "unit": "px"
+          }
+        }
+      },
+      "spacing": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        },
+        "s": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "m": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "l": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "xxl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "huge": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "gutter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "Horizontal screen margin."
+        },
+        "card-padding": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        }
+      },
+      "type": {
+        "$description": "System font (SF Pro / Roboto / Inter on web). Sizes in px, letter spacing in px.",
+        "display": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 34,
+              "unit": "px"
+            },
+            "lineHeight": 40,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": -0.8,
+              "unit": "px"
+            }
+          }
+        },
+        "title": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 20,
+              "unit": "px"
+            },
+            "lineHeight": 26,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": -0.2,
+              "unit": "px"
+            }
+          }
+        },
+        "body": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 15,
+              "unit": "px"
+            },
+            "lineHeight": 22,
+            "fontWeight": 400,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Colour: content.secondary."
+        },
+        "label": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 13,
+              "unit": "px"
+            },
+            "lineHeight": 16,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": 0.2,
+              "unit": "px"
+            }
+          }
+        },
+        "caption": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 12,
+              "unit": "px"
+            },
+            "lineHeight": 16,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": 0.6,
+              "unit": "px"
+            }
+          },
+          "$description": "UPPERCASE for eyebrows. Colour: content.tertiary."
+        },
+        "numeric": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 44,
+              "unit": "px"
+            },
+            "lineHeight": 48,
+            "fontWeight": 300,
+            "letterSpacing": {
+              "value": -1.5,
+              "unit": "px"
+            }
+          },
+          "$description": "Big figures: temperatures, timers, prices."
+        }
+      }
+    },
+    "motion": {
+      "$description": "Special · Glassmorphism motion. Springs are given as damping ratio + stiffness (mass 1). Web and other tween-only platforms can use the provided cubic-bezier approximations and durations.",
+      "springs": {
+        "surface": {
+          "use": "Panes entering, settling, resizing. Calm; overshoots by about 1%.",
+          "dampingRatio": 0.8,
+          "stiffness": 380,
+          "approximation": {
+            "durationMs": 420,
+            "cubicBezier": [
+              0.22,
+              1.0,
+              0.36,
+              1.0
+            ]
+          }
+        },
+        "press": {
+          "use": "Press feedback on anything tappable: scale and brighten.",
+          "dampingRatio": 0.6,
+          "stiffness": 800,
+          "approximation": {
+            "durationMs": 260,
+            "cubicBezier": [
+              0.34,
+              1.56,
+              0.64,
+              1.0
+            ]
+          }
+        },
+        "indicator": {
+          "use": "Selection lenses sliding between tabs, chips and nav items.",
+          "dampingRatio": 0.75,
+          "stiffness": 500,
+          "approximation": {
+            "durationMs": 360,
+            "cubicBezier": [
+              0.3,
+              1.3,
+              0.5,
+              1.0
+            ]
+          }
+        }
+      },
+      "press": {
+        "scale": 0.96,
+        "frostBoost": {
+          "tintTop": 0.1,
+          "tintBottom": 0.06
+        }
+      },
+      "entrance": {
+        "use": "Every screen: elements arrive in reading order, top to bottom.",
+        "spring": "surface",
+        "staggerMs": 60,
+        "from": {
+          "opacity": 0,
+          "translateY": 24,
+          "scale": 0.96
+        },
+        "to": {
+          "opacity": 1,
+          "translateY": 0,
+          "scale": 1
+        }
+      },
+      "backdrop": {
+        "use": "The aurora never stops moving, slowly. Each blob follows a closed Lissajous path so the loop is seamless. Blobs peak at 70% opacity: brighter washes the panes out and text loses contrast.",
+        "loopSeconds": 24,
+        "blobs": [
+          {
+            "color": "violet",
+            "speedX": 1,
+            "speedY": 2,
+            "phaseX": 0.0,
+            "phaseY": 0.1,
+            "radius": 0.48
+          },
+          {
+            "color": "sky",
+            "speedX": 2,
+            "speedY": 1,
+            "phaseX": 0.35,
+            "phaseY": 0.6,
+            "radius": 0.42
+          },
+          {
+            "color": "pink",
+            "speedX": 1,
+            "speedY": 1,
+            "phaseX": 0.62,
+            "phaseY": 0.25,
+            "radius": 0.4
+          },
+          {
+            "color": "amber",
+            "speedX": 3,
+            "speedY": 2,
+            "phaseX": 0.85,
+            "phaseY": 0.8,
+            "radius": 0.3
+          }
+        ],
+        "path": "center.x = w * (0.5 + 0.42 * sin(2π(t/loop * speedX + phaseX))); center.y = h * (0.45 + 0.34 * cos(2π(t/loop * speedY + phaseY))); radius = max(w,h) * (radius + 0.06 * sin(2π(2t/loop + phaseX)))",
+        "blend": "screen",
+        "intensity": 0.7,
+        "topVeil": {
+          "opacity": 0.65,
+          "extent": 0.35,
+          "use": "Night (#070b1a) gradient from the top edge, gone by 35% of the height, so headers on the bare backdrop stay readable."
+        }
+      },
+      "reducedMotion": {
+        "use": "When the OS asks for reduced motion.",
+        "entrance": "appear in place: instant, or an opacity-only fade of 150ms at most. No stagger, translate or scale",
+        "backdrop": "freeze the aurora at t = 0",
+        "press": "keep: it is feedback, not decoration"
+      }
+    }
+  },
+  "neo-brutalism": {
+    "version": "0.1.1",
+    "download": "/releases/neo-brutalism-0.1.1.zip",
+    "bytes": 200437,
+    "sha256": "ab002de307778105218307ce707974c630e901aa365019308e45ccc7f561b010",
+    "reference": "/references/neo-brutalism.png",
+    "demo": "/demos/neo-brutalism/example.html",
+    "tokens": {
+      "$description": "Special · Neo-brutalism design tokens (W3C Design Tokens format). Dimensions are in px; treat 1px as 1dp on Android and 1pt on iOS.",
+      "color": {
+        "paper": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1.0,
+              0.965,
+              0.898
+            ],
+            "alpha": 1,
+            "hex": "#fff6e5"
+          },
+          "$description": "The page. Warm, never pure white. A faint ink dot grid (12%, 22px pitch) sits on it."
+        },
+        "ink": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.067,
+              0.067,
+              0.067
+            ],
+            "alpha": 1,
+            "hex": "#111111"
+          },
+          "$description": "Every outline, every shadow, every piece of text."
+        },
+        "white": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "alpha": 1,
+            "hex": "#ffffff"
+          },
+          "$description": "Neutral block fill."
+        },
+        "pop": {
+          "$description": "Flat block fills, in the order screens should reach for them. Text on all of them is ink.",
+          "yellow": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1.0,
+                0.824,
+                0.247
+              ],
+              "alpha": 1,
+              "hex": "#ffd23f"
+            }
+          },
+          "pink": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1.0,
+                0.478,
+                0.635
+              ],
+              "alpha": 1,
+              "hex": "#ff7aa2"
+            }
+          },
+          "blue": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.357,
+                0.549,
+                1.0
+              ],
+              "alpha": 1,
+              "hex": "#5b8cff"
+            }
+          },
+          "green": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.239,
+                0.863,
+                0.592
+              ],
+              "alpha": 1,
+              "hex": "#3ddc97"
+            }
+          },
+          "lilac": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.714,
+                0.612,
+                1.0
+              ],
+              "alpha": 1,
+              "hex": "#b69cff"
+            }
+          },
+          "orange": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1.0,
+                0.541,
+                0.239
+              ],
+              "alpha": 1,
+              "hex": "#ff8a3d"
+            }
+          }
+        },
+        "redline": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1.0,
+              0.231,
+              0.188
+            ],
+            "alpha": 1,
+            "hex": "#ff3b30"
+          },
+          "$description": "Annotation only (specs, lessons). Never part of a design."
+        }
+      },
+      "block": {
+        "$description": "Every box on the page is a block: hard shadow, flat fill, one outline.",
+        "border": {
+          "$type": "dimension",
+          "$value": {
+            "value": 3,
+            "unit": "px"
+          },
+          "$description": "One outline weight for everything, in ink."
+        },
+        "shadow": {
+          "$type": "shadow",
+          "$value": {
+            "color": {
+              "colorSpace": "srgb",
+              "components": [
+                0.067,
+                0.067,
+                0.067
+              ],
+              "alpha": 1,
+              "hex": "#111111"
+            },
+            "offsetX": {
+              "value": 6,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 6,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 0,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Hard, solid, down-right. Blocks nested in another block cast half (3px); flat states cast none."
+        },
+        "radius": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$description": "Every box. Tags, chips and badges are pills."
+        },
+        "tilt": {
+          "$type": "number",
+          "$value": 3,
+          "$description": "Degrees. Stickers, highlight blocks and tape bands tilt by up to this; nothing else rotates at rest."
+        }
+      },
+      "spacing": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        },
+        "s": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "m": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "l": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "xxl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "huge": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "gutter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "Horizontal screen margin."
+        },
+        "card-padding": {
+          "$type": "dimension",
+          "$value": {
+            "value": 18,
+            "unit": "px"
+          }
+        }
+      },
+      "type": {
+        "$description": "System sans at heavy weights, plus system monospace for labels. Text is always ink.",
+        "display": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 44,
+              "unit": "px"
+            },
+            "lineHeight": 44,
+            "fontWeight": 900,
+            "letterSpacing": {
+              "value": -1.5,
+              "unit": "px"
+            }
+          },
+          "$description": "Headlines. One highlighted word per screen gets a tilted yellow marker block behind it."
+        },
+        "title": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 22,
+              "unit": "px"
+            },
+            "lineHeight": 26,
+            "fontWeight": 800,
+            "letterSpacing": {
+              "value": -0.5,
+              "unit": "px"
+            }
+          }
+        },
+        "body": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 15,
+              "unit": "px"
+            },
+            "lineHeight": 22,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        },
+        "label": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 14,
+              "unit": "px"
+            },
+            "lineHeight": 18,
+            "fontWeight": 700,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Buttons use this UPPERCASE with 1px tracking."
+        },
+        "mono": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 12,
+              "unit": "px"
+            },
+            "lineHeight": 16,
+            "fontWeight": 700,
+            "letterSpacing": {
+              "value": 1,
+              "unit": "px"
+            },
+            "fontFamily": "monospace"
+          },
+          "$description": "UPPERCASE meta: dates, tags, captions, slider labels."
+        },
+        "numeric": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 56,
+              "unit": "px"
+            },
+            "lineHeight": 56,
+            "fontWeight": 900,
+            "letterSpacing": {
+              "value": -2,
+              "unit": "px"
+            }
+          },
+          "$description": "Big numbers: stats, prices, counts."
+        }
+      }
+    },
+    "motion": {
+      "$description": "Special · Neo-brutalism motion. Springs are damping ratio + stiffness (mass 1). Tween-only platforms can use the approximations. Brutal motion is fast and bouncy: things are thrown, slapped and snapped.",
+      "springs": {
+        "drop": {
+          "use": "Blocks landing on the page, sizes and positions settling. Visible bounce (~15% overshoot).",
+          "dampingRatio": 0.55,
+          "stiffness": 600,
+          "approximation": {
+            "durationMs": 380,
+            "cubicBezier": [
+              0.34,
+              1.8,
+              0.6,
+              1
+            ]
+          }
+        },
+        "press": {
+          "use": "Sinking into the shadow on press; springs back on release.",
+          "dampingRatio": 0.5,
+          "stiffness": 1400,
+          "approximation": {
+            "durationMs": 140,
+            "cubicBezier": [
+              0.3,
+              1.6,
+              0.6,
+              1
+            ]
+          }
+        },
+        "pop": {
+          "use": "Checkmarks, toggles, selection raising up.",
+          "dampingRatio": 0.4,
+          "stiffness": 900,
+          "approximation": {
+            "durationMs": 300,
+            "cubicBezier": [
+              0.3,
+              2.0,
+              0.5,
+              1
+            ]
+          }
+        }
+      },
+      "press": {
+        "use": "The block moves down-right by its full shadow offset, covering its shadow. No scale, no colour change.",
+        "translate": "shadow offset",
+        "spring": "press"
+      },
+      "entrance": {
+        "use": "Every screen: blocks are slapped on in reading order.",
+        "spring": "drop",
+        "staggerMs": 70,
+        "from": {
+          "opacity": 0,
+          "translateY": -40,
+          "rotate": "±tilt (alternate left/right by order)",
+          "scale": 1.06
+        },
+        "to": {
+          "opacity": 1,
+          "translateY": 0,
+          "rotate": 0,
+          "scale": 1
+        },
+        "opacity": "reaches 1 in the first quarter of the motion: thrown things don't fade"
+      },
+      "selection": {
+        "use": "Tabs and chips: the selected block stands up on its shadow in colour; the others lie flat (no shadow, nudged 3px down-right).",
+        "spring": "pop"
+      },
+      "check": {
+        "use": "Checkbox: box scales up 18% and back while the tick path draws itself in; the label gets an ink strike-through drawn left to right and fades to 55%.",
+        "spring": "pop"
+      },
+      "ambient": {
+        "marquee": {
+          "use": "Ticker band: ink strip, yellow label text, tilted -tilt/2, scrolling left forever.",
+          "speedPxPerSecond": 40
+        },
+        "sticker": {
+          "use": "At most one starburst sticker per screen, spinning.",
+          "turnSeconds": 12
+        },
+        "progressHatch": {
+          "use": "Diagonal hatching inside progress fills crawls sideways while work remains.",
+          "speedPxPerSecond": 12
+        }
+      },
+      "reducedMotion": {
+        "use": "When the OS asks for reduced motion.",
+        "entrance": "appear in place: no drop, tilt or scale",
+        "ambient": "marquee, sticker and hatching stop",
+        "press": "keep: it is feedback, not decoration"
+      }
+    }
+  },
+  "kinetic-type": {
+    "version": "0.1.2",
+    "download": "/releases/kinetic-type-0.1.2.zip",
+    "bytes": 199139,
+    "sha256": "bac79326b26b3ce1b8d6666201e8c35a6fc17c33f555dcba7bb77d03638f0563",
+    "reference": "/references/kinetic-type.png",
+    "demo": "/demos/kinetic-type/example.html",
+    "tokens": {
+      "$description": "Special · Kinetic type design tokens (W3C Design Tokens format). Dimensions are in px; treat 1px as 1dp (sp for type) on Android and 1pt on iOS. System fonts only: the platform sans at its heaviest and lightest weights, and the platform monospace.",
+      "color": {
+        "ink": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.043,
+              0.043,
+              0.047
+            ],
+            "alpha": 1,
+            "hex": "#0b0b0c"
+          },
+          "$description": "The page. Near-black, never pure #000: pure black smears on OLED when type moves across it."
+        },
+        "raised": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.086,
+              0.086,
+              0.094
+            ],
+            "alpha": 1,
+            "hex": "#161618"
+          },
+          "$description": "Sheets and bars that sit over the page, when they need separating from it."
+        },
+        "paper": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.953,
+              0.945,
+              0.918
+            ],
+            "alpha": 1,
+            "hex": "#f3f1ea"
+          },
+          "$description": "Primary text. Warm off-white. 17.4:1 on ink."
+        },
+        "muted": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.557,
+              0.549,
+              0.522
+            ],
+            "alpha": 1,
+            "hex": "#8e8c85"
+          },
+          "$description": "Secondary text and mono meta. 5.85:1 on ink, 5.37:1 on raised."
+        },
+        "line": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.18,
+              0.18,
+              0.192
+            ],
+            "alpha": 1,
+            "hex": "#2e2e31"
+          },
+          "$description": "Hairline rules and the background grid. Decoration only: never the only cue."
+        },
+        "edge": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.42,
+              0.42,
+              0.439
+            ],
+            "alpha": 1,
+            "hex": "#6b6b70"
+          },
+          "$description": "Outlines of controls (tags, icon buttons, slider tracks). 3.7:1 on ink, enough for UI boundaries."
+        },
+        "accent": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.843,
+              1.0,
+              0.227
+            ],
+            "alpha": 1,
+            "hex": "#d7ff3a"
+          },
+          "$description": "Acid lime. The one electric colour: one word, the primary action, and whatever is live. Text on it is ink (17.1:1)."
+        }
+      },
+      "kinetic": {
+        "$description": "The entrance recipe. Every tunable in the lesson maps onto one of these.",
+        "letter-stagger": {
+          "$type": "duration",
+          "$value": {
+            "value": 28,
+            "unit": "ms"
+          },
+          "$description": "Delay between one letter and the next, in reading order. Whitespace is skipped."
+        },
+        "rise": {
+          "$type": "number",
+          "$value": 1,
+          "$description": "How far letters travel up out of their mask, in line heights. 1 = from just below their own line."
+        },
+        "tracking": {
+          "$type": "dimension",
+          "$value": {
+            "value": -3.5,
+            "unit": "px"
+          },
+          "$description": "Tracking of display type at 84px. Scale it with the size: about -0.042em."
+        },
+        "emphasis-scale": {
+          "$type": "number",
+          "$value": 1.08,
+          "$description": "Scale an emphasised word steps up to, together with its weight."
+        },
+        "damping": {
+          "$type": "number",
+          "$value": 0.74,
+          "$description": "Damping ratio of the rise spring. Lower is bouncier."
+        },
+        "fade": {
+          "$type": "number",
+          "$value": 0,
+          "$description": "Always 0. Letters are masked, never faded in."
+        }
+      },
+      "radius": {
+        "none": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          },
+          "$description": "Every box is square. The type is the shape."
+        }
+      },
+      "border": {
+        "hairline": {
+          "$type": "dimension",
+          "$value": {
+            "value": 1,
+            "unit": "px"
+          },
+          "$description": "Rules, grid and outlines. One weight only."
+        }
+      },
+      "spacing": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        },
+        "s": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "m": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "l": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "xxl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "huge": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "section": {
+          "$type": "dimension",
+          "$value": {
+            "value": 48,
+            "unit": "px"
+          },
+          "$description": "Between sections: each block of type gets its own stage."
+        },
+        "gutter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "Horizontal screen margin."
+        }
+      },
+      "type": {
+        "$description": "System sans at the extremes (900 for display, 200 for numbers), plus system monospace for meta. Big type is set tight.",
+        "display": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "system-ui",
+            "fontSize": {
+              "value": 84,
+              "unit": "px"
+            },
+            "lineHeight": 76,
+            "fontWeight": 900,
+            "letterSpacing": {
+              "value": -3.5,
+              "unit": "px"
+            }
+          },
+          "$description": "Headlines. UPPERCASE, 2 to 4 short lines, sized to the column (84 at most, never wider than the column). Letters rise in one by one."
+        },
+        "headline": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "system-ui",
+            "fontSize": {
+              "value": 44,
+              "unit": "px"
+            },
+            "lineHeight": 46,
+            "fontWeight": 800,
+            "letterSpacing": {
+              "value": -1.5,
+              "unit": "px"
+            }
+          },
+          "$description": "Second-level type: rolling words, marquee bands, small stat numbers."
+        },
+        "title": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "system-ui",
+            "fontSize": {
+              "value": 22,
+              "unit": "px"
+            },
+            "lineHeight": 28,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": -0.4,
+              "unit": "px"
+            }
+          },
+          "$description": "List items and lead lines. Steps up to 900 when emphasised."
+        },
+        "body": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "system-ui",
+            "fontSize": {
+              "value": 16,
+              "unit": "px"
+            },
+            "lineHeight": 24,
+            "fontWeight": 400,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Paragraphs. Lines rise as units, never letter by letter."
+        },
+        "label": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "system-ui",
+            "fontSize": {
+              "value": 14,
+              "unit": "px"
+            },
+            "lineHeight": 18,
+            "fontWeight": 700,
+            "letterSpacing": {
+              "value": 1.2,
+              "unit": "px"
+            }
+          },
+          "$description": "Button labels, UPPERCASE."
+        },
+        "meta": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "monospace",
+            "fontSize": {
+              "value": 12,
+              "unit": "px"
+            },
+            "lineHeight": 16,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": 1.5,
+              "unit": "px"
+            }
+          },
+          "$description": "UPPERCASE monospace for everything that isn't for reading: dates, list numbers, section labels, tags."
+        },
+        "numeric": {
+          "$type": "typography",
+          "$value": {
+            "fontFamily": "system-ui",
+            "fontSize": {
+              "value": 72,
+              "unit": "px"
+            },
+            "lineHeight": 72,
+            "fontWeight": 200,
+            "letterSpacing": {
+              "value": -3,
+              "unit": "px"
+            },
+            "fontFeatureSettings": "tnum"
+          },
+          "$description": "Big numbers. Tabular figures, so odometers never jitter."
+        }
+      }
+    },
+    "motion": {
+      "$description": "Special · Kinetic type motion. Springs are damping ratio + stiffness (mass 1). Tween-only platforms use the approximations. Kinetic motion serves reading: letters arrive in reading order, fast, from behind a mask, and settle still.",
+      "springs": {
+        "rise": {
+          "use": "Letters and blocks rising out of their mask. Quick, one 3% overshoot, then still.",
+          "dampingRatio": 0.74,
+          "stiffness": 380,
+          "approximation": {
+            "durationMs": 340,
+            "cubicBezier": [
+              0.55,
+              1.1,
+              0.2,
+              1
+            ]
+          }
+        },
+        "roll": {
+          "use": "Words and digits turning on their wheels; tab indicators sliding.",
+          "dampingRatio": 0.82,
+          "stiffness": 420,
+          "approximation": {
+            "durationMs": 290,
+            "cubicBezier": [
+              0.4,
+              0.55,
+              0.2,
+              1
+            ]
+          }
+        },
+        "emphasis": {
+          "use": "Emphasis stepping through weight, scale and tracking.",
+          "dampingRatio": 0.6,
+          "stiffness": 600,
+          "approximation": {
+            "durationMs": 260,
+            "cubicBezier": [
+              0.55,
+              1.45,
+              0.5,
+              1
+            ]
+          }
+        },
+        "press": {
+          "use": "A quick squeeze on press; springs back on release.",
+          "dampingRatio": 0.7,
+          "stiffness": 1200,
+          "approximation": {
+            "durationMs": 190,
+            "cubicBezier": [
+              0.55,
+              1.2,
+              0.25,
+              1
+            ]
+          }
+        }
+      },
+      "press": {
+        "use": "Scale down slightly. Buttons also roll their label over itself on tap.",
+        "scale": 0.97,
+        "spring": "press"
+      },
+      "entrance": {
+        "use": "Every screen. Display lines assemble letter by letter; everything else rises as a block. Nothing fades.",
+        "letters": {
+          "spring": "rise",
+          "letterStaggerMs": 28,
+          "order": "reading order across lines; whitespace skipped",
+          "mask": "each line clips its own letters to the line box",
+          "from": {
+            "translateY": "rise x line height (100%)",
+            "rise": 1,
+            "opacity": 1
+          },
+          "to": {
+            "translateY": 0,
+            "opacity": 1
+          },
+          "maxLetters": 24
+        },
+        "blocks": {
+          "spring": "rise",
+          "staggerMs": 90,
+          "mask": "the block's own bounds",
+          "from": {
+            "translateY": "100% of its own height",
+            "opacity": 1
+          }
+        },
+        "rule": {
+          "use": "Hairline rules draw in from the left.",
+          "durationMs": 560,
+          "cubicBezier": [
+            0.2,
+            0,
+            0,
+            1
+          ]
+        },
+        "screenOrder": "meta scramble 0 ms, headline letters from 120 ms, circle text 420 ms, lead line 560 ms, rolling word 640 ms, sections from 700 ms and 90 ms apart"
+      },
+      "roll": {
+        "use": "A word swap: old letters roll up and out, new letters roll up from below, letter by letter, and the width eases to fit. The same word rolled over itself is the kinetic press.",
+        "spring": "roll",
+        "letterStaggerMs": 24,
+        "wordHoldMs": 2400
+      },
+      "odometer": {
+        "use": "Each digit is a wheel. It turns the short way, in the direction of change. On entrance the wheels start at 0 and roll in left to right; a zero turns one full revolution.",
+        "spring": "roll",
+        "digitStaggerMs": 60
+      },
+      "scramble": {
+        "use": "Decoding meta text: characters appear as random glyphs in the accent, flicker, then lock left to right. Monospace only.",
+        "frameMs": 50,
+        "durationMs": 360,
+        "staggerMs": 32,
+        "glyphs": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=/<>"
+      },
+      "emphasis": {
+        "use": "Selection is emphasis: the word steps up through the weights one at a time (never a cross-fade), scales up, tightens and turns accent.",
+        "spring": "emphasis",
+        "scale": 1.08,
+        "weightStep": 100,
+        "trackingPx": -0.6
+      },
+      "scroll": {
+        "use": "The headline answers to scroll: over the range, alternate lines drift apart sideways and the tracking tightens. Circle text turns with it.",
+        "rangePx": 240,
+        "shiftPx": 24,
+        "trackingPx": -2,
+        "circleTurnDegrees": 120
+      },
+      "ambient": {
+        "marquee": {
+          "use": "Bands of headline type, one filled and one outlined, running opposite ways.",
+          "speedPxPerSecond": 44
+        },
+        "circle": {
+          "use": "Text on a circle turning slowly, with an accent asterisk turning against it.",
+          "turnSeconds": 20
+        }
+      },
+      "reducedMotion": {
+        "use": "When the OS asks for reduced motion.",
+        "entrance": "appear in place: letters, blocks, rules and scrambles show their final state at once",
+        "roll": "swap instantly; rotating words stop rotating (a tap still changes them)",
+        "odometer": "show the final number",
+        "ambient": "marquee, circle text, live counters and scroll drift stop",
+        "press": "keep: it is feedback, not decoration"
+      }
+    }
+  },
+  "aurora-shaders": {
+    "version": "0.1.1",
+    "download": "/releases/aurora-shaders-0.1.1.zip",
+    "bytes": 1387847,
+    "sha256": "38034faf1483ef749a4a68df0446b89e3fa030930ac66a3a0357602eb055a595",
+    "reference": "/references/aurora-shaders.png",
+    "demo": "/demos/aurora-shaders/example.html",
+    "tokens": {
+      "$description": "Special · Aurora shaders design tokens (W3C Design Tokens format). Dimensions are in px; treat 1px as 1dp on Android and 1pt on iOS. The shader group holds the default uniforms of the backdrop, grain, foil and glow programs.",
+      "color": {
+        "void": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.024,
+              0.02,
+              0.059
+            ],
+            "alpha": 1,
+            "hex": "#06050f"
+          },
+          "$description": "The night everything glows out of. The page colour and the shader's darkest value. Never pure black: pure black bands."
+        },
+        "deep": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.051,
+              0.043,
+              0.118
+            ],
+            "alpha": 1,
+            "hex": "#0d0b1e"
+          },
+          "$description": "Panels, buttons and the holo card's base: a lifted night."
+        },
+        "aurora": {
+          "$description": "The four hues, in gradient-map order (shader uniforms c0..c3). Light, not fill: they appear in the backdrop, foil, shimmer borders, glows and small accents, never as large flat areas.",
+          "mint": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.176,
+                0.961,
+                0.769
+              ],
+              "alpha": 1,
+              "hex": "#2df5c4"
+            },
+            "$description": "c0. The signature aurora green. Accents on text (eyebrows, notes) use this one."
+          },
+          "azure": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.235,
+                0.431,
+                1.0
+              ],
+              "alpha": 1,
+              "hex": "#3c6eff"
+            },
+            "$description": "c1."
+          },
+          "violet": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.545,
+                0.361,
+                0.965
+              ],
+              "alpha": 1,
+              "hex": "#8b5cf6"
+            },
+            "$description": "c2. Display-text glow."
+          },
+          "rose": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.941,
+                0.271,
+                0.612
+              ],
+              "alpha": 1,
+              "hex": "#f0459c"
+            },
+            "$description": "c3. Also marks trap values in the lesson."
+          }
+        },
+        "content": {
+          "primary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.965,
+                0.957,
+                1.0
+              ],
+              "alpha": 1,
+              "hex": "#f6f4ff"
+            },
+            "$description": "Titles, labels, numbers."
+          },
+          "secondary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.965,
+                0.957,
+                1.0
+              ],
+              "alpha": 0.74,
+              "hex": "#f6f4ff"
+            },
+            "$description": "Body text."
+          },
+          "tertiary": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.965,
+                0.957,
+                1.0
+              ],
+              "alpha": 0.62,
+              "hex": "#f6f4ff"
+            },
+            "$description": "Eyebrow captions and hints. At least 4.5:1 on panels and on the veil."
+          }
+        },
+        "surface": {
+          "panel": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.051,
+                0.043,
+                0.118
+              ],
+              "alpha": 0.82,
+              "hex": "#0d0b1e"
+            },
+            "$description": "Every surface: obsidian, mostly opaque, so text never depends on the shader behind it."
+          },
+          "edge": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "alpha": 0.1,
+              "hex": "#ffffff"
+            },
+            "$description": "Hairline inner edge of panels (gradient 16% top → 10% → 4% bottom)."
+          }
+        }
+      },
+      "shader": {
+        "$description": "Default uniforms. They are design decisions: change them together with the checklist's contrast numbers.",
+        "flow": {
+          "$type": "number",
+          "$value": 0.06,
+          "$description": "Noise units per second of motion time. The field should drift, never visibly stream."
+        },
+        "scale": {
+          "$type": "number",
+          "$value": 1.6,
+          "$description": "Noise frequency: cloud cells across the screen's short side."
+        },
+        "warp": {
+          "$type": "number",
+          "$value": 1.2,
+          "$description": "Domain-warp strength. Above ~2.6 the silk turns to noise soup."
+        },
+        "intensity": {
+          "$type": "number",
+          "$value": 0.9,
+          "$description": "How brightly the aurora glows out of the void."
+        },
+        "grain": {
+          "$type": "number",
+          "$value": 0.07,
+          "$description": "Film grain opacity, re-rolled 24 times a second. Above ~0.15 it reads as static."
+        },
+        "hue-shift": {
+          "$type": "number",
+          "$value": 0,
+          "$description": "Degrees; rotates all four hues with the CSS hue-rotate matrix."
+        },
+        "veil": {
+          "$type": "number",
+          "$value": 0.75,
+          "$description": "Void scrim opacity behind text on the backdrop: full over the top 30% and bottom 10% of the screen."
+        },
+        "foil": {
+          "$type": "number",
+          "$value": 0.75,
+          "$description": "Holographic foil strength on cards (screen-blended)."
+        },
+        "glow": {
+          "$type": "number",
+          "$value": 0.6,
+          "$description": "Opacity of glow halos: display text, the primary button, lit panels."
+        },
+        "aberration": {
+          "$type": "dimension",
+          "$value": {
+            "value": 1.5,
+            "unit": "px"
+          },
+          "$description": "Chromatic split on display text: mint ghost one side, rose the other."
+        },
+        "render-scale": {
+          "$type": "number",
+          "$value": 0.5,
+          "$description": "The backdrop renders at this fraction of device pixels, then scales up. It is soft, so 0.5 is invisible and costs a quarter."
+        }
+      },
+      "card": {
+        "aspect": {
+          "$type": "number",
+          "$value": 1.586,
+          "$description": "Holo card aspect ratio (ISO/IEC 7810 ID-1, a bank card)."
+        }
+      },
+      "radius": {
+        "panel": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$description": "Panels, sheets and tiles."
+        },
+        "card": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "The holo card."
+        },
+        "inner": {
+          "$type": "dimension",
+          "$value": {
+            "value": 14,
+            "unit": "px"
+          },
+          "$description": "Nested blocks: previews, chips of art, notes."
+        },
+        "pill": {
+          "$type": "dimension",
+          "$value": {
+            "value": 999,
+            "unit": "px"
+          },
+          "$description": "Buttons, chips, tags."
+        }
+      },
+      "spacing": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        },
+        "s": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "m": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "l": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "xxl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "huge": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "gutter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "Horizontal screen margin."
+        },
+        "panel-padding": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        }
+      },
+      "type": {
+        "$description": "System sans, light at display sizes so the glow does the talking; system monospace for card numbers. Text is always content.* colours.",
+        "display": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 44,
+              "unit": "px"
+            },
+            "lineHeight": 48,
+            "fontWeight": 300,
+            "letterSpacing": {
+              "value": -1.2,
+              "unit": "px"
+            }
+          },
+          "$description": "One line per screen, with the chromatic glow treatment."
+        },
+        "title": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 22,
+              "unit": "px"
+            },
+            "lineHeight": 28,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": -0.3,
+              "unit": "px"
+            }
+          }
+        },
+        "body": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 15,
+              "unit": "px"
+            },
+            "lineHeight": 22,
+            "fontWeight": 400,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Secondary colour."
+        },
+        "label": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 14,
+              "unit": "px"
+            },
+            "lineHeight": 18,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": 0.3,
+              "unit": "px"
+            }
+          },
+          "$description": "Buttons, list titles."
+        },
+        "caption": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 11,
+              "unit": "px"
+            },
+            "lineHeight": 14,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": 2,
+              "unit": "px"
+            }
+          },
+          "$description": "UPPERCASE eyebrows and meta. Tertiary colour by default."
+        },
+        "numeric": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 40,
+              "unit": "px"
+            },
+            "lineHeight": 44,
+            "fontWeight": 200,
+            "letterSpacing": {
+              "value": -1.5,
+              "unit": "px"
+            }
+          },
+          "$description": "Prices and stats."
+        },
+        "mono": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 13,
+              "unit": "px"
+            },
+            "lineHeight": 16,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": 2.2,
+              "unit": "px"
+            },
+            "fontFamily": "monospace"
+          },
+          "$description": "Card numbers and values."
+        }
+      }
+    },
+    "motion": {
+      "$description": "Special · Aurora shaders motion. Springs are damping ratio + stiffness (mass 1). Tween-only platforms can use the approximations. All shader time is motion time: it slows with slow motion and stops under reduced motion.",
+      "springs": {
+        "emerge": {
+          "use": "Entrances, panels lighting up, anything settling. Calm; overshoots about 1%.",
+          "dampingRatio": 0.82,
+          "stiffness": 170,
+          "approximation": {
+            "durationMs": 460,
+            "cubicBezier": [
+              0.22,
+              1.0,
+              0.36,
+              1.0
+            ]
+          }
+        },
+        "tilt": {
+          "use": "The holo card springing back after a drag. Loose: overshoots about 20% and wobbles once.",
+          "dampingRatio": 0.45,
+          "stiffness": 190,
+          "approximation": {
+            "durationMs": 640,
+            "cubicBezier": [
+              0.34,
+              1.56,
+              0.64,
+              1.0
+            ]
+          }
+        },
+        "press": {
+          "use": "Press: scale down and brighten the glow.",
+          "dampingRatio": 0.6,
+          "stiffness": 900,
+          "approximation": {
+            "durationMs": 210,
+            "cubicBezier": [
+              0.3,
+              1.4,
+              0.6,
+              1.0
+            ]
+          }
+        }
+      },
+      "press": {
+        "scale": 0.97,
+        "glowBoost": 0.6,
+        "spring": "press",
+        "use": "Scale to 0.97 and raise the glow by 60%. No ink ripples."
+      },
+      "entrance": {
+        "use": "Every screen: elements condense out of the light in reading order.",
+        "spring": "emerge",
+        "staggerMs": 80,
+        "from": {
+          "opacity": 0,
+          "translateY": 20,
+          "blur": 16
+        },
+        "to": {
+          "opacity": 1,
+          "translateY": 0,
+          "blur": 0
+        },
+        "note": "Remove the blur effect once sharp; it must cost nothing at rest."
+      },
+      "tilt": {
+        "use": "Holo card: follows the finger while dragging (snap), springs back on release.",
+        "spring": "tilt",
+        "maxDegrees": 14,
+        "cameraDistance": 12
+      },
+      "ripple": {
+        "use": "One ring per tap, expanding from the touch over the whole surface: refracts on AGSL/WebGL, a ring of light on fallbacks.",
+        "durationMs": 900,
+        "easing": "linear-out-slow-in",
+        "cubicBezier": [
+          0.0,
+          0.0,
+          0.2,
+          1.0
+        ],
+        "amplitudePx": 14,
+        "widthPx": 56
+      },
+      "ambient": {
+        "flow": {
+          "use": "Backdrop field drift.",
+          "noiseUnitsPerSecond": 0.06
+        },
+        "shimmer": {
+          "use": "Light lapping a shimmer border.",
+          "turnSeconds": 6
+        },
+        "grain": {
+          "use": "Grain re-rolls at film rate, not every frame.",
+          "fps": 24
+        },
+        "foilDrift": {
+          "use": "Foil sways slowly when nobody touches the card.",
+          "loopSeconds": 14
+        },
+        "aberration": {
+          "use": "The chromatic split on display text wobbles.",
+          "loopSeconds": 7
+        }
+      },
+      "reducedMotion": {
+        "use": "When the OS asks for reduced motion (Android: animator duration scale 0).",
+        "entrance": "appear in place: no rise, no blur",
+        "shaders": "time stops: the aurora, grain, shimmer and foil freeze on one frame (still fully drawn)",
+        "tilt": "keep: it follows the finger, it is direct manipulation",
+        "ripple": "skip",
+        "press": "keep"
+      }
+    }
+  },
+  "claymorphism": {
+    "version": "0.1.2",
+    "download": "/releases/claymorphism-0.1.2.zip",
+    "bytes": 598968,
+    "sha256": "24bbce5b19149944616ed2a381d21180935c036cd0ebc1945dd45208caaf8033",
+    "reference": "/references/claymorphism.png",
+    "demo": "/demos/claymorphism/example.html",
+    "tokens": {
+      "$description": "Special · Claymorphism design tokens (W3C Design Tokens format). Dimensions are in px; treat 1px as 1dp on Android and 1pt on iOS.",
+      "color": {
+        "background": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.933,
+              0.91,
+              0.98
+            ],
+            "alpha": 1,
+            "hex": "#eee8fa"
+          },
+          "$description": "The table everything sits on: lavender milk, with two faint pastel glows (peach top-right, sky left)."
+        },
+        "ink": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.169,
+              0.137,
+              0.251
+            ],
+            "alpha": 1,
+            "hex": "#2b2340"
+          },
+          "$description": "Titles, labels, icons. Pastels are light, so text is always dark."
+        },
+        "ink-soft": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.341,
+              0.298,
+              0.439
+            ],
+            "alpha": 1,
+            "hex": "#574c70"
+          },
+          "$description": "Body copy and captions. Passes 4.5:1 on every fill and on the background."
+        },
+        "highlight": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "alpha": 1,
+            "hex": "#ffffff"
+          },
+          "$description": "The inner highlight on the lit edge, used at clay.highlight opacity."
+        },
+        "milk": {
+          "$description": "The neutral: cards, knobs, thumbs, the lesson panel. `deep` is the same hue, darker: it tints this clay's outer shadow and inner shade.",
+          "fill": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.98,
+                0.969,
+                1.0
+              ],
+              "alpha": 1,
+              "hex": "#faf7ff"
+            }
+          },
+          "deep": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.643,
+                0.576,
+                0.839
+              ],
+              "alpha": 1,
+              "hex": "#a493d6"
+            }
+          }
+        },
+        "peach": {
+          "$description": "Warm. The climate card, avatars, the forward action. `deep` is the same hue, darker: it tints this clay's outer shadow and inner shade.",
+          "fill": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1.0,
+                0.812,
+                0.71
+              ],
+              "alpha": 1,
+              "hex": "#ffcfb5"
+            }
+          },
+          "deep": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.922,
+                0.522,
+                0.345
+              ],
+              "alpha": 1,
+              "hex": "#eb8558"
+            }
+          }
+        },
+        "mint": {
+          "$description": "On states: switches, progress, 'home' badges. `deep` is the same hue, darker: it tints this clay's outer shadow and inner shade.",
+          "fill": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.749,
+                0.922,
+                0.843
+              ],
+              "alpha": 1,
+              "hex": "#bfebd7"
+            }
+          },
+          "deep": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.302,
+                0.702,
+                0.541
+              ],
+              "alpha": 1,
+              "hex": "#4db38a"
+            }
+          }
+        },
+        "sky": {
+          "$description": "Cool accents: media, secondary tiles. `deep` is the same hue, darker: it tints this clay's outer shadow and inner shade.",
+          "fill": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.765,
+                0.871,
+                1.0
+              ],
+              "alpha": 1,
+              "hex": "#c3deff"
+            }
+          },
+          "deep": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.353,
+                0.592,
+                0.91
+              ],
+              "alpha": 1,
+              "hex": "#5a97e8"
+            }
+          }
+        },
+        "lilac": {
+          "$description": "The primary button and the floating blob. `deep` is the same hue, darker: it tints this clay's outer shadow and inner shade.",
+          "fill": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.863,
+                0.812,
+                1.0
+              ],
+              "alpha": 1,
+              "hex": "#dccfff"
+            }
+          },
+          "deep": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.541,
+                0.435,
+                0.89
+              ],
+              "alpha": 1,
+              "hex": "#8a6fe3"
+            }
+          }
+        },
+        "butter": {
+          "$description": "Light and heat: lamps, the sun, numbered badges. `deep` is the same hue, darker: it tints this clay's outer shadow and inner shade.",
+          "fill": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                1.0,
+                0.914,
+                0.651
+              ],
+              "alpha": 1,
+              "hex": "#ffe9a6"
+            }
+          },
+          "deep": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.89,
+                0.675,
+                0.169
+              ],
+              "alpha": 1,
+              "hex": "#e3ac2b"
+            }
+          }
+        }
+      },
+      "clay": {
+        "$description": "The recipe every lump of clay is painted with. Three layers, all following light.angle: a soft outer shadow tinted from the fill's deep tone, thrown away from the light; a white inner highlight inside the lit edge; a deep-tone inner shade inside the far edge. Nested clay uses half the depth.",
+        "depth": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$description": "Outer shadow distance, measured away from the light. Nested clay: 6. Controls inside controls: about 5."
+        },
+        "highlight": {
+          "$type": "number",
+          "$value": 0.8,
+          "$description": "Opacity of the white inner highlight."
+        },
+        "shade": {
+          "$type": "number",
+          "$value": 0.35,
+          "$description": "Opacity of the deep-tone inner shade."
+        },
+        "squish": {
+          "$type": "number",
+          "$value": 0.1,
+          "$description": "Press squash: scaleX 1 + squish, scaleY 1 - squish."
+        },
+        "tint": {
+          "$type": "number",
+          "$value": 1,
+          "$description": "1 = shadows and shade use the fill's deep tone. 0 = a flat grey (the anti-pattern the lesson teaches)."
+        },
+        "shadow-blur": {
+          "$type": "number",
+          "$value": 2,
+          "$description": "Outer shadow blur = depth × this (24 at depth 12)."
+        },
+        "shadow-alpha": {
+          "$type": "number",
+          "$value": 0.5,
+          "$description": "Opacity of the coloured outer shadow."
+        },
+        "inner-offset": {
+          "$type": "number",
+          "$value": 0.5,
+          "$description": "Inner highlight and shade are offset depth × this (6 at depth 12)."
+        },
+        "inner-blur": {
+          "$type": "number",
+          "$value": 1,
+          "$description": "Inner highlight and shade blur = depth × this (12 at depth 12)."
+        },
+        "well-darken": {
+          "$type": "number",
+          "$value": 0.06,
+          "$description": "A well pressed into clay is the parent fill mixed this much towards the parent's deep tone."
+        },
+        "example": {
+          "$type": "shadow",
+          "$value": [
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0.643,
+                  0.576,
+                  0.839
+                ],
+                "alpha": 0.5,
+                "hex": "#a493d6"
+              },
+              "offsetX": {
+                "value": 8.49,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 8.49,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 24,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            },
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  1,
+                  1,
+                  1
+                ],
+                "alpha": 0.8,
+                "hex": "#ffffff"
+              },
+              "offsetX": {
+                "value": 4.24,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 4.24,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 12,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              },
+              "inset": true
+            },
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0.643,
+                  0.576,
+                  0.839
+                ],
+                "alpha": 0.35,
+                "hex": "#a493d6"
+              },
+              "offsetX": {
+                "value": -4.24,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": -4.24,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 12,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              },
+              "inset": true
+            }
+          ],
+          "$description": "The whole recipe for milk clay on the table at the default light (315°), expanded. Recompute offsets if the light moves: outer = -light × depth, highlight = -light × depth/2 (inset), shade = +light × depth/2 (inset), where light = (sin a, -cos a)."
+        }
+      },
+      "light": {
+        "angle": {
+          "$type": "number",
+          "$value": 315,
+          "$description": "Where the light comes from, as a compass bearing in degrees: 0 top, 90 right, 315 top-left. One light for the whole screen."
+        }
+      },
+      "radius": {
+        "card": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$description": "Cards, sheets and tiles. Clay is never sharp: nothing below 16."
+        },
+        "inner": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "Wells, tiles inside cards, the lesson's curve holder."
+        },
+        "pill": {
+          "$type": "dimension",
+          "$value": {
+            "value": 999,
+            "unit": "px"
+          },
+          "$description": "Buttons, badges, switches, tubes, segmented controls. Icon buttons and avatars are circles."
+        }
+      },
+      "spacing": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        },
+        "s": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "m": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "l": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "xxl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "huge": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "gutter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$description": "Horizontal screen margin. Wider than usual: soft shadows need room."
+        },
+        "card-padding": {
+          "$type": "dimension",
+          "$value": {
+            "value": 22,
+            "unit": "px"
+          }
+        }
+      },
+      "type": {
+        "$description": "System sans at heavy weights (a rounded face such as SF Pro Rounded or Nunito if your platform has one). Ink for titles and labels, ink-soft for body and captions.",
+        "display": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 34,
+              "unit": "px"
+            },
+            "lineHeight": 40,
+            "fontWeight": 800,
+            "letterSpacing": {
+              "value": -0.8,
+              "unit": "px"
+            }
+          },
+          "$description": "Screen titles."
+        },
+        "title": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 20,
+              "unit": "px"
+            },
+            "lineHeight": 26,
+            "fontWeight": 800,
+            "letterSpacing": {
+              "value": -0.3,
+              "unit": "px"
+            }
+          },
+          "$description": "Card titles."
+        },
+        "body": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 15,
+              "unit": "px"
+            },
+            "lineHeight": 22,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Supporting copy, in ink-soft."
+        },
+        "label": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 15,
+              "unit": "px"
+            },
+            "lineHeight": 20,
+            "fontWeight": 700,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Buttons, segment labels, device names. Sentence case."
+        },
+        "caption": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 13,
+              "unit": "px"
+            },
+            "lineHeight": 18,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": 0.2,
+              "unit": "px"
+            }
+          },
+          "$description": "Meta and status, in ink-soft. Sentence case, never uppercase."
+        },
+        "numeric": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 48,
+              "unit": "px"
+            },
+            "lineHeight": 52,
+            "fontWeight": 800,
+            "letterSpacing": {
+              "value": -1.5,
+              "unit": "px"
+            }
+          },
+          "$description": "Big numbers: temperature, counts."
+        }
+      }
+    },
+    "motion": {
+      "$description": "Special · Claymorphism motion. Springs are damping ratio + stiffness (mass 1). Use approximation.cssLinear on the web (it reproduces the whole wobble); cubicBezier is a last resort that keeps only the first overshoot. Clay motion is jelly: squash on press, wobble on release, stretch in flight.",
+      "springs": {
+        "squash": {
+          "use": "Pressing down: fast and firm, barely overshoots.",
+          "dampingRatio": 0.6,
+          "stiffness": 1100,
+          "approximation": {
+            "durationMs": 324,
+            "cubicBezier": [
+              0.3,
+              1.25,
+              0.5,
+              1
+            ],
+            "cssLinear": "linear(0, 0.083, 0.271, 0.492, 0.698, 0.865, 0.983, 1.055, 1.088, 1.094, 1.084, 1.065, 1.044, 1.025, 1.01, 1, 0.994, 0.991, 0.991, 0.992, 0.994, 0.996, 0.998, 0.999, 1)"
+          }
+        },
+        "jelly": {
+          "use": "Release and anything that should jiggle: low damping, wobbles past rest about twice.",
+          "dampingRatio": 0.3,
+          "stiffness": 380,
+          "approximation": {
+            "durationMs": 1071,
+            "cubicBezier": [
+              0.3,
+              1.9,
+              0.45,
+              0.85
+            ],
+            "cssLinear": "linear(0, 0.049, 0.181, 0.368, 0.582, 0.798, 0.995, 1.157, 1.276, 1.347, 1.372, 1.357, 1.311, 1.243, 1.164, 1.083, 1.009, 0.947, 0.901, 0.873, 0.862, 0.866, 0.882, 0.907, 0.936, 0.966, 0.994, 1.018, 1.036, 1.047, 1.051, 1.05, 1.045, 1.036, 1.025, 1.014, 1.003, 0.994, 0.987, 0.983, 0.981, 0.981, 0.983, 0.986, 0.99, 0.995, 0.998, 1.002, 1.005, 1.006, 1.007, 1.007, 1.006, 1.005, 1.004, 1.002, 1.001, 0.999, 0.998, 0.998, 0.997, 0.997, 0.998, 0.998, 1)"
+          }
+        },
+        "knob": {
+          "use": "Switch knobs, segment pucks and slider thumbs sliding into place.",
+          "dampingRatio": 0.45,
+          "stiffness": 520,
+          "approximation": {
+            "durationMs": 617,
+            "cubicBezier": [
+              0.3,
+              1.55,
+              0.5,
+              1
+            ],
+            "cssLinear": "linear(0, 0.067, 0.233, 0.447, 0.668, 0.865, 1.022, 1.129, 1.188, 1.205, 1.192, 1.158, 1.114, 1.068, 1.028, 0.996, 0.974, 0.962, 0.958, 0.961, 0.968, 0.977, 0.986, 0.994, 1.001, 1.005, 1.008, 1.009, 1.008, 1.007, 1.005, 1.003, 1.001, 1, 0.999, 0.998, 1)"
+          }
+        },
+        "dough": {
+          "use": "Entrances: dough popping up, overshooting into a squash, jiggling still.",
+          "dampingRatio": 0.42,
+          "stiffness": 240,
+          "approximation": {
+            "durationMs": 970,
+            "cubicBezier": [
+              0.3,
+              1.6,
+              0.5,
+              1
+            ],
+            "cssLinear": "linear(0, 0.031, 0.114, 0.234, 0.377, 0.529, 0.679, 0.82, 0.943, 1.046, 1.126, 1.183, 1.218, 1.233, 1.231, 1.215, 1.19, 1.158, 1.123, 1.087, 1.054, 1.023, 0.997, 0.977, 0.961, 0.951, 0.946, 0.946, 0.948, 0.953, 0.96, 0.968, 0.977, 0.985, 0.992, 0.999, 1.004, 1.008, 1.011, 1.012, 1.013, 1.012, 1.011, 1.01, 1.008, 1.006, 1.004, 1.002, 1.001, 1, 0.998, 0.998, 0.997, 0.997, 0.997, 0.997, 0.998, 0.998, 1)"
+          }
+        }
+      },
+      "press": {
+        "use": "Squash-and-stretch. Pressing squashes on `squash` (scaleX 1 + squish, scaleY 1 - squish) and sinks the clay so its shadow shrinks to `lift` of its depth. Release springs back on `jelly`, overshooting into a stretch and wobbling. Even the quickest tap squashes fully (a 90 ms tween) before releasing.",
+        "squish": 0.1,
+        "lift": 0.35,
+        "tapMs": 90,
+        "pressSpring": "squash",
+        "releaseSpring": "jelly",
+        "scale": {
+          "card": 0.3,
+          "button": 1,
+          "iconButton": 1.2,
+          "well": 0.6,
+          "sliderThumb": 2,
+          "switchKnob": 1.5
+        }
+      },
+      "entrance": {
+        "use": "Every screen: clay pops up in reading order, tall and narrow, then lands in a squash. Scale from the bottom centre.",
+        "spring": "dough",
+        "staggerMs": 60,
+        "transformOrigin": "bottom center",
+        "from": {
+          "opacity": 0,
+          "translateY": 28,
+          "scaleX": 0.8,
+          "scaleY": 1.1
+        },
+        "to": {
+          "opacity": 1,
+          "translateY": 0,
+          "scaleX": 1,
+          "scaleY": 1
+        },
+        "opacity": "reaches 1 in the first third of the motion",
+        "overshoot": "the same linear mapping, pushed past 1 by the spring, becomes the landing squash (scaleX ~1.05, scaleY ~0.98) and a small hop above rest"
+      },
+      "knob": {
+        "use": "Switch knobs and segment pucks stretch along their travel (scaleX 1 + stretch·sin(πf), scaleY 1 - 0.35·stretch·sin(πf), f = fraction travelled). Past the end, sin goes negative and the same formula squashes it against the wall.",
+        "spring": "knob",
+        "stretch": 0.35,
+        "segmentStretch": 0.21
+      },
+      "selection": {
+        "use": "Wells: chosen = pressed into the clay (lift -1) and filled with its tone; unchosen = a soft pillow (lift 0.6). The change rides `jelly`, so it wobbles through flush.",
+        "spring": "jelly"
+      },
+      "progress": {
+        "use": "Tube fillings grow on `jelly`, so every change bulges and settles.",
+        "spring": "jelly"
+      },
+      "ambient": {
+        "float": {
+          "use": "Decorative blobs bob up and down; their shadow on the table shrinks as they rise.",
+          "periodSeconds": 6,
+          "amplitudePx": 8
+        },
+        "morph": {
+          "use": "Blobs slowly change shape (three sine ripples on the radius).",
+          "periodSeconds": 9
+        }
+      },
+      "reducedMotion": {
+        "use": "When the OS asks for reduced motion.",
+        "entrance": "appear in place: no rise, stretch or squash",
+        "ambient": "blobs hold still",
+        "press": "keep the squash (it is feedback) but skip the wobble: release settles without overshoot"
+      }
+    }
+  },
+  "bento-motion": {
+    "version": "0.1.5",
+    "download": "/releases/bento-motion-0.1.5.zip",
+    "bytes": 199098,
+    "sha256": "b555f9efb549e9850fc078072d460c9f9d498da712331611af9e4b846f288e4e",
+    "reference": "/references/bento-motion.png",
+    "demo": "/demos/bento-motion/example.html",
+    "tokens": {
+      "$description": "Special · Bento motion design tokens (W3C Design Tokens format). Dimensions are in px; treat 1px as 1dp on Android and 1pt on iOS.",
+      "color": {
+        "page": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.949,
+              0.945,
+              0.933
+            ],
+            "alpha": 1,
+            "hex": "#f2f1ee"
+          },
+          "$description": "The page. Warm light grey, so white tiles read as objects with no shadow at all."
+        },
+        "tile": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "alpha": 1,
+            "hex": "#ffffff"
+          },
+          "$description": "Most tiles."
+        },
+        "night": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.086,
+              0.086,
+              0.086
+            ],
+            "alpha": 1,
+            "hex": "#161616"
+          },
+          "$description": "A few tiles, for rhythm: media, the thing you're in the middle of."
+        },
+        "accent": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1.0,
+              0.353,
+              0.122
+            ],
+            "alpha": 1,
+            "hex": "#ff5a1f"
+          },
+          "$description": "The one vivid colour. One or two accent tiles per screen, plus charts, meters and live dots. Text on it is ink."
+        },
+        "ink": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.078,
+              0.078,
+              0.078
+            ],
+            "alpha": 1,
+            "hex": "#141414"
+          },
+          "$description": "Text and glyphs on tile, page, track and accent."
+        },
+        "ink-secondary": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.42,
+              0.416,
+              0.4
+            ],
+            "alpha": 1,
+            "hex": "#6b6a66"
+          },
+          "$description": "Small labels and secondary text on tile and page."
+        },
+        "on-night": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "alpha": 1,
+            "hex": "#ffffff"
+          },
+          "$description": "Text and glyphs on night."
+        },
+        "on-night-secondary": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.612,
+              0.608,
+              0.588
+            ],
+            "alpha": 1,
+            "hex": "#9c9b96"
+          },
+          "$description": "Small labels and secondary text on night."
+        },
+        "track": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.902,
+              0.898,
+              0.882
+            ],
+            "alpha": 1,
+            "hex": "#e6e5e1"
+          },
+          "$description": "Sunken wells on the page and in tiles: segmented-control tracks, map land."
+        },
+        "spec": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.122,
+              0.369,
+              1.0
+            ],
+            "alpha": 1,
+            "hex": "#1f5eff"
+          },
+          "$description": "Annotation only (layout specs, lessons). Never part of a design."
+        }
+      },
+      "grid": {
+        "$description": "The bento grid: equal columns, square rows, one gap everywhere. Tiles span whole cells.",
+        "columns": {
+          "$type": "number",
+          "$value": 4,
+          "$description": "On a phone. 2 on narrow widgets, 6–8 on tablets and desktop. Spans wider than the grid clamp to fit."
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": {
+            "value": 10,
+            "unit": "px"
+          },
+          "$description": "The gutter between tiles, both ways. Same everywhere, always."
+        },
+        "row-aspect": {
+          "$type": "number",
+          "$value": 1,
+          "$description": "Row height ÷ column width. Rows are square."
+        },
+        "gap-jitter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          },
+          "$description": "Always 0. Exists so the lesson can show why uneven gaps break the grid."
+        }
+      },
+      "radius": {
+        "tile": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$description": "Every tile."
+        },
+        "inner": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          },
+          "$description": "Anything inside a tile: tile radius minus tile padding, so curves stay concentric. Tags and buttons are pills."
+        },
+        "sheet": {
+          "$type": "dimension",
+          "$value": {
+            "value": 28,
+            "unit": "px"
+          },
+          "$description": "Sheets and cards that hold a small grid of their own (sheet padding 16 + tile radius 12)."
+        }
+      },
+      "spacing": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        },
+        "s": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "m": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "l": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "xxl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "huge": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          }
+        },
+        "gutter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$description": "Horizontal screen margin."
+        },
+        "tile-padding": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$description": "Inside every tile. Full-bleed tiles (maps, photos) use 0 and inset their own text by 12–16."
+        }
+      },
+      "type": {
+        "$description": "System sans. Big numbers, small labels: the size jump is the hierarchy.",
+        "display": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 34,
+              "unit": "px"
+            },
+            "lineHeight": 40,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": -1,
+              "unit": "px"
+            }
+          },
+          "$description": "Screen titles."
+        },
+        "title": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 17,
+              "unit": "px"
+            },
+            "lineHeight": 22,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": -0.2,
+              "unit": "px"
+            }
+          },
+          "$description": "Names inside tiles: a song, a place."
+        },
+        "body": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 15,
+              "unit": "px"
+            },
+            "lineHeight": 20,
+            "fontWeight": 400,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        },
+        "label": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 13,
+              "unit": "px"
+            },
+            "lineHeight": 16,
+            "fontWeight": 500,
+            "letterSpacing": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "$description": "Buttons, segmented controls, secondary lines."
+        },
+        "caption": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 11,
+              "unit": "px"
+            },
+            "lineHeight": 14,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": 0.6,
+              "unit": "px"
+            }
+          },
+          "$description": "UPPERCASE labels above big numbers, in the secondary colour."
+        },
+        "numeric": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 30,
+              "unit": "px"
+            },
+            "lineHeight": 30,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": -1,
+              "unit": "px"
+            },
+            "fontFeatureSettings": "tnum"
+          },
+          "$description": "Big numbers in one-row and one-column tiles. Tabular figures."
+        },
+        "hero": {
+          "$type": "typography",
+          "$value": {
+            "fontSize": {
+              "value": 56,
+              "unit": "px"
+            },
+            "lineHeight": 56,
+            "fontWeight": 600,
+            "letterSpacing": {
+              "value": -2.5,
+              "unit": "px"
+            },
+            "fontFeatureSettings": "tnum"
+          },
+          "$description": "Big numbers in 2×2 tiles and open tiles. Tabular figures."
+        }
+      }
+    },
+    "motion": {
+      "$description": "Special · Bento motion. Springs are damping ratio + stiffness (mass 1). One spring (place) moves the whole grid: the wave, every reflow and every tile opening. Tween-only platforms can use the approximations; CSS can use the exact linear() curves in bento.css.",
+      "springs": {
+        "place": {
+          "use": "The wave, reflow (reorder, resize, filter, density, column count), a tile opening and closing, selection pills sliding. Calm, a whisper of overshoot (~1.5%).",
+          "dampingRatio": 0.8,
+          "stiffness": 380,
+          "approximation": {
+            "durationMs": 435,
+            "cubicBezier": [
+              0.25,
+              1.1,
+              0.35,
+              1
+            ]
+          }
+        },
+        "press": {
+          "use": "The small give when a tile or button is pressed.",
+          "dampingRatio": 0.6,
+          "stiffness": 900,
+          "approximation": {
+            "durationMs": 340,
+            "cubicBezier": [
+              0.3,
+              1.5,
+              0.5,
+              1
+            ]
+          }
+        }
+      },
+      "wave": {
+        "use": "How tiles arrive: in order of distance from an origin, never in list order. The first time a grid appears the origin is the top-left corner; a replay or refresh starts from where the user tapped, or from the centre.",
+        "spring": "place",
+        "stepMsPerCell": 45,
+        "distance": "centre of the origin to centre of the tile, divided by the cell pitch (column width + gap), so timing is the same on every screen size",
+        "from": {
+          "opacity": 0,
+          "scale": 0.9,
+          "pullPx": 16,
+          "pull": "the tile starts this far towards the origin and springs outwards into place"
+        },
+        "to": {
+          "opacity": 1,
+          "scale": 1,
+          "pullPx": 0
+        },
+        "opaqueAt": 0.4
+      },
+      "reflow": {
+        "use": "Whenever a tile's resting place changes, it springs there from wherever it is now, keeping its velocity if it was already moving. Content is laid out at the in-between size (Compose) or counter-scaled (web FLIP), so text never stretches. Bigger tiles pass over smaller ones.",
+        "spring": "place",
+        "packing": "dense: each tile in reading order takes the first free spot from the top-left; then tiles grow right, then down, into any cell left empty",
+        "filter": "never remove tiles. Matching tiles move to the front at full span; the rest shrink to 1×1 at the back and dim.",
+        "filteredAlpha": 0.4
+      },
+      "expand": {
+        "use": "Tapping a tile opens it in place: its span becomes full width × max(2, columns − 1) rows, neighbours reflow around it, and the screen scrolls it into view once it has mostly grown. Tap again to close.",
+        "spring": "place",
+        "detail": {
+          "delayMs": 120,
+          "fadeMs": 240,
+          "use": "the open layout crossfades in over the growing tile; its charts draw in after the delay"
+        },
+        "scrollIntoViewAfterMs": 380
+      },
+      "press": {
+        "use": "Tiles scale to 0.97 while pressed, buttons to 0.94. No ripple, no colour change.",
+        "tileScale": 0.97,
+        "buttonScale": 0.94,
+        "spring": "press"
+      },
+      "live": {
+        "use": "Tile content comes alive after its tile lands: counters count up, charts and routes draw in, rings sweep. It starts over on every replay.",
+        "startsAtLanded": 0.55,
+        "counterMs": 1100,
+        "drawMs": 900,
+        "cubicBezier": [
+          0.2,
+          0,
+          0,
+          1
+        ]
+      },
+      "ambient": {
+        "pulse": {
+          "use": "Live dots and 'you are here' on maps: two rings breathe out of a solid centre.",
+          "periodSeconds": 2.4
+        },
+        "sun": {
+          "use": "Weather glyph rays turn, barely.",
+          "turnSeconds": 40
+        },
+        "photo": {
+          "use": "Photo tiles drift in a slow Ken Burns: scale 1.02–1.10.",
+          "periodSeconds": 56
+        },
+        "equalizer": {
+          "use": "Four accent bars bounce while something plays; they settle flat when paused."
+        }
+      },
+      "reducedMotion": {
+        "use": "When the OS asks for reduced motion.",
+        "wave": "tiles appear in place: no delay, scale, pull or fade",
+        "reflow": "tiles jump to their new place",
+        "live": "counters and charts show their final values",
+        "ambient": "pulse, sun, photo drift and equaliser stop",
+        "press": "keep: it is feedback, not decoration",
+        "initialization": "Restore persisted and OS control state before enabling transitions. Initialization is not press feedback; switches must not slide on first paint. Under reduced motion, custom switch movement stays off; direct press feedback may remain."
+      }
+    }
+  }
+}

@@ -1,0 +1,291 @@
+/*
+ * Special · Glassmorphism for the web.
+ * Values mirror tokens.json and motion.json. Structure:
+ *
+ *   <body class="glass-scene">
+ *     <div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+ *     <article class="glass glass-card">…<button class="glass-fill glass-icon-button">…</button></article>
+ *   </body>
+ */
+
+:root {
+  --glass-base: #070b1a;
+  --glass-violet: #7c3aed;
+  --glass-sky: #0ea5e9;
+  --glass-pink: #db2777;
+  --glass-amber: #f59e0b;
+  --glass-accent: #7dd3fc;
+
+  --content-primary: rgb(255 255 255 / 1);
+  --content-secondary: rgb(255 255 255 / .90);
+  --content-tertiary: rgb(255 255 255 / .86);
+
+  --glass-blur: 24px;
+  --glass-saturation: 160%;
+  --glass-shade: rgb(7 11 26 / .55);
+  --glass-tint-top: rgb(255 255 255 / .08);
+  --glass-tint-bottom: rgb(255 255 255 / .02);
+  --glass-highlight: rgb(255 255 255 / .12);
+  --glass-stroke-top: rgb(255 255 255 / .45);
+  --glass-stroke-bottom: rgb(255 255 255 / .10);
+  --glass-shadow: 0 16px 32px rgb(0 0 0 / .30);
+
+  --fill-tint-top: rgb(255 255 255 / .14);
+  --fill-tint-bottom: rgb(255 255 255 / .08);
+  --fill-stroke-top: rgb(255 255 255 / .28);
+  --fill-stroke-bottom: rgb(255 255 255 / .06);
+
+  --radius-sheet: 32px;
+  --radius-card: 28px;
+  --radius-inner: 18px;
+  --radius-pill: 999px;
+
+  --space-xs: 4px; --space-s: 8px; --space-m: 12px; --space-l: 16px;
+  --space-xl: 20px; --space-xxl: 24px; --space-huge: 32px;
+  --gutter: 20px;
+
+  /* Springs approximated as curves (motion.json → approximation). */
+  --spring-surface: 420ms cubic-bezier(.22, 1, .36, 1);
+  --spring-press: 260ms cubic-bezier(.34, 1.56, .64, 1);
+  --spring-indicator: 360ms cubic-bezier(.3, 1.3, .5, 1);
+  --stagger: 60ms;
+  --backdrop-loop: 24s;
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.1'/%3E%3C/svg%3E");
+}
+
+/* Elements marked hidden stay hidden, even when a component class sets display. */
+[hidden] { display: none !important; }
+
+/* ---------- Scene and backdrop ---------- */
+
+.glass-scene {
+  position: relative;
+  min-height: 100dvh;
+  margin: 0;
+  background: var(--glass-base);
+  color: var(--content-primary);
+  font-family: system-ui, -apple-system, "SF Pro Text", Inter, Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  isolation: isolate;
+  overflow-x: hidden;
+}
+
+@property --bx { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --by { syntax: "<number>"; inherits: false; initial-value: 0; }
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--glass-base);
+}
+
+/* Each blob swings on x and y at different whole-number speeds: a closed Lissajous loop. */
+.aurora > i {
+  --c: var(--glass-violet); --r: .48; --sx: 1; --sy: 2; --px: 0; --py: .1;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: calc(var(--r) * 200vmax);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 70%, transparent), color-mix(in srgb, var(--c) 40%, transparent) 45%, transparent);
+  mix-blend-mode: screen;
+  translate: calc(-50% + var(--bx) * 42vw) calc(-50% + var(--by) * 34vh);
+  animation:
+    glass-bx calc(var(--backdrop-loop) / var(--sx) / 2) ease-in-out calc(var(--backdrop-loop) * var(--px) / var(--sx) * -1) infinite alternate,
+    glass-by calc(var(--backdrop-loop) / var(--sy) / 2) ease-in-out calc(var(--backdrop-loop) * var(--py) / var(--sy) * -1) infinite alternate;
+}
+.aurora > i:nth-child(2) { --c: var(--glass-sky);   --r: .42; --sx: 2; --sy: 1; --px: .35; --py: .6; }
+.aurora > i:nth-child(3) { --c: var(--glass-pink);  --r: .40; --sx: 1; --sy: 1; --px: .62; --py: .25; }
+.aurora > i:nth-child(4) { --c: var(--glass-amber); --r: .30; --sx: 3; --sy: 2; --px: .85; --py: .8; }
+.aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Veil the top third, where headers sit on the backdrop, and settle the bottom under floating controls. */
+  background: linear-gradient(color-mix(in srgb, var(--glass-base) 65%, transparent), transparent 35%, transparent 60%, color-mix(in srgb, var(--glass-base) 55%, transparent));
+}
+
+@keyframes glass-bx { from { --bx: -1; } to { --bx: 1; } }
+@keyframes glass-by { from { --by: -1; } to { --by: 1; } }
+
+/* ---------- The pane ---------- */
+
+.glass,
+.glass-fill {
+  --radius: var(--radius-card);
+  position: relative;
+  border-radius: var(--radius);
+  isolation: isolate;
+  color: inherit;
+  border: 0;
+  font: inherit;
+}
+
+/* Frost over shade: the shade darkens bright colour behind the pane so white text stays readable. */
+.glass {
+  background: linear-gradient(var(--glass-tint-top), var(--glass-tint-bottom)), linear-gradient(var(--glass-shade), var(--glass-shade));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  box-shadow: var(--glass-shadow);
+}
+
+/* Anything on a pane: frost and edge, never blur (glass never sits on glass). */
+.glass-fill {
+  background: linear-gradient(var(--fill-tint-top), var(--fill-tint-bottom));
+  --glass-stroke-top: var(--fill-stroke-top);
+  --glass-stroke-bottom: var(--fill-stroke-bottom);
+}
+
+/* Sheen from the top-left, plus grain. */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    var(--grain),
+    linear-gradient(to bottom right, var(--glass-highlight), transparent 55%);
+}
+
+/* The 1px inner edge light: a gradient ring masked to the border box. */
+.glass::after,
+.glass-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(to bottom right, var(--glass-stroke-top), color-mix(in srgb, var(--glass-stroke-bottom) 40%, transparent) 50%, var(--glass-stroke-bottom));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+/* Press: shrink and brighten on the press spring. */
+:is(.glass, .glass-fill):is(button, a, [role="button"], [role="tab"]) {
+  cursor: pointer;
+  transition: scale var(--spring-press), background var(--spring-press);
+  -webkit-tap-highlight-color: transparent;
+}
+:is(.glass, .glass-fill):is(button, a, [role="button"], [role="tab"]):active {
+  scale: .96;
+  --glass-tint-top: rgb(255 255 255 / .18);
+  --glass-tint-bottom: rgb(255 255 255 / .08);
+  --fill-tint-top: rgb(255 255 255 / .24);
+  --fill-tint-bottom: rgb(255 255 255 / .14);
+}
+:is(.glass, .glass-fill):focus-visible { outline: 2px solid var(--glass-accent); outline-offset: 3px; }
+
+/* ---------- Components ---------- */
+
+.glass-card { --radius: var(--radius-card); padding: 20px; }
+.glass-sheet { --radius: var(--radius-sheet); padding: 20px; }
+.glass-inner { --radius: var(--radius-inner); }
+
+.glass-button {
+  --radius: var(--radius-pill);
+  display: inline-flex; align-items: center; gap: var(--space-s);
+  padding: var(--space-m) var(--space-xl);
+  font-size: 13px; line-height: 16px; font-weight: 500; letter-spacing: .2px;
+}
+.glass-button svg { width: 18px; height: 18px; }
+
+.glass-icon-button {
+  --radius: var(--radius-pill);
+  --size: 48px;
+  display: inline-grid; place-items: center;
+  width: var(--size); height: var(--size); padding: 0;
+}
+.glass-icon-button svg { width: 22px; height: 22px; }
+
+.glass-chip {
+  --radius: var(--radius-pill);
+  flex-shrink: 0; white-space: nowrap;
+  height: 36px; padding: 0 var(--space-l);
+  font-size: 13px; font-weight: 500; letter-spacing: .2px;
+  color: var(--content-secondary);
+  transition: color var(--spring-indicator), background var(--spring-indicator), scale var(--spring-press);
+}
+.glass-chip[aria-pressed="true"] {
+  color: var(--content-primary);
+  --glass-tint-top: rgb(255 255 255 / .22);
+  --glass-tint-bottom: rgb(255 255 255 / .10);
+  --fill-tint-top: rgb(255 255 255 / .28);
+  --fill-tint-bottom: rgb(255 255 255 / .16);
+}
+
+.glass-progress {
+  height: 4px; border-radius: var(--radius-pill); overflow: hidden;
+  background: rgb(255 255 255 / .14);
+}
+.glass-progress::after {
+  content: ""; display: block; height: 100%;
+  width: calc(var(--progress, 0) * 100%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--glass-accent) 70%, transparent), #fff);
+}
+
+.glass-nav {
+  --radius: var(--radius-pill);
+  --count: 4; --index: 0;
+  position: fixed; left: 32px; right: 32px; bottom: calc(16px + env(safe-area-inset-bottom));
+  height: 68px; padding: 6px;
+  display: grid; grid-template-columns: repeat(var(--count), 1fr);
+}
+.glass-nav__lens {
+  position: absolute; top: 6px; bottom: 6px; left: 6px;
+  width: calc((100% - 12px) / var(--count));
+  translate: calc(var(--index) * 100%) 0;
+  transition: translate var(--spring-indicator);
+  --radius: var(--radius-pill);
+}
+.glass-nav__item {
+  position: relative; display: grid; place-items: center; align-content: center; gap: 2px;
+  background: none; border: 0; color: var(--content-tertiary); font: inherit; cursor: pointer;
+  transition: color var(--spring-indicator);
+}
+.glass-nav__item[aria-current="page"] { color: var(--content-primary); }
+.glass-nav__item svg { width: 22px; height: 22px; }
+.glass-nav__item span { font-size: 11px; line-height: 16px; font-weight: 500; letter-spacing: .2px; }
+
+/* ---------- Type ---------- */
+
+.t-display { font-size: 34px; line-height: 40px; font-weight: 600; letter-spacing: -.8px; margin: 0; }
+.t-title   { font-size: 20px; line-height: 26px; font-weight: 600; letter-spacing: -.2px; margin: 0; }
+.t-body    { font-size: 15px; line-height: 22px; font-weight: 400; color: var(--content-secondary); margin: 0; }
+.t-label   { font-size: 13px; line-height: 16px; font-weight: 500; letter-spacing: .2px; }
+.t-caption { font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .6px; color: var(--content-tertiary); text-transform: uppercase; }
+.t-numeric { font-size: 44px; line-height: 48px; font-weight: 300; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; }
+
+/* ---------- Entrance choreography ---------- */
+
+/*
+ * Put this on the glass element itself, never on a wrapper around glass: while an
+ * ancestor animates opacity or transform, browsers cut its children's
+ * backdrop-filter off from the page behind. "backwards" drops the effect once done.
+ */
+.glass-enter {
+  animation: glass-enter var(--spring-surface) backwards;
+  animation-delay: calc(var(--order, 0) * var(--stagger));
+}
+@keyframes glass-enter {
+  from { opacity: 0; translate: 0 24px; scale: .96; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora > i { animation-play-state: paused; } /* frozen at t = 0: each blob at its own phase */
+  .glass-enter { animation: glass-fade 150ms backwards; animation-delay: 0ms; }
+  @keyframes glass-fade { from { opacity: 0; } }
+}
+
+/* Browsers without backdrop-filter: a solid, still-legible fallback. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: linear-gradient(rgb(40 44 70 / .92), rgb(24 28 52 / .92)); }
+}
