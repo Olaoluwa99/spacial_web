@@ -1,6 +1,6 @@
 # Special website handoff
 
-*Last updated 2026-10-01 · iteration 001 completed.*
+*Last updated 2026-10-01 · iteration 002 completed.*
 
 The user approved the recommended stack and requested a polished, attention-catching
 site. The first website milestone is implemented in this independent repository on
@@ -55,6 +55,8 @@ currently has no remote; Android has local commits awaiting push. Do not push un
 | # | Date | Record |
 |---|---|---|
 | 001 | 2026-10-01 | [First website milestone](iterations/001-website-milestone.md) |
+
+| 002 | 2026-10-01 | [IDE ignores and deployment planning](iterations/002-ide-ignore-and-next-phase.md) |
 
 [00-preflight.md](00-preflight.md) preserves the original pre-implementation proposal.
 Its pending-approval statements are historical, superseded by this handoff.

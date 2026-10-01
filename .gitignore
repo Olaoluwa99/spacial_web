@@ -6,3 +6,7 @@ dist/
 !.env.example
 artifacts/
 .DS_Store
+
+# JetBrains IDE settings and module files
+.idea/
+*.iml
