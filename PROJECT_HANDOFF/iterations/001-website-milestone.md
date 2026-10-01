@@ -3,7 +3,7 @@
 - **Date:** 2026-10-01
 - **Branch:** main
 - **Status:** done
-- **Commits:** website implementation and accompanying handoff commits on main
+- **Commits:** `4f9256b` website implementation; accompanying handoff checkpoint on main
 
 ## Goal
 
