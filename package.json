@@ -13,10 +13,13 @@
     "preview": "astro preview --host 127.0.0.1 --port 4321",
     "sync:bundles": "python3 scripts/sync-bundles.py",
     "test:browser": "node scripts/check-site.cjs",
-    "test": "node --test scripts/spring.test.mjs"
+    "test": "node --test scripts/spring.test.mjs scripts/account.test.mjs",
+    "test:accounts": "node scripts/check-accounts.cjs",
+    "test:schema": "node --test scripts/schema.test.mjs"
   },
   "dependencies": {
     "@astrojs/check": "0.9.10",
+    "@supabase/supabase-js": "2.117.2",
     "astro": "7.3.5",
     "typescript": "6.0.3"
   }

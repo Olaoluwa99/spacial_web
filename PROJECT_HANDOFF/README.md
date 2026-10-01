@@ -1,10 +1,10 @@
 # Special website handoff
 
-*Last updated 2026-10-01 · iteration 002 completed.*
+*Last updated 2026-10-01 · iteration 003 completed.*
 
 The user approved the recommended stack and requested a polished, attention-catching
 site. The first website milestone is implemented in this independent repository on
-`main`. Read [iteration 001](iterations/001-website-milestone.md) and the root
+`main`. Read [iteration 003](iterations/003-cloudflare-and-accounts.md) and the root
 [runbook](../README.md) before continuing.
 
 ## Current state
@@ -12,9 +12,12 @@ site. The first website milestone is implemented in this independent repository 
 - Astro 7.3.5 + TypeScript 6.0.3, custom CSS, self-hosted Manrope and native animations.
 - Home, filterable catalogue, six detail pages, original interactive bundle demos,
   downloads, usage guide, spring playground and 404 page.
-- Ten content routes plus 404, robots and conditional sitemap. Static production build.
+- Sixteen content/account routes plus404,robots andproduction sitemap. Staticproductionbuild.
 - Release exports: Glass/Bento 0.1.5, Clay/Kinetic 0.1.2, Aurora/Brutalism 0.1.1.
-- No remote, deployment, production domain, accounts, backend or payments configured.
+- Live Cloudflare site: https://special-web.olaoluwa-special.workers.dev/
+- Account UI/client/declarative schema prepared locally; correct Supabase project connection pending.
+- No remote Supabase mutations, custom domain, payment or AI service configured.
+- Git origin: github.com/Olaoluwa99/spacial_web.git; no push performed.
 - Local preview: http://127.0.0.1:4321. Set SITE_URL for a production build.
 
 ## Architecture and boundaries
@@ -36,27 +39,31 @@ Do not claim controlled model rankings from the existing one-sample evaluations.
 - Keep custom CSS and local content; no component kit, CMS or animation dependency.
 - Use exact dependency pins and a committed lockfile. Local assets avoid runtime CDN needs.
 - Real ZIP downloads with SHA-256 metadata; isolate original demos and unload closed previews.
-- Cloudflare static hosting remains the suggested deployment option; provider/domain setup
-  is a future action. No deployment or push authorized in this session.
+- Cloudflare Workers Static Assets hosting is now configured and deployed with user authorization.
+  Supabase changes are restricted to local code until the user reconnects their own account.
 
 ## Next phase
 
-1. User reviews the local design and selects any visual refinements.
-2. Select domain/hosting, configure SITE_URL and publish when requested; verify live links,
-   headers and caching. Add social-share artwork when the public identity is agreed.
-3. Add app distribution link when available. Accounts, payments and generation services
-   remain later phases requiring their own scope and credentials.
+1. Connect the user's own Supabase MCP account/project; verify target nbeplophztgvxhsbhmar
+   before applying any schema or configuring Auth. The currently connected DafeDeScribe
+   organization is unrelated to the expected target. The user explicitly forbids direct
+   Supabase setup for now.
+2. Reconcile schema/history, generate a narrow migration, apply only when authorized,
+   configure Auth/email/redirects, add public environment values, then test real accounts.
+3. Add a custom domain and automated builds when requested. App distribution, payments
+   and generation services remain separate later milestones.
 
-Before changing machines, preserve both repositories on their remotes. The website
-currently has no remote; Android has local commits awaiting push. Do not push unasked.
+Cloudflare is set up; account code is locally reviewable. See the ongoing
+[action log](operations/2026-10-01-cloudflare-accounts.md) for exact operations/results.
+No pushes have been requested. Preserve both repositories before switching machines.
 
 ## Iterations
 
 | # | Date | Record |
 |---|---|---|
 | 001 | 2026-10-01 | [First website milestone](iterations/001-website-milestone.md) |
-
 | 002 | 2026-10-01 | [IDE ignores and deployment planning](iterations/002-ide-ignore-and-next-phase.md) |
+| 003 | 2026-10-01 | [Cloudflare hosting and local account implementation](iterations/003-cloudflare-and-accounts.md) |
 
 [00-preflight.md](00-preflight.md) preserves the original pre-implementation proposal.
 Its pending-approval statements are historical, superseded by this handoff.

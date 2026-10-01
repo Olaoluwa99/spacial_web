@@ -3379,3 +3379,23 @@ button:focus-visible {
     transform: rotate(-10deg);
   }
 }
+.detail-save {
+  margin-top: 12px;
+}
+.detail-save button {
+  font-size: 11px;
+  color: #536b30;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.detail-save button:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+.detail-save p {
+  font-size: 11px;
+  color: var(--muted);
+  max-width: 470px;
+  margin: 2px 0 16px;
+  line-height: 1.7;
+}

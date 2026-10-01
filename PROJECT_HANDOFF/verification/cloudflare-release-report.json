@@ -1,0 +1,36 @@
+{
+  "downloads": [
+    {
+      "style": "glassmorphism",
+      "bytes": 1818842,
+      "sha256": "passed"
+    },
+    {
+      "style": "neo-brutalism",
+      "bytes": 200437,
+      "sha256": "passed"
+    },
+    {
+      "style": "kinetic-type",
+      "bytes": 199139,
+      "sha256": "passed"
+    },
+    {
+      "style": "aurora-shaders",
+      "bytes": 1387847,
+      "sha256": "passed"
+    },
+    {
+      "style": "claymorphism",
+      "bytes": 598968,
+      "sha256": "passed"
+    },
+    {
+      "style": "bento-motion",
+      "bytes": 199098,
+      "sha256": "passed"
+    }
+  ],
+  "missingRoute": 404,
+  "sitemap": "passed"
+}

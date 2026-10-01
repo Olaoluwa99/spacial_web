@@ -1,0 +1,13 @@
+---
+import AccountShell from '../../components/AccountShell.astro';
+import Mark from '../../components/Mark.astro';
+import Icon from '../../components/Icon.astro';
+---
+<AccountShell title="One moment — Special" eyebrow="03 / ALMOST THERE" heading="Your space" emphasis="is close." description="A collection of styles, chosen by you. We’re checking your email link so you can make yourself at home.">
+  <div class="account-callback-mark"><Mark size={44}/></div>
+  <h2>One moment<span>.</span></h2>
+  <p class="account-form-intro">We’re checking your sign-in link.</p>
+  <p class="account-status account-callback-status" data-auth-callback data-auth-status role="status" aria-live="polite">Checking your link…</p>
+  <a class="button account-submit" href="/account/sign-in/" data-account-next-link>Back to sign in <Icon name="arrow"/></a>
+  <p class="account-switch">An expired link? <a href="/account/forgot-password/">Request a new one</a></p>
+</AccountShell>

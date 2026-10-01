@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Mark from '../../components/Mark.astro';
+import '../../styles/account.css';
+---
+<Base title="Your space — Special" description="Your saved styles, personal collection and Special account settings.">
+  <section class="container account-dashboard-shell" data-account-page="dashboard">
+    <div data-account-loading class="account-loading" role="status" aria-live="polite"><Mark size={36}/><p>Getting your space ready…</p></div>
+    <div data-account-guest class="account-guest" hidden>
+      <span class="eyebrow">YOUR TASTE. YOUR SPACE.</span><h1>A collection<br/><em>with your name on it.</em></h1>
+      <p>Keep your favourite styles in one place. Sign in to open your library, or create a space of your own.</p>
+      <div class="account-guest-actions"><a class="button" href="/account/sign-in/" data-account-next-link>Sign in <Icon name="arrow"/></a><a class="text-link" href="/account/sign-up/" data-account-next-link>Create an account <Icon name="arrow" size={18}/></a></div>
+      <p class="account-status" data-auth-status role="status" aria-live="polite"></p>
+    </div>
+    <div data-account-dashboard hidden>
+      <header class="account-dashboard-heading"><div><span class="eyebrow">YOUR PERSONAL COLLECTION</span><h1>Your space<span>.</span></h1><p>A little inspiration. A lot of possibility.</p></div><a class="button" href="/styles/">Find something new <Icon name="plus" size={18}/></a></header>
+      <nav class="account-section-nav" aria-label="Your account sections"><a href="#library">Your library <Icon name="arrow" size={15}/></a><a href="#profile">Account settings <Icon name="arrow" size={15}/></a></nav>
+      <section id="library" class="account-library"><div class="account-section-heading"><div><span class="eyebrow">01 / KEEP WHAT CATCHES YOUR EYE</span><h2>Saved for <em>later.</em></h2></div><span class="account-library-label">A COLLECTION THAT’S ALL YOU</span></div><div data-library-list class="account-library-grid"></div>
+        <div data-library-empty class="account-empty" hidden><div class="account-empty-icon"><Mark size={34}/></div><div><h3>Good taste starts somewhere.</h3><p>Find a style that feels right and save it to your library.<br/>Your next favourite idea might be one click away.</p><a class="text-link" href="/styles/">Explore the collection <Icon name="arrow" size={18}/></a></div><span aria-hidden="true" class="account-empty-doodle">✳</span></div>
+        <p class="account-status" data-library-status role="status" aria-live="polite"></p>
+      </section>
+      <section id="profile" class="account-profile"><div><span class="eyebrow">02 / THE PERSONAL DETAILS</span><h2>Make yourself<br/><em>at home.</em></h2><p>Keep your name up to date. Your saved styles stay right where you left them.</p></div><div class="account-profile-panel"><form method="post" class="account-form" data-auth-form="profile"><label for="profile-name">Your name<input id="profile-name" name="display_name" data-profile-name type="text" autocomplete="nickname" required minlength="1" maxlength="80"/></label><div class="account-email-field"><span>Email address</span><p data-account-email></p><small>Your sign-in email.</small></div><p class="account-status" data-auth-status role="status" aria-live="polite"></p><button class="button" type="submit">Save changes <Icon name="check" size={18}/></button></form><div class="account-session"><div><strong>All done for now?</strong><p>You can come back to your collection anytime.</p></div><button class="text-link" data-signout type="button">Sign out <Icon name="arrow" size={17}/></button></div></div></section>
+    </div>
+    <noscript><p class="account-noscript">Your account uses JavaScript to sign in securely. You can still <a href="/styles/">explore the collection</a> and download every bundle.</p></noscript>
+  </section>
+  <script src="../../scripts/account.ts"></script>
+</Base>

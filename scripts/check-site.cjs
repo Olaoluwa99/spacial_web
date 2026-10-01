@@ -34,6 +34,14 @@ const report = { pages: [], interactions: [], downloads: [], errors: [] };
       "/guide/",
       "/playground/",
       ...Object.keys(releases).map((id) => `/styles/${id}/`),
+      ...[
+        "",
+        "sign-in/",
+        "sign-up/",
+        "forgot-password/",
+        "reset-password/",
+        "callback/",
+      ].map((path) => `/account/${path}`),
     ];
     for (const viewport of [
       { width: 1440, height: 1000 },
@@ -57,7 +65,7 @@ const report = { pages: [], interactions: [], downloads: [], errors: [] };
       });
       for (const route of routes) {
         await page.goto(origin + route, { waitUntil: "networkidle" });
-        assert.equal(await page.locator("h1").count(), 1, route);
+        assert.equal(await page.locator("h1:visible").count(), 1, route);
         assert.equal(await page.locator("main").count(), 1, route);
         const overflow = await page.evaluate(() => ({
           viewport: innerWidth,
@@ -89,6 +97,14 @@ const report = { pages: [], interactions: [], downloads: [], errors: [] };
             ),
             fullPage: true,
           });
+        }
+        if (route.startsWith("/account/")) {
+          assert.equal(
+            await page.locator('meta[name="robots"]').getAttribute("content"),
+            "noindex, follow",
+          );
+          if (route !== "/account/callback/")
+            assert.equal(await page.locator("form input:enabled").count(), 0);
         }
         report.pages.push({
           route,

@@ -10,3 +10,8 @@ artifacts/
 # JetBrains IDE settings and module files
 .idea/
 *.iml
+
+# Cloudflare local state and credentials
+.wrangler/
+.dev.vars
+.dev.vars.*

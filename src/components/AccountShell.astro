@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Mark from './Mark.astro';
+import StyleArt from './StyleArt.astro';
+import '../styles/account.css';
+interface Props { title: string; eyebrow: string; heading: string; emphasis: string; description: string; }
+const { title, eyebrow, heading, emphasis, description } = Astro.props;
+const accountPages: Record<string, string> = { 'sign-in': 'signin', 'sign-up': 'signup', 'forgot-password': 'forgot', 'reset-password': 'reset', callback: 'callback' };
+const accountPage = accountPages[Astro.url.pathname.split('/').filter(Boolean).at(-1) || ''] || 'signin';
+---
+<Base title={title} description={description}>
+  <section class="container account-entry" data-account-page={accountPage}>
+    <aside class="account-story">
+      <span class="eyebrow">YOUR TASTE. YOUR SPACE.</span>
+      <h1>{heading}<br/><em>{emphasis}</em></h1>
+      <p>{description}</p>
+      <div class="account-art" aria-hidden="true">
+        <div class="account-art-grid"></div>
+        <div class="account-art-card account-art-glass"><StyleArt id="glassmorphism"/></div>
+        <div class="account-art-card account-art-kinetic"><StyleArt id="kinetic-type"/></div>
+        <span class="account-art-sticker"><Mark size={24}/> A LITTLE MORE YOU.</span>
+      </div>
+      <div class="account-story-note"><span class="status-dot"></span> SIX DISTINCTIVE STYLES. ONE PERSONAL COLLECTION.</div>
+    </aside>
+    <div class="account-form-panel"><span class="eyebrow account-panel-eyebrow">{eyebrow}</span><slot/><noscript><p class="account-noscript">Enable JavaScript to use your account securely. You can still <a href="/styles/">explore the collection</a>.</p></noscript></div>
+  </section>
+  <script src="../scripts/account.ts"></script>
+</Base>

@@ -1,0 +1,17 @@
+---
+import AccountShell from '../../components/AccountShell.astro';
+import Icon from '../../components/Icon.astro';
+---
+<AccountShell title="Make it personal — Special" eyebrow="01 / MAKE YOURSELF AT HOME" heading="Good taste." emphasis="Your collection." description="Save the styles you love and build a library with a point of view. Start with whatever makes you feel something.">
+  <h2>Make it personal<span>.</span></h2>
+  <p class="account-form-intro">A home for your next favourite idea.</p>
+  <form method="post" class="account-form" data-auth-form="signup">
+    <label for="signup-name">Your name<input id="signup-name" name="display_name" type="text" autocomplete="nickname" placeholder="What should we call you?" required minlength="1" maxlength="80"/></label>
+    <label for="signup-email">Email address<input id="signup-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254"/></label>
+    <label for="signup-password">Password<input id="signup-password" name="password" type="password" autocomplete="new-password" required minlength="12" aria-describedby="password-guidance"/><span class="account-field-note" id="password-guidance">Use at least 12 characters. A few unrelated words work well.</span></label>
+    <p class="account-status" data-auth-status role="status" aria-live="polite"></p>
+    <button class="button account-submit" type="submit">Create my account <Icon name="arrow"/></button>
+  </form>
+  <p class="account-switch">Already have a space here? <a href="/account/sign-in/" data-account-next-link>Sign in <Icon name="arrow" size={14}/></a></p>
+  <div class="account-form-footnote"><Icon name="check" size={16}/><p>We’ll send a confirmation link to your email to finish setting up your account.</p></div>
+</AccountShell>

@@ -1,0 +1,14 @@
+{
+  "source": "isolated fixture build; mocked local auth/data responses; no Supabase requests",
+  "checks": [
+    "Signup confirmation, no invented signed-in state",
+    "Password recovery request and neutral confirmation",
+    "Invalid credentials, successful signin, verified profile/library, safe next",
+    "Owned profile upsert and saved-style removal",
+    "Save from detail page to verified user library",
+    "Password update only after verified session",
+    "Signout clears private state and persisted session",
+    "Single PKCE exchange, specific concurrent flow verifier, URL scrub, safe callback"
+  ],
+  "errors": []
+}

@@ -1,0 +1,16 @@
+---
+import AccountShell from '../../components/AccountShell.astro';
+import Icon from '../../components/Icon.astro';
+---
+<AccountShell title="Welcome back — Special" eyebrow="01 / COME ON IN" heading="A good place" emphasis="to come back to." description="Keep the styles that catch your eye close. Your personal collection is ready when you are.">
+  <h2>Welcome back<span>.</span></h2>
+  <p class="account-form-intro">A little inspiration, picked by you.</p>
+  <form method="post" class="account-form" data-auth-form="signin">
+    <label for="signin-email">Email address<input id="signin-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254"/></label>
+    <label for="signin-password"><span class="account-field-heading">Password<a href="/account/forgot-password/">Forgot password?</a></span><input id="signin-password" name="password" type="password" autocomplete="current-password" required/></label>
+    <p class="account-status" data-auth-status role="status" aria-live="polite"></p>
+    <button class="button account-submit" type="submit">Sign in <Icon name="arrow"/></button>
+  </form>
+  <p class="account-switch">New around here? <a href="/account/sign-up/" data-account-next-link>Create an account <Icon name="arrow" size={14}/></a></p>
+  <div class="account-form-footnote"><Icon name="check" size={16}/><p>The collection, previews and downloads are always available to explore.</p></div>
+</AccountShell>
