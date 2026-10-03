@@ -19,7 +19,8 @@ site. The first website milestone is implemented in this independent repository 
   saved_styles with owner-only RLS, verified on the real project. Public settings are in
   the ignored `.env.production`; that build is **not yet deployed**, so production still
   shows the coming-soon account state.
-- Outstanding: Auth Site/redirect URLs, a working deploy path, custom SMTP, real-user test.
+- Branches: work on `develop`; pushing `main` deploys via GitHub Actions (secret pending).
+- Outstanding: first CI deploy, owner's real-user test, custom domain and SMTP later.
 - No custom domain, payment or AI service configured.
 - Git origin: github.com/Olaoluwa99/spacial_web.git; no push performed.
 - Local preview: http://127.0.0.1:4321. Set SITE_URL for a production build.
@@ -50,8 +51,9 @@ Do not claim controlled model rankings from the existing one-sample evaluations.
 
 1. Owner signs in to the Supabase dashboard (or sets them directly) so the Auth Site URL
    and callback redirect URLs can be configured. The MCP cannot change Auth settings.
-2. Restore a Cloudflare deploy path (connector with deploy tools, or wrangler with the
-   owner's login), redeploy, and test a real account round trip.
+2. Owner adds GitHub secret `CLOUDFLARE_API_TOKEN` and pushes `main`/`develop`. Pushes to
+   `main` deploy through `.github/workflows/build-and-deploy.yml`; `develop` is for normal
+   work and is verified only. The owner then tests a real account round trip.
 3. Email: Supabase's built-in sender for now (owner-only testing). Before public accounts,
    add a custom domain on Cloudflare and switch to custom SMTP (Cloudflare Email Service
    or a free-tier provider). Custom domain and automated builds

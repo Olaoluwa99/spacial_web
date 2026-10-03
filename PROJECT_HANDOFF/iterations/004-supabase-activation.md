@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-01
 - **Branch:** main
-- **Status:** in progress (database live; Auth URLs, email and redeploy outstanding)
+- **Status:** in progress (database live; CI deploy prepared, awaiting secret and push)
 - **Commits:** handoff checkpoint for this iteration
 
 ## Goal
@@ -66,6 +66,24 @@ redeploy the site with public settings.
   3,000/month included; owner creates the API token and enters it in Supabase) or a
   free-tier provider.
 
+## Deployment pipeline · 2026-10-03
+
+- The owner will test accounts themselves and asked for a `develop` branch for normal
+  work, with pushes to the release branch deploying through GitHub Actions. This repo's
+  release branch is `main` (the owner said "master", which is the Android repo's name).
+- Added `.github/workflows/build-and-deploy.yml`: on `develop`, `main` and PRs into
+  `main` it runs `npm ci`, check, tests, build and guards (no `sb_secret_` in dist,
+  sitemap generated, Supabase settings present). Only a push to `main` deploys, via
+  `cloudflare/wrangler-action@v4` with wrangler 4.147.0 pinned. checkout/setup-node v7.
+- Public build settings live in the workflow env. The single secret is
+  `CLOUDFLARE_API_TOKEN`, which the owner creates and adds to GitHub. The account ID comes
+  from `wrangler.jsonc`. No project dependency was added; CI installs wrangler itself.
+- Found that `SITE_URL` must be a real environment variable (Astro config reads
+  `process.env`); a `.env.production`-only build has no sitemap. The workflow sets it.
+- Simulated locally with the same env: YAML parses, check 0 issues, 9 tests pass, build
+  17 pages, all three guards pass. The workflow has not run on GitHub yet.
+- Created local `develop` from `main`. Nothing pushed.
+
 ## Verification
 
 Remote schema, policies, grants, rollback and advisors verified through the MCP as above.
@@ -75,8 +93,8 @@ page has been exercised yet.
 ## Left open / next
 
 1. Owner signs in to the dashboard (or sets the URLs directly) for the Auth URL settings.
-2. Restore a deploy path: reconnect the Cloudflare connector with Worker deploy tools, or
-   approve installing wrangler and run `wrangler login` (owner) then `wrangler deploy`.
-3. Redeploy, then test a real sign-up/confirm/sign-in/profile/save/sign-out round trip
-   with an address the built-in sender can reach.
+2. Owner adds the `CLOUDFLARE_API_TOKEN` secret, then pushes `main` and `develop`
+   (agents ask first). The first `main` run deploys; check it and the live site.
+3. Owner tests the real sign-up/confirm/sign-in/profile/save/sign-out round trip with
+   an address the built-in sender can reach.
 4. Custom domain plus custom SMTP before public launch (see the email decision above).

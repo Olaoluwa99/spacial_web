@@ -4,7 +4,7 @@ The public home for Special: six interface styles, original live showcases, vers
 Web + Compose bundles, a getting-started guide and an interactive spring playground.
 
 Built with TypeScript, Astro 7, custom CSS and native Web Animations. Static output;
-local account integration prepared; no CMS or server rendering. Supabase is not configured yet. Manrope is served locally under its OFL
+Supabase accounts (project `nbeplophztgvxhsbhmar`); no CMS or server rendering. Manrope is served locally under its OFL
 license; editorial illustrations are separate from the original bundle showcases.
 
 ## Run
@@ -24,7 +24,21 @@ Local URL: http://127.0.0.1:4321. Astro 7 preview runs as a managed background s
 use `npx astro preview status` or `npx astro preview stop` to inspect/stop it.
 Built output is `dist/`. Set `SITE_URL=https://your-real-domain` when building for
 production to generate canonical URLs and the sitemap. Without it, no production
-domain is invented. Cloudflare hosting is configured; no custom domain is attached.
+domain is invented. `SITE_URL` must be a shell/CI environment variable: the Astro
+config reads `process.env`, which `.env.production` does not populate.
+
+## Branches and deployment
+
+- Work on `develop` (or feature branches off it). Pushes to `develop` and pull requests
+  into `main` run check, tests, build and the public-build guard only.
+- Merge or push to `main` to release: the same workflow then deploys `dist/` to the
+  `special-web` Worker with wrangler. See `.github/workflows/build-and-deploy.yml`.
+- The workflow holds the public build settings (site URL, Supabase URL, publishable key).
+  The only secret is `CLOUDFLARE_API_TOKEN` (GitHub → Settings → Secrets and variables →
+  Actions): a Cloudflare API token from the **Edit Cloudflare Workers** template, scoped
+  to this account (09f02c2b…).
+  Never add Supabase service-role or secret keys anywhere in this repository.
+- Live: https://special-web.olaoluwa-special.workers.dev/ (no custom domain yet).
 
 ## Bundle releases
 
