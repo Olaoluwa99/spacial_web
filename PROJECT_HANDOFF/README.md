@@ -1,6 +1,6 @@
 # Special website handoff
 
-*Last updated 2026-10-01 · iteration 004 in progress (Supabase database live).*
+*Last updated 2026-10-03 · iteration 004 completed (accounts live, CI deploys main).*
 
 The user approved the recommended stack and requested a polished, attention-catching
 site. The first website milestone is implemented in this independent repository on
@@ -15,12 +15,10 @@ site. The first website milestone is implemented in this independent repository 
 - Sixteen content/account routes plus 404, robots and production sitemap. Static production build.
 - Release exports: Glass/Bento 0.1.5, Clay/Kinetic 0.1.2, Aurora/Brutalism 0.1.1.
 - Live Cloudflare site: https://special-web.olaoluwa-special.workers.dev/
-- Supabase project `nbeplophztgvxhsbhmar` (Special) verified and migrated: profiles and
-  saved_styles with owner-only RLS, verified on the real project. Public settings are in
-  the ignored `.env.production`; that build is **not yet deployed**, so production still
-  shows the coming-soon account state.
-- Branches: work on `develop`; pushing `main` deploys via GitHub Actions (secret pending).
-- Outstanding: first CI deploy, owner's real-user test, custom domain and SMTP later.
+- Supabase project `nbeplophztgvxhsbhmar` (Special): profiles and saved_styles with
+  owner-only RLS. Accounts are live; the owner signed up and used their account.
+- Branches: work on `develop`; merging/pushing to `main` deploys via GitHub Actions.
+- Email uses Supabase's built-in sender (team addresses only). Custom domain + SMTP later.
 - No custom domain, payment or AI service configured.
 - Git origin: github.com/Olaoluwa99/spacial_web.git; no push performed.
 - Local preview: http://127.0.0.1:4321. Set SITE_URL for a production build.
@@ -49,15 +47,10 @@ Do not claim controlled model rankings from the existing one-sample evaluations.
 
 ## Next phase
 
-1. Owner signs in to the Supabase dashboard (or sets them directly) so the Auth Site URL
-   and callback redirect URLs can be configured. The MCP cannot change Auth settings.
-2. Owner adds GitHub secret `CLOUDFLARE_API_TOKEN` and pushes `main`/`develop`. Pushes to
-   `main` deploy through `.github/workflows/build-and-deploy.yml`; `develop` is for normal
-   work and is verified only. The owner then tests a real account round trip.
-3. Email: Supabase's built-in sender for now (owner-only testing). Before public accounts,
-   add a custom domain on Cloudflare and switch to custom SMTP (Cloudflare Email Service
-   or a free-tier provider). Custom domain and automated builds
-   when requested; app distribution, payments and generation services remain later.
+1. Before opening accounts to the public: custom domain on Cloudflare, custom SMTP
+   (Cloudflare Email Service or a free-tier provider), then update Auth URLs and `SITE_URL`.
+2. Optional: enable Supabase leaked password protection (advisor warning).
+3. App distribution, payments and generation services remain later milestones.
 
 Cloudflare is set up; account code is locally reviewable. See the ongoing
 [action log](operations/2026-10-01-cloudflare-accounts.md) for exact operations/results.
@@ -70,7 +63,7 @@ No pushes have been requested. Preserve both repositories before switching machi
 | 001 | 2026-10-01 | [First website milestone](iterations/001-website-milestone.md) |
 | 002 | 2026-10-01 | [IDE ignores and deployment planning](iterations/002-ide-ignore-and-next-phase.md) |
 | 003 | 2026-10-01 | [Cloudflare hosting and local account implementation](iterations/003-cloudflare-and-accounts.md) |
-| 004 | 2026-10-01 | [Supabase activation](iterations/004-supabase-activation.md) |
+| 004 | 2026-10-01 | [Supabase activation and CI deploys (completed)](iterations/004-supabase-activation.md) |
 
 [00-preflight.md](00-preflight.md) preserves the original pre-implementation proposal.
 Its pending-approval statements are historical, superseded by this handoff.

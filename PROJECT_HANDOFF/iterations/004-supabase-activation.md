@@ -2,7 +2,7 @@
 
 - **Date:** 2026-10-01
 - **Branch:** main
-- **Status:** in progress (database live; CI deploy prepared, awaiting secret and push)
+- **Status:** done (accounts live; deployed from GitHub Actions)
 - **Commits:** handoff checkpoint for this iteration
 
 ## Goal
@@ -84,6 +84,17 @@ redeploy the site with public settings.
   17 pages, all three guards pass. The workflow has not run on GitHub yet.
 - Created local `develop` from `main`. Nothing pushed.
 
+## Accounts live · 2026-10-03
+
+- The owner added the Cloudflare token, pushed `develop` and merged PR #1 into `main`.
+  All three runs succeeded (develop push, PR check, main push with deploy).
+- Live checks: sitemap now lists production URLs; `/`, `/account/`, `/account/sign-up/`
+  and a release ZIP return 200.
+- The owner signed up, confirmed by email and used their account. Database counts only
+  (no personal data read): 1 user, 1 confirmed, 1 profile, 0 saved styles.
+- Security advisor now reports one warning: leaked password protection is disabled
+  (HaveIBeenPwned check, an Auth dashboard setting). Left for the owner to decide.
+
 ## Verification
 
 Remote schema, policies, grants, rollback and advisors verified through the MCP as above.
@@ -92,9 +103,7 @@ page has been exercised yet.
 
 ## Left open / next
 
-1. Owner signs in to the dashboard (or sets the URLs directly) for the Auth URL settings.
-2. Owner adds the `CLOUDFLARE_API_TOKEN` secret, then pushes `main` and `develop`
-   (agents ask first). The first `main` run deploys; check it and the live site.
-3. Owner tests the real sign-up/confirm/sign-in/profile/save/sign-out round trip with
-   an address the built-in sender can reach.
-4. Custom domain plus custom SMTP before public launch (see the email decision above).
+1. Optional: enable leaked password protection in Supabase Auth (may need a paid plan).
+2. Before public accounts: custom domain on Cloudflare, custom SMTP, then update the Auth
+   Site/redirect URLs and the workflow `SITE_URL`.
+3. Saved styles have not been exercised on production yet (0 rows); the owner can try one.
