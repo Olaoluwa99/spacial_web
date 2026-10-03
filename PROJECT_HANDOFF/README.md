@@ -52,7 +52,9 @@ Do not claim controlled model rankings from the existing one-sample evaluations.
    and callback redirect URLs can be configured. The MCP cannot change Auth settings.
 2. Restore a Cloudflare deploy path (connector with deploy tools, or wrangler with the
    owner's login), redeploy, and test a real account round trip.
-3. Configure custom SMTP before advertising accounts. Custom domain and automated builds
+3. Email: Supabase's built-in sender for now (owner-only testing). Before public accounts,
+   add a custom domain on Cloudflare and switch to custom SMTP (Cloudflare Email Service
+   or a free-tier provider). Custom domain and automated builds
    when requested; app distribution, payments and generation services remain later.
 
 Cloudflare is set up; account code is locally reviewable. See the ongoing

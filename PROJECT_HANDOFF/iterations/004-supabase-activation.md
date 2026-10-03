@@ -51,6 +51,21 @@ redeploy the site with public settings.
   testing (it only delivers to the organization's team addresses). Real sign-ups need
   custom SMTP before accounts are advertised publicly.
 
+## Follow-up · 2026-10-03
+
+- Connectors rechecked: Supabase (claude.ai) works and still sees only Special; the
+  Cloudflare connector works but still has no Worker deploy tools; the Supabase and
+  RevenueCat plugins are unauthenticated and not needed. The site is still the 10-01 deploy.
+- Public Auth settings confirm email signup enabled, signups open, confirmation required.
+  The owner reports setting the Auth URLs; not yet visually confirmed (built-in browser
+  is signed out of the dashboard).
+- **Email decision:** keep Supabase's built-in sender for now. It only delivers to the
+  organization's team addresses and is hourly rate-limited, so it suits the owner's own
+  round-trip test, not public signups. Before opening accounts publicly: get a custom
+  domain on Cloudflare, then use Cloudflare Email Service SMTP (beta; Workers Paid plan,
+  3,000/month included; owner creates the API token and enters it in Supabase) or a
+  free-tier provider.
+
 ## Verification
 
 Remote schema, policies, grants, rollback and advisors verified through the MCP as above.
@@ -64,4 +79,4 @@ page has been exercised yet.
    approve installing wrangler and run `wrangler login` (owner) then `wrangler deploy`.
 3. Redeploy, then test a real sign-up/confirm/sign-in/profile/save/sign-out round trip
    with an address the built-in sender can reach.
-4. Configure custom SMTP (and optionally branded templates) before public launch.
+4. Custom domain plus custom SMTP before public launch (see the email decision above).
