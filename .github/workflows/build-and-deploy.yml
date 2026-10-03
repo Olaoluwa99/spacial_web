@@ -1,0 +1,57 @@
+name: Build and deploy
+
+# develop and pull requests are verified only; a push to main also deploys.
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Never cancel a production deploy halfway; superseded branch checks can go.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+env:
+  # Public build settings only. The publishable key is meant to ship to browsers.
+  # Never put a service-role or secret key here; deploy credentials live in secrets.
+  SITE_URL: https://special-web.olaoluwa-special.workers.dev
+  PUBLIC_SUPABASE_URL: https://nbeplophztgvxhsbhmar.supabase.co
+  PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ghVyG834UkI75ONEcb-1sQ_UbsuxMqE
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+
+      - name: Guard the public build
+        run: |
+          if grep -rqE 'sb_secret_[A-Za-z0-9]' dist; then
+            echo "::error::A Supabase secret key reached dist/"; exit 1
+          fi
+          grep -q '<urlset' dist/sitemap.xml || { echo "::error::Sitemap missing SITE_URL"; exit 1; }
+          grep -rq 'nbeplophztgvxhsbhmar' dist/_astro || { echo "::error::Supabase settings missing"; exit 1; }
+
+      - name: Deploy to Cloudflare Workers
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: "4.147.0"
+          command: deploy

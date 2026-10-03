@@ -1,7 +1,7 @@
--- Run only in a disposable local Supabase database after applying the schema.
+-- Run in a disposable local Supabase database after applying the schema.
 -- Administrator connection required. All fixtures are rolled back.
--- Validated in local PostgreSQL WASM (PGlite 0.5.8) with simulated auth helpers.
--- Still requires verification against the owner's actual Supabase environment.
+-- Passed in PGlite 0.5.8 and, once, on the empty production project (2026-10-01).
+-- Do not run against production once real users exist.
 begin;
 
 insert into auth.users (id, email) values

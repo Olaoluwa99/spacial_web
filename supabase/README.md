@@ -1,15 +1,20 @@
-# Accounts database preparation
+# Accounts database
 
-**Prepared locally; not applied or connected to any Supabase project.** The user has
-asked to reconnect the MCP to their own account before any Supabase setup. Do not
-apply this code through the currently connected account. The supplied project URL
-is an intended destination, not evidence of ownership or a verified connection.
+**Applied to Supabase project `nbeplophztgvxhsbhmar` (Special, eu-west-1) on
+2026-10-01** with the owner's authorization, as migration `20261001181148_special_accounts`.
+`migrations/20261001181148_special_accounts.sql` is the exact SQL applied; its body is
+identical to `schemas/accounts.sql`. Keep both in sync: change the declarative schema,
+then add a new reviewed migration. Never edit an applied migration.
 
-`schemas/accounts.sql` declares the desired database state. There is no invented
-timestamped migration or recorded migration history. A Supabase CLI/local stack is
-not available in this workspace. The desired schema and complete RLS script passed
-in local PostgreSQL WASM (PGlite 0.5.8), using simulated Supabase Auth helpers and
-roles. They have not been applied to an actual Supabase environment.
+After applying, `verify/rls.sql` ran once against the real project inside a single
+transaction that ended in `ROLLBACK` (the project had no users or data). It passed, and
+a follow-up read confirmed zero users, profiles and saved styles. Security and
+performance advisors reported no issues. Do not rerun it once real users exist.
+
+`schemas/accounts.sql` declares the desired database state. A Supabase CLI/local stack
+is not available in this workspace; the migration was applied through the Supabase MCP.
+Before that, the schema and complete RLS script also passed in local PostgreSQL WASM
+(PGlite 0.5.8) with simulated Auth helpers.
 
 ## Application contract
 
@@ -31,9 +36,11 @@ Saving a style uses insert with `ignoreDuplicates: true`, or handles duplicate-k
 error `23505`. Do not use a saved-style upsert that updates rows: UPDATE is not
 granted. Removing a saved style deletes the matching `(user_id, style_id)`.
 
-## Later: validate locally, then apply to the owner's project
+## Future schema changes
 
-These are operator instructions for later, **not commands executed this session**.
+The first migration is applied, so steps 1-5 below now describe how to validate and
+apply **later** changes (the project is no longer empty). Step 6 is partly open: see
+the website handoff for the Auth and email work still outstanding.
 
 1. Install an appropriate Supabase CLI using the official installation instructions,
    and Docker for the local stack. Run `supabase --version`, `supabase --help`, then
